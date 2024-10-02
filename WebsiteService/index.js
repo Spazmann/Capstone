@@ -1,40 +1,64 @@
 const express = require('express');
 const app = express();
-require('dotenv').config();
+const path = require('path');
+const multer = require('multer');
+const sharp = require('sharp');
+const crypto = require('crypto');
+const dotenv = require('dotenv');
+const result = require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
-app.set('json spaces', 5); // to pretify json response
+const { uploadFile, deleteFile, getObjectSignedUrl } = require('./s3.js');
 
-const PORT = process.env.PORT;
-const fileparser = require('./fileparser');
+const PORT = process.env.PORT || 3000;
 
-app.get('/', (req, res) => {
-  res.send(`
-    <h2>File Upload With <code>"Node.js"</code></h2>
-    <form action="/api/upload" enctype="multipart/form-data" method="post">
-      <div>Select a file: 
-        <input name="file" type="file" />
-      </div>
-      <input type="submit" value="Upload" />
-    </form>
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 
-  `);
-});
+// View Engine Setup
+app.use(express.static(path.join(__dirname, 'public/views')));
+console.log(process.env.S3_BUCKET);
 
-app.post('/api/upload', async (req, res) => {
-  await fileparser(req)
-  .then(data => {
-    res.status(200).json({
-      message: "Success",
-      data
-    })
-  })
-  .catch(error => {
-    res.status(400).json({
-      message: "An error occurred.",
-      error
-    })
-  })
-});
+
+const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
+
+app.get("/", async (req, res) => {
+  // const posts = await prisma.posts.findMany({orderBy: [{ created: 'desc'}]})
+  // for (let post of posts) {
+  //   post.imageUrl = await getObjectSignedUrl(post.imageName)
+  // }
+  res.render('index')
+})
+
+app.post('/posts', upload.single('image'), async (req, res) => {
+  const file = req.file
+  const caption = req.body.caption
+  const imageName = generateFileName()
+
+  const fileBuffer = await sharp(file.buffer)
+    .resize({ height: 1920, width: 1080, fit: "contain" })
+    .toBuffer()
+
+  await uploadFile(fileBuffer, imageName, file.mimetype)
+
+  // await prisma.posts.create({
+  //   data: {
+  //     imageName,
+  //     caption,
+  //   }
+  // })
+  
+  res.redirect("/")
+})
+
+app.post("/api/deletePost/:id", async (req, res) => {
+  const id = +req.params.id
+  const post = await prisma.posts.findUnique({where: {id}}) 
+
+  await deleteFile(post.imageName)
+
+  // await prisma.posts.delete({where: {id: post.id}})
+  res.redirect("/")
+})
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}.`);
