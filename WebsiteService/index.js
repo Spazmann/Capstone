@@ -15,9 +15,9 @@ const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 
 // View Engine Setup
-app.use(express.static(path.join(__dirname, 'public/views')));
+app.set('views', path.join(__dirname, 'public/views'));  // Views directory
+app.set('view engine', 'pug');
 console.log(process.env.S3_BUCKET);
-
 
 const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
 
@@ -26,7 +26,8 @@ app.get("/", async (req, res) => {
   // for (let post of posts) {
   //   post.imageUrl = await getObjectSignedUrl(post.imageName)
   // }
-  res.render('index')
+  const imageUrl = await getObjectSignedUrl("de610b8c7dd199ecdd996f8ba9fb8f8bdf1ba2ee7905c52b2148273d05eda2a4")
+  res.render('index', {imageUrl})
 })
 
 app.post('/posts', upload.single('image'), async (req, res) => {
