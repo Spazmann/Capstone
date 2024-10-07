@@ -9,6 +9,8 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 // Router Imports
 const imagesPageRouter = require('./routes/images');
 const indexPageRouter = require('./routes/index');
+const homePageRouter = require('./routes/home');
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -22,6 +24,8 @@ console.log(process.env.S3_BUCKET);
 
 app.use('/images', imagesPageRouter);
 app.use('/', indexPageRouter);
+app.use('/home', homePageRouter);
+
 
 // Cookies and Session Setup
 app.use(session({
