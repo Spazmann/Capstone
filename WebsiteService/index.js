@@ -1,66 +1,63 @@
 const express = require('express');
+const createError = require('http-errors');
 const app = express();
 const path = require('path');
-const multer = require('multer');
-const sharp = require('sharp');
-const crypto = require('crypto');
+const session = require('express-session');
 const dotenv = require('dotenv');
-const result = require('dotenv').config({ path: path.resolve(__dirname, '.env') });
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
-const { uploadFile, deleteFile, getObjectSignedUrl } = require('./s3.js');
+// Router Imports
+const imagesPageRouter = require('./routes/images');
 
 const PORT = process.env.PORT || 3000;
-
-const storage = multer.memoryStorage()
-const upload = multer({ storage: storage })
 
 // View Engine Setup
 app.set('views', path.join(__dirname, 'public/views'));  // Views directory
 app.set('view engine', 'pug');
 console.log(process.env.S3_BUCKET);
 
-const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
+// RestAPI Router Setup
+app.use('/', imagesPageRouter);
 
-app.get("/", async (req, res) => {
-  // const posts = await prisma.posts.findMany({orderBy: [{ created: 'desc'}]})
-  // for (let post of posts) {
-  //   post.imageUrl = await getObjectSignedUrl(post.imageName)
-  // }
-  const imageUrl = await getObjectSignedUrl("de610b8c7dd199ecdd996f8ba9fb8f8bdf1ba2ee7905c52b2148273d05eda2a4")
-  res.render('index', {imageUrl})
-})
+// Cookies and Session Setup
+app.use(session({
+  secret: '1234',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }
+}));
 
-app.post('/posts', upload.single('image'), async (req, res) => {
-  const file = req.file
-  const caption = req.body.caption
-  const imageName = generateFileName()
+app.get('/cookie', function(req, res) {
+  let today = new Date();
+  let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + " " + today.getHours() + ":" + today.getMinutes() + "." + today.getSeconds();
+  res.cookie('lastVisited', date, { maxAge: 86400000, httpOnly: true }).send('Cookie is set');
+});
 
-  const fileBuffer = await sharp(file.buffer)
-    .resize({ height: 1920, width: 1080, fit: "contain" })
-    .toBuffer()
+app.get('/cookieGet', function(req, res) {
+  const lastVisited = req.cookies.lastVisited;
+  res.send(lastVisited);
+});
 
-  await uploadFile(fileBuffer, imageName, file.mimetype)
+app.get('/logout', function(req, res) {
+  req.session.user = null;
+  res.redirect('/');
+});
 
-  // await prisma.posts.create({
-  //   data: {
-  //     imageName,
-  //     caption,
-  //   }
-  // })
-  
-  res.redirect("/")
-})
+// Error Handling
+app.use(function(req, res, next) {
+  next(createError(404));
+});
 
-app.post("/api/deletePost/:id", async (req, res) => {
-  const id = +req.params.id
-  const post = await prisma.posts.findUnique({where: {id}}) 
+app.use(function(err, req, res, next) {
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  await deleteFile(post.imageName)
-
-  // await prisma.posts.delete({where: {id: post.id}})
-  res.redirect("/")
-})
+  res.status(err.status || 500);
+  res.render('error');
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}.`);
 })
+
+module.exports = app;
