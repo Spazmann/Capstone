@@ -8,6 +8,7 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 // Router Imports
 const imagesPageRouter = require('./routes/images');
+const indexPageRouter = require('./routes/index');
 
 const PORT = process.env.PORT || 3000;
 
@@ -17,7 +18,9 @@ app.set('view engine', 'pug');
 console.log(process.env.S3_BUCKET);
 
 // RestAPI Router Setup
-app.use('/', imagesPageRouter);
+
+app.use('/images', imagesPageRouter);
+app.use('/', indexPageRouter);
 
 // Cookies and Session Setup
 app.use(session({
