@@ -1,7 +1,10 @@
 const express = require('express');
+const createError = require('http-errors');
 const app = express();
 const path = require('path');
 const session = require('express-session');
+const dotenv = require('dotenv');
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 // Router Imports
 const imagesPageRouter = require('./routes/images');
@@ -14,7 +17,7 @@ app.set('view engine', 'pug');
 console.log(process.env.S3_BUCKET);
 
 // RestAPI Router Setup
-app.use('/images', imagesPageRouter);
+app.use('/', imagesPageRouter);
 
 // Cookies and Session Setup
 app.use(session({

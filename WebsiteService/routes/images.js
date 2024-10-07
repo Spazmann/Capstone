@@ -6,13 +6,13 @@ const crypto = require('crypto');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
-const { uploadFile, deleteFile, getObjectSignedUrl } = require('./api/s3.js');
+const { uploadFile, deleteFile, getObjectSignedUrl } = require('../api/s3');
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 
 const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
 
-app.get("/", async (req, res) => {
+router.get("/", async (req, res) => {
   // const posts = await prisma.posts.findMany({orderBy: [{ created: 'desc'}]})
   // for (let post of posts) {
   //   post.imageUrl = await getObjectSignedUrl(post.imageName)
@@ -21,7 +21,7 @@ app.get("/", async (req, res) => {
   res.render('index', {imageUrl})
 })
 
-app.post('/posts', upload.single('image'), async (req, res) => {
+router.post('/posts', upload.single('image'), async (req, res) => {
   const file = req.file
   const caption = req.body.caption
   const imageName = generateFileName()
@@ -42,7 +42,7 @@ app.post('/posts', upload.single('image'), async (req, res) => {
   res.redirect("/")
 })
 
-app.post("/api/deletePost/:id", async (req, res) => {
+router.post("/api/deletePost/:id", async (req, res) => {
   const id = +req.params.id
   const post = await prisma.posts.findUnique({where: {id}}) 
 
