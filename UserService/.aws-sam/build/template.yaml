@@ -5,8 +5,8 @@ Description: 'Sample SAM Template for UserService
   '
 Globals:
   Function:
-    Timeout: 10
-    MemorySize: 512
+    Timeout: 30
+    MemorySize: 1024
     LoggingConfig:
       LogFormat: JSON
 Resources:

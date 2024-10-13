@@ -12,49 +12,59 @@ using Amazon.Runtime.Internal.Settings;
 public class UserDatabase
 {
     const string connectionString = "mongodb+srv://ddmann2004:9kt1LQi62AMBcXDW@cluster0.gzmfmz9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"; // Added semicolon
+    private static readonly MongoClient mongoClient = new MongoClient(connectionString);
 
-    public static async Task<APIGatewayProxyResponse> AddUserToDatabase(User user)
+   public static async Task<APIGatewayProxyResponse> AddUserToDatabase(User user)
     {
-        var mongoClient = new MongoClient(connectionString);
-        var database = mongoClient.GetDatabase("Capstone");
-        var collection = database.GetCollection<User>("Users");
-        
-        User user1 = await FindUserByEmail(user.Email);
-        if (user1 != null)
+        try
         {
-            if (user.Email == user1.Email)
+            var database = mongoClient.GetDatabase("Capstone");
+            var collection = database.GetCollection<User>("Users");
+
+            // Check if user with the same email exists
+            var userWithSameEmail = await collection.Find(u => u.Email == user.Email).FirstOrDefaultAsync();
+            if (userWithSameEmail != null)
             {
                 return new APIGatewayProxyResponse
                 {
-                    Body = JsonSerializer.Serialize(new { message = $"User With Email {user1.Email} already exists" }),
-                    StatusCode = 500,
+                    Body = JsonSerializer.Serialize(new { message = $"User with Email {user.Email} already exists" }),
+                    StatusCode = 400,
                     Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
                 };
             }
-        }
-        
-        User user2 = await FindUserByUsername(user.Username);
-        if (user2 != null)
-        {
-            if (user.Username == user2.Username)
+
+            // Check if user with the same username exists
+            var userWithSameUsername = await collection.Find(u => u.Username == user.Username).FirstOrDefaultAsync();
+            if (userWithSameUsername != null)
             {
                 return new APIGatewayProxyResponse
                 {
-                    Body = JsonSerializer.Serialize(new { message = $"User With Username {user2.Username} already exists" }),
-                    StatusCode = 500,
+                    Body = JsonSerializer.Serialize(new { message = $"User with Username {user.Username} already exists" }),
+                    StatusCode = 400,
                     Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
                 };
             }
+
+            // Insert the new user
+            user.Id = Guid.NewGuid().ToString();
+            await collection.InsertOneAsync(user);
+
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { message = "User created successfully", user }),
+                StatusCode = 201,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
         }
-        
-        user.Id = Guid.NewGuid().ToString();
-        await collection.InsertOneAsync(user);
-        return new APIGatewayProxyResponse
+        catch (Exception ex)
         {
-            Body = JsonSerializer.Serialize(new { message = user }),
-            StatusCode = 200,
-            Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
-        };
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { error = ex.Message }),
+                StatusCode = 500,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
     }
 
     public static async Task<APIGatewayProxyResponse> EditUser(User user, string email)

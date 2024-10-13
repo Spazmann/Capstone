@@ -13,11 +13,12 @@ namespace HelloWorld;
 public class Function
 {
 
-    public async Task<APIGatewayProxyResponse> CreateUser(APIGatewayProxyRequest apigProxyEvent, ILambdaContext context)
+    public async Task<APIGatewayProxyResponse> CreateUser(APIGatewayProxyRequest request, ILambdaContext context)
     {
+        Console.WriteLine("Reached Create User");
         try
         {
-            var input = JsonSerializer.Deserialize<User>(apigProxyEvent.Body);
+            var input = JsonSerializer.Deserialize<User>(request.Body);
 
             if (input == null)
             {
@@ -29,19 +30,33 @@ public class Function
                 };
             }
 
-            var response = await UserDatabase.AddUserToDatabase(input);
+            Console.WriteLine("Before User Was added to database");
+
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            var response = await UserDatabase.AddUserToDatabase(input).WaitAsync(cts.Token);
+
+            Console.WriteLine("After User Was added to database");
 
             return new APIGatewayProxyResponse
             {
                 Body = JsonSerializer.Serialize(response.Body),
-                StatusCode = 201, // Created
+                StatusCode = 201,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+        catch (OperationCanceledException)
+        {
+            LambdaLogger.Log("Database operation timed out.");
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { error = "Database operation timed out." }),
+                StatusCode = 504, // Gateway Timeout
                 Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
             };
         }
         catch (Exception ex)
         {
-            LambdaLogger.Log($"Error in CreateUser: {ex.ToString()}");
-
+            LambdaLogger.Log($"Error in CreateUser: {ex}");
             return new APIGatewayProxyResponse
             {
                 Body = JsonSerializer.Serialize(new { error = ex.Message }),
@@ -50,6 +65,7 @@ public class Function
             };
         }
     }
+
 
 
     public async Task<APIGatewayProxyResponse> FindUser(APIGatewayProxyRequest apigProxyEvent, ILambdaContext context)
