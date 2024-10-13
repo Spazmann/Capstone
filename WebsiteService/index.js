@@ -8,16 +8,24 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 // Router Imports
 const imagesPageRouter = require('./routes/images');
+const indexPageRouter = require('./routes/index');
+const homePageRouter = require('./routes/home');
+
 
 const PORT = process.env.PORT || 3000;
 
 // View Engine Setup
-app.set('views', path.join(__dirname, 'public/views'));  // Views directory
+app.set('views', path.join(__dirname, 'views'));  // Views directory
 app.set('view engine', 'pug');
+app.use(express.static(path.join(__dirname, 'public')));
 console.log(process.env.S3_BUCKET);
 
 // RestAPI Router Setup
-app.use('/', imagesPageRouter);
+
+app.use('/images', imagesPageRouter);
+app.use('/', indexPageRouter);
+app.use('/home', homePageRouter);
+
 
 // Cookies and Session Setup
 app.use(session({

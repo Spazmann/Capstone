@@ -1,0 +1,18 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Test Images
+  body
+    .App
+      .flex.flex-col.items-center.justify-center
+        form(action="/posts" method="POST" enctype="multipart/form-data" style="width:650px" class="flex flex-col space-y-5 px-5 py-14")
+          input(type="file" name="image" accept="image/*")
+          input(type="text" name="caption" placeholder="Caption")
+          button(type="submit") Submit
+        
+        //- Display the uploaded image if the URL is available
+        if imageUrl
+          h2 Uploaded Image:
+          img(src=imageUrl alt="Uploaded Image" style="max-width: 100%; height: auto;")
