@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const dal = require('../api/userService')
 const router = express.Router();
 
 router.use(session({

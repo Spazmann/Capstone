@@ -1,150 +1,119 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
 body {
-  background-color: #15202B;
-  color: #E1E8ED;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
 }
 
-.main-container {
-  display: flex;
-  flex-grow: 1;
-  max-width: 1200px;
-  margin: 20px auto;
-  width: 100%;
+.container {
+    display: flex;
+    width: 100%;
 }
 
-.left-sidebar {
-  width: 250px;
-  background-color: #192734;
-  padding: 20px;
+.left {
+    width: 70%; /* Left side takes 70% of the width */
+    height: 100vh;
+    background-color: #a85809; /* Orange left side */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.left-sidebar ul {
-  list-style: none;
+.left img {
+    max-width: 200px;
 }
 
-.left-sidebar ul li {
-  margin-bottom: 20px;
-}
-
-.left-sidebar ul li a {
-  text-decoration: none;
-  color: #E1E8ED;
-  font-size: 18px;
-  display: block;
-  padding: 10px;
-  border-radius: 30px;
-  transition: background-color 0.3s ease;
-}
-
-.left-sidebar ul li a:hover {
-  background-color: #1DA1F2;
-}
-
-.left-sidebar button {
-  background-color: #1DA1F2;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 30px;
-  cursor: pointer;
-  margin-top: 20px;
-  width: 100%;
-  font-size: 18px;
+.right {
+    width: 30%; /* Right side takes 30% of the width */
+    height: 100vh;
+    background-color: #454341; /* Dark background for right side */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .content {
-  flex-grow: 1;
-  padding: 20px;
+    width: 80%;
+    max-width: 400px;
+    text-align: left;
 }
 
-.new-post {
-  background-color: #192734;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 10px;
+h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: white;
 }
 
-.new-post textarea {
-  width: 100%;
-  height: 80px;
-  padding: 10px;
-  background-color: #253341;
-  border: none;
-  color: white;
-  border-radius: 10px;
-  resize: none;
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: white;
 }
 
-.new-post button {
-  display: inline-block;
-  background-color: #1DA1F2;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  margin-top: 10px;
-  border-radius: 30px;
-  cursor: pointer;
+form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
 }
 
-.posts {
-  background-color: #192734;
-  border-radius: 10px;
-  padding: 15px;
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.post {
-  border-bottom: 1px solid #2F3336;
-  padding: 10px 0;
+button {
+    padding: 15px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 1rem;
 }
 
-.post:last-child {
-  border-bottom: none;
+button.google-login {
+    background-color: black;
+    color: white;
 }
 
-.post-header strong {
-  font-size: 16px;
-  margin-right: 10px;
-  color: #E1E8ED;
+button[type='submit'] {
+    background-color: #f2921d;
+    color: white;
 }
 
-.post-header span {
-  font-size: 14px;
-  color: #8899A6;
+button:hover {
+    background-color: #d9791a;
 }
 
-.right-sidebar {
-  width: 250px;
-  background-color: #192734;
-  padding: 20px;
-  color: #E1E8ED;
+p.or {
+    text-align: center;
+    margin: 5px 0;
+    color: white;
 }
 
-.right-sidebar h3 {
-  margin-bottom: 10px;
+p {
+    font-size: 0.9rem;
+    color: #8899A6;
 }
 
-.right-sidebar ul {
-  list-style: none;
+a {
+    color: #f2921d;
+    text-decoration: none;
 }
 
-.right-sidebar ul li {
-  margin-bottom: 10px;
-  padding: 10px;
-  background-color: #253341;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.right-sidebar ul li:hover {
-  background-color: #1DA1F2;
+a:hover {
+    text-decoration: underline;
 }

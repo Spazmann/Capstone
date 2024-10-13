@@ -1,54 +1,45 @@
-doctype html
 html
   head
-    title X/Twitter Clone
+    title Intro Page
     link(rel='stylesheet', href='/styles/index.css')
+    script(src='/scripts/index.js')
   body
+    .container
+      .left
+        img(src='/images/logo.png', alt='Logo')
 
-    .main-container
-      .left-sidebar
-        ul
-          li
-            a(href='#') Home
-          li
-            a(href='#') Explore
-          li
-            a(href='#') Notifications
-          li
-            a(href='#') Messages
-          li
-            a(href='#') Bookmarks
-          li
-            a(href='#') Profile
-        button(type='button') Post
+      .right
+        div.content
+          h1 Welcome
+          h2 Join today.
+          form()
+            .input-container
+              button.google-login(type='button') Google SignIn
+              p.or Or
+              button.create-account(type='button') Create account
+          p Already have an account? 
+          a(href='/signin') Sign in
 
-      .content
-        .new-post
-          form(action='/post', method='post')
-            textarea(name='post' placeholder='What’s happening?')
-            button(type='submit') Post
-        .posts
-          .post
-            .post-header
-              strong Username
-              span @username · 5m
-            p This is a sample post.
-          .post
-            .post-header
-              strong AnotherUser
-              span @anotheruser · 10m
-            p Another example post.
-
-      .right-sidebar
-        .trending
-          h3 What’s happening
-          ul
-            li Trending 1
-            li Trending 2
-            li Trending 3
-        .who-to-follow
-          h3 Who to follow
-          ul
-            li User 1
-            li User 2
-            li User 3
+    // Modal Overlay
+    #overlay.hidden
+      .modal
+        button.close-button X
+        h1 Create your account
+        form()
+          label(for='name') Name
+          input#name(type='text', maxlength='50', placeholder='Enter your name', required)
+          label(for='phone') Phone
+          input#phone(type='tel', placeholder='Enter your phone number')
+          a(href='#') Use email instead
+          h3 Date of birth
+          p This will not be shown publicly. Confirm your own age, even if this account is for a business, a pet, or something else.
+          select(name='month')
+            option January
+            option February
+          select(name='day')
+            option 1
+            option 2
+          select(name='year')
+            option 1990
+            option 1991
+          button(type='submit') Next
