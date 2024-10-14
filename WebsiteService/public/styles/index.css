@@ -1,3 +1,4 @@
+/* Reset and Global Styles */
 * {
     margin: 0;
     padding: 0;
@@ -5,34 +6,37 @@
     font-family: Arial, sans-serif;
 }
 
+/* Body Layout */
 body {
     display: flex;
     height: 100vh;
     overflow: hidden;
+    background-color: #a85809; /* Background for the left side */
 }
 
+/* Main Container */
 .container {
     display: flex;
     width: 100%;
 }
 
+/* Left Section Styling */
 .left {
-    width: 70%; /* Left side takes 70% of the width */
-    height: 100vh;
-    background-color: #a85809; /* Orange left side */
+    width: 70%;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: inherit;
 }
 
 .left img {
     max-width: 200px;
 }
 
+/* Right Section Styling */
 .right {
-    width: 30%; /* Right side takes 30% of the width */
-    height: 100vh;
-    background-color: #454341; /* Dark background for right side */
+    width: 30%;
+    background-color: #454341;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,24 +48,26 @@ body {
     text-align: left;
 }
 
+/* Header Styling */
 h1 {
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: bold;
     margin-bottom: 10px;
     color: white;
 }
 
 h2 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     margin-bottom: 20px;
     color: white;
 }
 
+/* Form Layout */
 form {
     display: flex;
     flex-direction: column;
+    gap: 15px;
     width: 100%;
-    gap: 10px;
 }
 
 .input-container {
@@ -70,17 +76,14 @@ form {
     gap: 15px;
 }
 
+/* Button Styling */
 button {
-    padding: 15px;
-    border: none;
+    padding: 10px;
     border-radius: 30px;
+    border: none;
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
     font-size: 1rem;
 }
 
@@ -89,7 +92,7 @@ button.google-login {
     color: white;
 }
 
-button[type='submit'] {
+button.create-account {
     background-color: #f2921d;
     color: white;
 }
@@ -98,22 +101,168 @@ button:hover {
     background-color: #d9791a;
 }
 
-p.or {
-    text-align: center;
-    margin: 5px 0;
+.date-of-birth {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.date-of-birth select {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #8899A6;
+    border-radius: 8px;
+    background-color: #253341;
+    color: white;
+    font-size: 1rem;
+}
+
+.date-of-birth select option {
+    background-color: #15202B;
     color: white;
 }
 
-p {
-    font-size: 0.9rem;
+.date-of-birth select:focus {
+    outline: none;
+    border-color: #f2921d;
+}
+
+
+
+
+/* Modal Overlay */
+#overlay, #passwordOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s;
+    z-index: 10;
+}
+
+#overlay.visible, #passwordOverlay.visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Modal Styling */
+.modal {
+    background-color: #15202B;
+    padding: 40px;
+    border-radius: 12px;
+    width: 500px;
+    max-width: 90%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    color: white;
+    position: relative;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* Close Button Styling */
+button.close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+button.close-button:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Subtle circle hover effect */
+    color: #f2921d; /* Orange color on hover for the X */
+}
+
+/* Form Elements */
+.modal label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.modal input,
+.modal select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #8899A6;
+    border-radius: 8px;
+    background-color: #253341;
+    color: white;
+    font-size: 1rem;
+}
+
+.modal input::placeholder {
     color: #8899A6;
 }
 
-a {
-    color: #f2921d;
-    text-decoration: none;
+.modal p {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    color: #8899A6;
+    line-height: 1.4;
 }
 
-a:hover {
+/* Modal Buttons */
+.modal button.submit {
+    width: 100%;
+    padding: 12px;
+    background-color: #f2921d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.modal button.submit:hover {
+    background-color: #d9791a;
+}
+
+/* Link Styling */
+.modal a {
+    display: block;
+    margin-top: 10px;
+    color: #1DA1F2;
+    text-decoration: none;
+    font-size: 0.9rem;
+    text-align: right;
+}
+
+.modal a:hover {
     text-decoration: underline;
 }
+
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s;
+  }
+  
+  .visible {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s;
+  }
+  

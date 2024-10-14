@@ -20,26 +20,51 @@ html
           p Already have an account? 
           a(href='/signin') Sign in
 
-    // Modal Overlay
+    // Modal Overlay for User Details
     #overlay.hidden
       .modal
         button.close-button X
         h1 Create your account
-        form()
-          label(for='name') Name
-          input#name(type='text', maxlength='50', placeholder='Enter your name', required)
-          label(for='phone') Phone
-          input#phone(type='tel', placeholder='Enter your phone number')
-          a(href='#') Use email instead
+        form#userForm
+          label(for='name') Username
+          input#username(type='text', maxlength='50', placeholder='Enter your Username', required)
+          label(for='email') Email
+          input#email(type='email', placeholder='Enter your email', required)
           h3 Date of birth
           p This will not be shown publicly. Confirm your own age, even if this account is for a business, a pet, or something else.
-          select(name='month')
-            option January
-            option February
-          select(name='day')
-            option 1
-            option 2
-          select(name='year')
-            option 1990
-            option 1991
-          button(type='submit') Next
+          div.date-of-birth
+            select#month(name='month', required)
+              option(value='') Month
+              option January
+              option February
+              option March
+              option April
+              option May
+              option June
+              option July
+              option August
+              option September
+              option October
+              option November
+              option December
+            select#day(name='day', required)
+              option(value='') Day
+              - for (let i = 1; i <= 31; i++)
+                option #{i}
+            select#year(name='year', required)
+              option(value='') Year
+          button.submitUsername(type='submit') Next
+
+
+    // Modal Overlay for Password Setup
+    #passwordOverlay.hidden
+      .modal
+        button.close-button X
+        h1 Set your password
+        form#passwordForm
+          label(for='password') Password
+          input#password(type='password', placeholder='Enter your password', required)
+          label(for='confirmPassword') Confirm Password
+          input#confirmPassword(type='password', placeholder='Confirm your password', required)
+          button.submit(type='submit') Complete Signup
+
