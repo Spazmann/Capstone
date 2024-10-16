@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let savedUsername = '';
   let savedEmail = '';
+  let savedBirthDate = '';
 
   createAccountButton.addEventListener('click', () => {
       overlay.classList.add('visible');
@@ -25,6 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const username = document.getElementById('username').value;
       const email = document.getElementById('email').value;
+      const month = document.getElementById('month').value;
+      const day = document.getElementById('day').value;
+      const year = document.getElementById('year').value;
 
       if (!username || !email) {
           alert('Please fill in all fields.');
@@ -43,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (response.ok) {
               savedUsername = username;
               savedEmail = email;
+              savedBirthDate = `${year}-${month}-${day}`;
 
               overlay.classList.remove('visible');
               passwordOverlay.classList.add('visible');
@@ -53,6 +58,44 @@ document.addEventListener('DOMContentLoaded', () => {
           console.error('Error:', error);
           alert('An error occurred while checking the username and email.');
       }
+  });
+
+  passwordForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    if (password !== confirmPassword) {
+      alert('Passwords do not match.');
+      return;
+    }
+
+    const userData = {
+      username: savedUsername,
+      password: password,
+      email: savedEmail,
+      birthDate: savedBirthDate
+    };
+
+    try {
+      const response = await fetch('/createAccount', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
+
+      if (response.ok) {
+        alert('Account created successfully!');
+        window.location.href = '/home'; 
+      } else {
+        const result = await response.text();
+        alert(`Failed to create user: ${result}`);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while creating the user.');
+    }
   });
 
   const yearSelect = document.getElementById('year');

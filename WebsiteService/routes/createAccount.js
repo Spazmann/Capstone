@@ -1,4 +1,5 @@
 const express = require('express');
+const dal = require('../api/userService')
 const router = express.Router();
 
 const AWS = require('aws-sdk');
@@ -9,39 +10,35 @@ const sqs = new AWS.SQS({ apiVersion: '2012-11-05' });
 
 const queueUrl = '';
 
-router.post('/', function(req, res) {
-  
+router.post('/', (req, res) => {
+  const { username, password, email, birthDate } = req.body;
+
   const jsonData = {
-    Username: req.body.username,
-    Email: req.body.email,
-    Password: req.body.password
+    Username: username,
+    Password: password,
+    Email: email,
+    Profile: {
+      name: '', 
+      birthDate: birthDate,
+      gender: '', 
+      bannerImage: '',
+      profileImage: '', 
+      bio: '', 
+      location: ''
+    },
+    Settings: {
+      bannedWords: [],
+      darkMode: true
+    }
   };
 
   dal.addUser((err) => {
     if (err) {
-      console.error("Error adding user:", err);
-      return res.status(500).send("Error adding user.");
+      console.error('Error adding user:', err);
+      return res.status(500).send('Error adding user.');
     }
-
-    // const params = {
-    //   MessageBody: JSON.stringify({
-    //     email: jsonData.Email,
-    //     username: jsonData.Username,
-    //     message: `Congratulations, ${jsonData.Username}! Your account has been created successfully.`,
-    //   }),
-    //   QueueUrl: queueUrl
-    // };
-
-    // sqs.sendMessage(params, (err, data) => {
-    //   if (err) {
-    //     console.log("Error sending message to SQS", err);
-    //     return res.status(500).send("Error sending message to the queue.");
-    //   } else {
-    //     console.log("Success", data.MessageId);
-    //     res.redirect('/');
-    //   }
-    // });
+    res.status(201).send('User created successfully!');
   }, jsonData);
 });
-  
+
 module.exports = router;
