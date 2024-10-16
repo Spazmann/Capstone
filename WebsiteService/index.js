@@ -12,6 +12,8 @@ const indexPageRouter = require('./routes/index');
 const homePageRouter = require('./routes/home');
 const profilePageRouter = require('./routes/profile');
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); 
 
 const PORT = process.env.PORT || 3000;
 

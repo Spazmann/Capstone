@@ -8,13 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
   let savedUsername = '';
   let savedEmail = '';
 
-  // Open user details modal
   createAccountButton.addEventListener('click', () => {
       overlay.classList.add('visible');
       passwordOverlay.classList.remove('visible');
   });
 
-  // Close modals on close button click
   closeButtons.forEach(button => {
       button.addEventListener('click', () => {
           overlay.classList.remove('visible');
@@ -22,9 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   });
 
-  // Handle user form submission
   userForm.addEventListener('submit', async (e) => {
-      e.preventDefault(); // Prevent page reload
+      e.preventDefault(); 
 
       const username = document.getElementById('username').value;
       const email = document.getElementById('email').value;
@@ -44,15 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
           const result = await response.json();
 
           if (response.ok) {
-              // Save username and email for later use
               savedUsername = username;
               savedEmail = email;
 
-              // Switch to password setup modal
               overlay.classList.remove('visible');
               passwordOverlay.classList.add('visible');
           } else {
-              alert(result.message); // Show error message
+              alert(result.message); 
           }
       } catch (error) {
           console.error('Error:', error);
@@ -60,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
   });
 
-  // Populate the "Year" select dropdown
   const yearSelect = document.getElementById('year');
   const currentYear = new Date().getFullYear();
 

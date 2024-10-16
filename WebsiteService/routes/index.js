@@ -37,29 +37,24 @@ router.post('/api/checkuseremail', async (req, res) => {
   const { username, email } = req.body;
 
   if (!username || !email) {
-      return res.status(400).json({ message: 'Username and email are required.' });
+    return res.status(400).json({ message: 'Username and email are required.' });
   }
 
   try {
-      const response = await fetch(`${API_GATEWAY_URL}?username=${username}&email=${email}`, {
-          method: 'GET',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-          res.status(200).json(data); 
-      } else {
-          res.status(response.status).json(data); 
+    await dal.checkUserEmail((error, result) => {
+      if (error) {
+        console.error('Error:', error.message);
+        return res.status(400).json({ message: error.message });
       }
+
+      res.status(200).json(result);
+    }, username, email);
   } catch (error) {
-      console.error('Error calling API Gateway:', error);
-      res.status(500).json({ message: 'Internal server error.' });
+    console.error('Error in /api/checkuseremail:', error);
+    res.status(500).json({ message: 'Internal server error.' });
   }
 });
+
 
 
 module.exports = router;

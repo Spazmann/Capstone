@@ -17,33 +17,30 @@ router.post('/', function(req, res) {
     Password: req.body.password
   };
 
-  // Adding a new user
   dal.addUser((err) => {
     if (err) {
       console.error("Error adding user:", err);
       return res.status(500).send("Error adding user.");
     }
 
-    // Message to be sent to the SQS queue
-    const params = {
-      MessageBody: JSON.stringify({
-        email: jsonData.Email,
-        username: jsonData.Username,
-        message: `Congratulations, ${jsonData.Username}! Your account has been created successfully.`,
-      }),
-      QueueUrl: queueUrl
-    };
+    // const params = {
+    //   MessageBody: JSON.stringify({
+    //     email: jsonData.Email,
+    //     username: jsonData.Username,
+    //     message: `Congratulations, ${jsonData.Username}! Your account has been created successfully.`,
+    //   }),
+    //   QueueUrl: queueUrl
+    // };
 
-    // Send message to the SQS queue
-    sqs.sendMessage(params, (err, data) => {
-      if (err) {
-        console.log("Error sending message to SQS", err);
-        return res.status(500).send("Error sending message to the queue.");
-      } else {
-        console.log("Success", data.MessageId);
-        res.redirect('/');
-      }
-    });
+    // sqs.sendMessage(params, (err, data) => {
+    //   if (err) {
+    //     console.log("Error sending message to SQS", err);
+    //     return res.status(500).send("Error sending message to the queue.");
+    //   } else {
+    //     console.log("Success", data.MessageId);
+    //     res.redirect('/');
+    //   }
+    // });
   }, jsonData);
 });
   

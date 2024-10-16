@@ -11,7 +11,7 @@ body {
     display: flex;
     height: 100vh;
     overflow: hidden;
-    background-color: #a85809; /* Background for the left side */
+    background-color: #a85809;
 }
 
 /* Main Container */
