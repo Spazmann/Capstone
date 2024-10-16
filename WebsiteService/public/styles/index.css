@@ -131,7 +131,7 @@ button:hover {
 
 
 /* Modal Overlay */
-#overlay, #passwordOverlay {
+#overlay, #passwordOverlay, #loginOverlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -147,7 +147,7 @@ button:hover {
     z-index: 10;
 }
 
-#overlay.visible, #passwordOverlay.visible {
+#overlay.visible, #passwordOverlay.visible , #loginOverlay.visible {
     visibility: visible;
     opacity: 1;
 }

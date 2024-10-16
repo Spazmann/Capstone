@@ -6,7 +6,7 @@ html
   body
     .container
       .left
-        img(src='/images/logo.png', alt='Logo')
+        img(src='', alt='Logo')
 
       .right
         div.content
@@ -18,7 +18,7 @@ html
               p.or Or
               button.create-account(type='button') Create account
           p Already have an account? 
-          a(href='/signin') Sign in
+          a.login-link(href='#') Sign in
 
     // Modal Overlay for User Details
     #overlay.hidden
@@ -67,4 +67,15 @@ html
           label(for='confirmPassword') Confirm Password
           input#confirmPassword(type='password', placeholder='Confirm your password', required)
           button.submit(type='submit') Complete Signup
+
+    #loginOverlay.hidden
+      .modal
+        button.close-button X
+        h1 Login
+        form#passwordForm
+          label(for='username') Username
+          input#password(type='username', placeholder='Enter your username', required)
+          label(for='password') Password
+          input#confirmPassword(type='password', placeholder='Enter your password', required)
+          button.submit(type='submit') Login
 

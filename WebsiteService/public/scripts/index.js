@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   const overlay = document.getElementById('overlay');
   const passwordOverlay = document.getElementById('passwordOverlay');
+  const loginOverlay = document.getElementById('loginOverlay');
   const createAccountButton = document.querySelector('.create-account');
+  const loginLink = document.querySelector('.login-link');
   const userForm = document.getElementById('userForm');
   const closeButtons = document.querySelectorAll('.close-button');
 
@@ -14,10 +16,18 @@ document.addEventListener('DOMContentLoaded', () => {
       passwordOverlay.classList.remove('visible');
   });
 
+  loginLink.addEventListener('click', (e) => {
+    e.preventDefault(); 
+    loginOverlay.classList.add('visible');
+    overlay.classList.remove('visible');
+    passwordOverlay.classList.remove('visible');
+  });
+
   closeButtons.forEach(button => {
       button.addEventListener('click', () => {
           overlay.classList.remove('visible');
           passwordOverlay.classList.remove('visible');
+          loginOverlay.classList.remove('visible');
       });
   });
 
