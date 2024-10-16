@@ -127,9 +127,6 @@ button:hover {
     border-color: #f2921d;
 }
 
-
-
-
 /* Modal Overlay */
 #overlay, #passwordOverlay, #loginOverlay {
     position: fixed;

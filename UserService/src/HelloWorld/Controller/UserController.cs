@@ -68,6 +68,60 @@ public class UserDatabase
         }
     }
 
+    public static async Task<APIGatewayProxyResponse> Login(string identifier, string password)
+    {
+        try
+        {
+            var database = mongoClient.GetDatabase("Capstone");
+            var collection = database.GetCollection<User>("Users");
+
+            var filter = Builders<User>.Filter.Or(
+                Builders<User>.Filter.Eq("Username", identifier)
+            );
+            
+            var foundUser = await collection.Find(filter).FirstOrDefaultAsync();
+
+            if (foundUser == null)
+            {
+                return new APIGatewayProxyResponse
+                {
+                    Body = JsonSerializer.Serialize(new { error = "User not found or invalid credentials" }),
+                    StatusCode = 404,
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+
+            if (foundUser.Password == password)
+            {
+                return new APIGatewayProxyResponse
+                {
+                    Body = JsonSerializer.Serialize(new { message = "Login successful", user = foundUser }),
+                    StatusCode = 200,
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+            else
+            {
+                return new APIGatewayProxyResponse
+                {
+                    Body = JsonSerializer.Serialize(new { error = "Invalid password" }),
+                    StatusCode = 401,
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { error = ex.Message }),
+                StatusCode = 500,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+    }
+
+
     public static async Task<APIGatewayProxyResponse> CheckUserEmail(string username, string email) {
         try
         {
