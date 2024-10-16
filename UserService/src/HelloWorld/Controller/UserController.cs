@@ -8,6 +8,7 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 using System;
 using Amazon.Runtime.Internal.Settings;
+using MongoDB.Bson.Serialization.Conventions;
 
 public class UserDatabase
 {
@@ -65,6 +66,54 @@ public class UserDatabase
                 Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
             };
         }
+    }
+
+    public static async Task<APIGatewayProxyResponse> CheckUserEmail(string username, string email) {
+        try
+        {
+            var database = mongoClient.GetDatabase("Capstone");
+            var collection = database.GetCollection<User>("Users");
+
+            // Check if user with the same email exists
+            var userWithSameEmail = await collection.Find(u => u.Email == email).FirstOrDefaultAsync();
+            if (userWithSameEmail != null)
+            {
+                return new APIGatewayProxyResponse
+                {
+                    Body = JsonSerializer.Serialize(new { message = $"User with Email {email} already exists" }),
+                    StatusCode = 400,
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+
+            // Check if user with the same username exists
+            var userWithSameUsername = await collection.Find(u => u.Username == username).FirstOrDefaultAsync();
+            if (userWithSameUsername != null)
+            {
+                return new APIGatewayProxyResponse
+                {
+                    Body = JsonSerializer.Serialize(new { message = $"User with Username {username} already exists" }),
+                    StatusCode = 400,
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { message = "This username and email is unused" }),
+                StatusCode = 200,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        } catch (Exception ex)
+        {
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { error = ex.Message }),
+                StatusCode = 500,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+        
     }
 
     public static async Task<APIGatewayProxyResponse> EditUser(User user, string email)

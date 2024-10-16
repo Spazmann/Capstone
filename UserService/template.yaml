@@ -88,6 +88,25 @@ Resources:
           Properties:
             Path: /DeleteUser/{Id}
             Method: DELETE
+  
+  CheckUserEmailFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::CheckUserEmailHandler
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      MemorySize: 512
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          PARAM1: VALUE
+      Events:
+        CheckUserEmailApi:
+          Type: Api
+          Properties:
+            Path: /checkuseremail
+            Method: GET
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -112,6 +131,10 @@ Outputs:
     Description: Users Lambda Function ARN
     Value: !GetAtt DeleteUser.Arn
 
+  CheckUserEmailFunction:
+    Description: Users Lambda Function ARN
+    Value: !GetAtt CheckUserEmailFunction.Arn
+
   CreateUserIamRole:
     Description: Implicit IAM Role created for Users function
     Value: !GetAtt CreateUserRole.Arn
@@ -127,3 +150,7 @@ Outputs:
   DeleteUserIamRole:
     Description: Implicit IAM Role created for Users function
     Value: !GetAtt DeleteUserRole.Arn
+
+  CheckUserEmailFunctionIamRole:
+    Description: Implicit IAM Role created for Users function
+    Value: !GetAtt CheckUserEmailFunction.Arn

@@ -30,7 +30,6 @@ router.post('/', function(req, res) {
 
 
 router.get('/', async function(req, res) {
-  var user = req.session ? req.session.user : null;
   res.render('index', { title: "Home Page", });
 });
 

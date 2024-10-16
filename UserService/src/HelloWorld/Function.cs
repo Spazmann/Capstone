@@ -66,7 +66,39 @@ public class Function
         }
     }
 
+    public async Task<APIGatewayProxyResponse> CheckUserEmailHandler(APIGatewayProxyRequest request, ILambdaContext context)
+    {
+        try
+        {
+            var queryParams = request.QueryStringParameters;
 
+            if (queryParams == null || !queryParams.ContainsKey("username") || !queryParams.ContainsKey("email"))
+            {
+                return new APIGatewayProxyResponse
+                {
+                    Body = JsonSerializer.Serialize(new { error = "Username and email are required as query parameters." }),
+                    StatusCode = 400,
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+
+            string username = queryParams["username"];
+            string email = queryParams["email"];
+
+            var response = await UserDatabase.CheckUserEmail(username, email);
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { error = ex.Message }),
+                StatusCode = 500,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+    }
 
     public async Task<APIGatewayProxyResponse> FindUser(APIGatewayProxyRequest apigProxyEvent, ILambdaContext context)
     {

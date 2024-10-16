@@ -90,6 +90,26 @@ Resources:
             Method: DELETE
     Metadata:
       SamResourceId: DeleteUser
+  CheckUserEmailFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: CheckUserEmailFunction
+      Handler: HelloWorld::HelloWorld.Function::CheckUserEmailHandler
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        CheckUserEmailApi:
+          Type: Api
+          Properties:
+            Path: /checkuseremail
+            Method: GET
+    Metadata:
+      SamResourceId: CheckUserEmailFunction
 Outputs:
   UsersApi:
     Description: API Gateway endpoint URL for Prod stage for Users function
@@ -119,6 +139,12 @@ Outputs:
       Fn::GetAtt:
       - DeleteUser
       - Arn
+  CheckUserEmailFunction:
+    Description: Users Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - CheckUserEmailFunction
+      - Arn
   CreateUserIamRole:
     Description: Implicit IAM Role created for Users function
     Value:
@@ -142,4 +168,10 @@ Outputs:
     Value:
       Fn::GetAtt:
       - DeleteUserRole
+      - Arn
+  CheckUserEmailFunctionIamRole:
+    Description: Implicit IAM Role created for Users function
+    Value:
+      Fn::GetAtt:
+      - CheckUserEmailFunction
       - Arn

@@ -76,8 +76,32 @@ const updateUser = async (callback, userData, email) => {
     }
 };
 
+const checkUserEmail = async (callback, username, email) => {
+    try {
+        const response = await fetch(`${url}checkuseremail?username=${username}&email=${email}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            callback(null, result); 
+        } else {
+            const errorMessage = result.message || 'An error occurred';
+            callback(new Error(errorMessage), null); 
+        }
+    } catch (error) {
+        callback(error, null); 
+    }
+};
+
+
 module.exports = {
     getUser: getUser,
     addUser: addUser,
-    updateUser: updateUser
+    updateUser: updateUser,
+    checkUserEmail: checkUserEmail
 }
