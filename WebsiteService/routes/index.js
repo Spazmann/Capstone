@@ -33,5 +33,33 @@ router.get('/', async function(req, res) {
   res.render('index', { title: "Home Page", });
 });
 
+router.post('/api/checkuseremail', async (req, res) => {
+  const { username, email } = req.body;
+
+  if (!username || !email) {
+      return res.status(400).json({ message: 'Username and email are required.' });
+  }
+
+  try {
+      const response = await fetch(`${API_GATEWAY_URL}?username=${username}&email=${email}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+          res.status(200).json(data); 
+      } else {
+          res.status(response.status).json(data); 
+      }
+  } catch (error) {
+      console.error('Error calling API Gateway:', error);
+      res.status(500).json({ message: 'Internal server error.' });
+  }
+});
+
 
 module.exports = router;

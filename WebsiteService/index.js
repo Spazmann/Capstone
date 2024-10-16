@@ -10,6 +10,7 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 const imagesPageRouter = require('./routes/images');
 const indexPageRouter = require('./routes/index');
 const homePageRouter = require('./routes/home');
+const profilePageRouter = require('./routes/profile');
 
 
 const PORT = process.env.PORT || 3000;
@@ -25,6 +26,7 @@ console.log(process.env.S3_BUCKET);
 app.use('/images', imagesPageRouter);
 app.use('/', indexPageRouter);
 app.use('/home', homePageRouter);
+app.use('/profile', profilePageRouter);
 
 
 // Cookies and Session Setup

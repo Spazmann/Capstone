@@ -1,0 +1,63 @@
+doctype html
+html
+  head
+    title Profile
+    link(rel='stylesheet', href='/styles/profile.css')
+    script(src="/scripts/profile.js", defer)
+  body
+    .main-container
+      .left-sidebar
+        ul
+          li
+            a(href='#') Home
+          li
+            a(href='#') Explore
+          li
+            a(href='#') Notifications
+          li
+            a(href='#') Messages
+          li
+            a(href='#') Bookmarks
+          li
+            a(href='#') Profile
+        button(type='button') Post
+
+      .content
+        .banner-image
+          img(src="https://pbs.twimg.com/profile_banners/1238177261146320900/1584066048/1500x500", alt="Banner Image")
+        header.banner
+          div.profile-pic
+            img(src="https://pbs.twimg.com/profile_images/1238177398073556994/sToruGZ__400x400.jpg", alt="Profile Picture Placeholder")
+          div.header-details
+            h1 displayName
+            p @username
+        section.user-info
+          div.info-row
+            p BIO Row
+          div.info-row
+            span JOB | LOCATION | BIRTHDATE | JOINDATE
+        section.stats
+          div.stat 27 Followers
+          div.stat 140 Following
+        section.nav
+          button.active(data-nav="posts") Posts
+          button(data-nav="replies") Replies
+          button(data-nav="media") Media
+          button(data-nav="likes") Likes
+        .feed
+          article.post
+            div.post-header
+
+      .right-sidebar
+        .trending
+          h3 What’s happening
+          ul
+            li Trending 1
+            li Trending 2
+            li Trending 3
+        .who-to-follow
+          h3 Who to follow
+          ul
+            li User 1
+            li User 2
+            li User 3

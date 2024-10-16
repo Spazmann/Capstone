@@ -102,7 +102,6 @@ public class Function
 
     public async Task<APIGatewayProxyResponse> FindUser(APIGatewayProxyRequest apigProxyEvent, ILambdaContext context)
     {
-
         try
         {
             string email = apigProxyEvent.PathParameters != null && apigProxyEvent.PathParameters.ContainsKey("Email")
