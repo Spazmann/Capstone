@@ -2,9 +2,9 @@ const { callback } = require("chart.js/helpers");
 
 const url = "https://h2xina3og7.execute-api.us-east-1.amazonaws.com/Prod/";
 
-const getUser = async (callback, email, password) => {
+const getUser = async (callback, username, password) => {
     try {
-        const response = await fetch(`${url}person/Login/${email}/${password}`, {
+        const response = await fetch(`${url}Login/${username}/${password}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

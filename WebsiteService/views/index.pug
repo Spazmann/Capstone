@@ -72,10 +72,11 @@ html
       .modal
         button.close-button X
         h1 Login
-        form#passwordForm(method="POST", action="/")
-          label(for='username') Username
-          input#password(type='username', placeholder='Enter your username', required)
-          label(for='password') Password
-          input#confirmPassword(type='password', placeholder='Enter your password', required)
-          button.submit(type='submit') Login
+        form#loginForm(method="POST", action="/")
+          label(for='usernameLogin') Username
+          input#usernameLogin(type='text', name='usernameLogin', placeholder='Enter your username', required)
+          label(for='passwordLogin') Password
+          input#passwordLogin(type='password', name='passwordLogin', placeholder='Enter your password', required)
+          button.submitLogin(type='submit') Login
+
 

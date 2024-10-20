@@ -12,7 +12,7 @@ using MongoDB.Bson.Serialization.Conventions;
 
 public class UserDatabase
 {
-    const string connectionString = "mongodb+srv://ddmann2004:9kt1LQi62AMBcXDW@cluster0.gzmfmz9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"; // Added semicolon
+    const string connectionString = "mongodb+srv://ddmann2004:9kt1LQi62AMBcXDW@cluster0.gzmfmz9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
     private static readonly MongoClient mongoClient = new MongoClient(connectionString);
 
    public static async Task<APIGatewayProxyResponse> AddUserToDatabase(User user)

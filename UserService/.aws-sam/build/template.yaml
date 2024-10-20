@@ -50,6 +50,26 @@ Resources:
             Method: GET
     Metadata:
       SamResourceId: FindUser
+  Login:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: Login
+      Handler: HelloWorld::HelloWorld.Function::Login
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /Login/{username}/{password}
+            Method: GET
+    Metadata:
+      SamResourceId: Login
   UpdateUser:
     Type: AWS::Serverless::Function
     Properties:
@@ -145,6 +165,12 @@ Outputs:
       Fn::GetAtt:
       - CheckUserEmailFunction
       - Arn
+  Login:
+    Description: Users Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - Login
+      - Arn
   CreateUserIamRole:
     Description: Implicit IAM Role created for Users function
     Value:
@@ -174,4 +200,10 @@ Outputs:
     Value:
       Fn::GetAtt:
       - CheckUserEmailFunction
+      - Arn
+  LoginIamRole:
+    Description: Implicit IAM Role created for Users function
+    Value:
+      Fn::GetAtt:
+      - LoginRole
       - Arn

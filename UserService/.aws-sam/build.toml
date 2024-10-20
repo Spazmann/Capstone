@@ -5,9 +5,9 @@ codeuri = "C:\\Users\\dmann\\Documents\\Neumont\\Capstone\\UserService\\src\\Hel
 runtime = "dotnet8"
 architecture = "x86_64"
 handler = "HelloWorld::HelloWorld.Function::CreateUser"
-source_hash = "e22fffe31c8eb3ed479e4106945c49d57e48d5c60232552abe812aa9b94cdcf1"
+source_hash = "51bd74e9dda29f738634ef58e2e645a41c10cd160bad464c687ddd6bfe74cf32"
 manifest_hash = ""
 packagetype = "Zip"
-functions = ["CreateUser", "FindUser", "UpdateUser", "DeleteUser", "CheckUserEmailFunction"]
+functions = ["CreateUser", "FindUser", "Login", "UpdateUser", "DeleteUser", "CheckUserEmailFunction"]
 
 [layer_build_definitions]
