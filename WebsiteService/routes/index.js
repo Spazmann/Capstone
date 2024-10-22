@@ -11,8 +11,8 @@ router.use(session({
 }));
 
 router.post('/', function(req, res) {
-  var email = req.body.email;
-  var password = req.body.password;
+  var username = req.body.usernameLogin;
+  var password = req.body.passwordLogin;
 
   dal.getUser((error, jsonData) => {
     if (error) {
@@ -21,11 +21,12 @@ router.post('/', function(req, res) {
     }
 
     if (jsonData != null) {
-      
+      req.session.user = jsonData.user;
+      return res.redirect('/home');
     } else {
       return res.json({ success: false, message: 'Invalid email or password' });
     }
-  }, email, password);
+  }, username, password);
 });
 
 

@@ -180,4 +180,55 @@ public class Function
             };
         }
     }
+
+    public async Task<APIGatewayProxyResponse> Login(APIGatewayProxyRequest apigProxyEvent, ILambdaContext context)
+    {
+        try{
+            string username = apigProxyEvent.PathParameters != null && apigProxyEvent.PathParameters.ContainsKey("username")
+            ? apigProxyEvent.PathParameters["username"]
+            : null;
+            string password = apigProxyEvent.PathParameters !=null && apigProxyEvent.PathParameters.ContainsKey("password")
+            ?apigProxyEvent.PathParameters["password"]
+            :null;
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                return new APIGatewayProxyResponse
+                {
+                    Body = JsonSerializer.Serialize(new { error = "Missing identifier or password." }),
+                    StatusCode = 400, 
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+
+            var response = await UserDatabase.Login(username,password);
+            if (response != null)
+            {
+                return new APIGatewayProxyResponse
+                {
+                    Body = JsonSerializer.Serialize(response),
+                    StatusCode = response.StatusCode,
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+            else
+            {
+                return new APIGatewayProxyResponse
+                {
+                    Body = JsonSerializer.Serialize(new { error = "User not found or invalid credentials." }),
+                    StatusCode = 404, 
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+        }catch (Exception ex)
+        {
+            context.Logger.LogError($"Error: {ex.Message}");
+            context.Logger.LogError(ex.StackTrace);
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { error = ex.Message }),
+                StatusCode = 500,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+    }
 }

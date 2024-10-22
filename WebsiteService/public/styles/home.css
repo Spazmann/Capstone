@@ -25,6 +25,8 @@ body {
   width: 250px;
   background-color: #192734;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .left-sidebar ul {
@@ -148,3 +150,35 @@ body {
 .right-sidebar ul li:hover {
   background-color: #1DA1F2;
 }
+
+.profile {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #253341;
+  border-radius: 30px;
+  margin-top: auto; 
+}
+
+.profile img {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-info strong {
+  font-size: 16px;
+  color: #E1E8ED;
+}
+
+.profile-info span {
+  font-size: 14px;
+  color: #8899A6;
+}
+

@@ -18,7 +18,7 @@ router.post('/', (req, res) => {
     Password: password,
     Email: email,
     Profile: {
-      name: '', 
+      name: username, 
       birthDate: birthDate,
       gender: '', 
       bannerImage: '',
