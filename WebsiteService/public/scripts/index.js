@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (response.ok) {
         alert('Account created successfully!');
-        window.location.href = '/home'; 
+        window.location.href = '/'; 
       } else {
         const result = await response.text();
         alert(`Failed to create user: ${result}`);

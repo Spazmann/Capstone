@@ -1,5 +1,6 @@
 const express = require('express');
 const dal = require('../api/userService');
+const { getObjectSignedUrl } = require('../api/s3');
 const router = express.Router();
 
 router.get('/:profile', async function(req, res) {
@@ -10,7 +11,11 @@ router.get('/:profile', async function(req, res) {
         const profileUser = await dal.findUser(profileUsername);
         
         if (profileUser) {
-            res.render('profile', { title: profileUser.Username, user: loggedInUser, profile: profileUser });
+            res.render('profile', { 
+                title: profileUser.Username, 
+                user: loggedInUser, 
+                profile: profileUser
+            });
         } else {
             res.status(404).send('Profile not found');
         }

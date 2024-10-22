@@ -33,10 +33,10 @@ html
 
       .content
         .banner-image
-          img(src=profile.Profile.bannerImage, alt="Banner Image")
+          img(src=`https://capstonemedia.s3.amazonaws.com/${profile.Profile.bannerImage}`, alt="Banner Image")
         header.banner
           div.profile-pic
-            img(src=profile.Profile.profileImage, alt="Profile Picture Placeholder")
+            img(src=`https://capstonemedia.s3.amazonaws.com/${profile.Profile.profileImage}`, alt="Profile Picture")
           div.header-details
             h1 #{profile.Profile.name}
             p @#{profile.Username}
@@ -46,8 +46,8 @@ html
           div.info-row
             span JOB | LOCATION | BIRTHDATE | JOINDATE
         section.stats
-          div.stat 27 Followers
-          div.stat 140 Following
+          div.stat Followers: #{user.Followers.length}
+          div.stat Following: #{user.Following.length}
         section.nav
           button.active(data-nav="posts") Posts
           button(data-nav="replies") Replies

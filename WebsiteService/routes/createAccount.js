@@ -21,8 +21,8 @@ router.post('/', (req, res) => {
       name: username, 
       birthDate: birthDate,
       gender: '', 
-      bannerImage: '',
-      profileImage: '', 
+      bannerImage: 'defaultbanner.png',
+      profileImage: 'defaultpfp.png', 
       bio: '', 
       location: ''
     },
