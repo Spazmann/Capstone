@@ -21,6 +21,15 @@ html
           li
             a(href='#') Profile
         button(type='button') Post
+        
+        // Profile component at the bottom
+        .profile
+          img(src='/path-to-your-image.png' alt='Profile Picture')
+          .profile-info
+            if user
+              if user.Profile
+                strong #{user.Profile.name}
+                span @#{user.Username}
 
       .content
         .new-post

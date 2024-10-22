@@ -21,7 +21,8 @@ router.post('/', function(req, res) {
     }
 
     if (jsonData != null) {
-      
+      req.session.user = jsonData.user;
+      return res.redirect('/home');
     } else {
       return res.json({ success: false, message: 'Invalid email or password' });
     }
