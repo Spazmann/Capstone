@@ -29,7 +29,13 @@ router.post('/', (req, res) => {
     Settings: {
       bannedWords: [],
       darkMode: true
-    }
+    },
+    Followers: [],
+    Following: [],
+    Posts: [],
+    Likes: [],
+    Bookmarks: [],
+    Blocks: []
   };
 
   dal.addUser((err) => {

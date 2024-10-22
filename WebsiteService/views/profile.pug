@@ -19,21 +19,30 @@ html
           li
             a(href='#') Bookmarks
           li
-            a(href='#') Profile
+            a(href=`/profile/${user.Username}`) Profile
         button(type='button') Post
+        
+        // Profile component at the bottom
+        .profile
+          img(src='/path-to-your-image.png' alt='Profile Picture')
+          .profile-info
+            if user
+              if user.Profile
+                strong #{user.Profile.name}
+                span @#{user.Username}
 
       .content
         .banner-image
-          img(src="https://pbs.twimg.com/profile_banners/1238177261146320900/1584066048/1500x500", alt="Banner Image")
+          img(src=profile.Profile.bannerImage, alt="Banner Image")
         header.banner
           div.profile-pic
-            img(src="https://pbs.twimg.com/profile_images/1238177398073556994/sToruGZ__400x400.jpg", alt="Profile Picture Placeholder")
+            img(src=profile.Profile.profileImage, alt="Profile Picture Placeholder")
           div.header-details
-            h1 displayName
-            p @username
+            h1 #{profile.Profile.name}
+            p @#{profile.Username}
         section.user-info
           div.info-row
-            p BIO Row
+            p #{profile.Profile.bio}
           div.info-row
             span JOB | LOCATION | BIRTHDATE | JOINDATE
         section.stats

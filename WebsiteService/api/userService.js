@@ -98,10 +98,42 @@ const checkUserEmail = async (callback, username, email) => {
     }
 };
 
+const findUser = async (callback, username) => {
+    try {
+        const response = await fetch(`${url}FindUser/${username}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            if (result.body) {
+                const data = JSON.parse(result.body);
+                callback(null, data); 
+            } else {
+                callback(null, null); 
+            }
+        } else {
+            if (result.body) {
+                const errorData = JSON.parse(result.body);
+                callback(new Error(errorData.error), null);
+            } else {
+                callback(new Error("Unknown error occurred"), null);
+            }
+        }
+    } catch (error) {
+        callback(error, null); 
+    }
+};
+
 
 module.exports = {
     getUser: getUser,
     addUser: addUser,
     updateUser: updateUser,
-    checkUserEmail: checkUserEmail
+    checkUserEmail: checkUserEmail,
+    findUser: findUser
 }

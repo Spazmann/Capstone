@@ -190,7 +190,14 @@ public class UserDatabase
                     .Set("Password", user.Password)
                     .Set("Email", user.Email)
                     .Set("profile", user.Profile)
-                    .Set("settings", user.Settings);
+                    .Set("settings", user.Settings)
+                    .Set("followers", user.Followers)
+                    .Set("following", user.Following)
+                    .Set("posts", user.Posts)
+                    .Set("likes", user.Likes)
+                    .Set("bookmarks", user.Bookmarks)
+                    .Set("blocks", user.Blocks);
+
 
                 await collection.UpdateOneAsync(filter, update);
                 return new APIGatewayProxyResponse

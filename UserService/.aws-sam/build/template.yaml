@@ -46,7 +46,7 @@ Resources:
         User:
           Type: Api
           Properties:
-            Path: /FindUser/{Email}
+            Path: /FindUser/{Username}
             Method: GET
     Metadata:
       SamResourceId: FindUser
