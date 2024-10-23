@@ -102,7 +102,10 @@
     padding: 10px;
     background-color: #253341;
     border-radius: 30px;
-    margin-top: auto; 
+    margin-top: auto;
+    position: relative;
+    width: 100%; /* Ensures consistent width for .profile */
+    max-width: 200px; /* You can adjust this to the desired width */
   }
   
   .profile img {
@@ -127,3 +130,30 @@
     color: #8899A6;
   }
   
+  .profile-dropdown {
+    display: none; /* Initially hidden */
+    list-style: none;
+    padding: 10px;
+    background-color: #253341;
+    border-radius: 10px;
+    position: absolute;
+    bottom: 60px; /* Position above profile */
+    right: 0;
+    z-index: 100; /* Ensure it's above other elements */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Match the width of the .profile container */
+  }
+  
+  .profile-dropdown li {
+    padding: 10px;
+    cursor: pointer;
+    color: #E1E8ED;
+  }
+  
+  .profile-dropdown li:hover {
+    background-color: #1DA1F2;
+  }
+  
+  .profile.active .profile-dropdown {
+    display: block; /* Show dropdown when profile is active */
+  }

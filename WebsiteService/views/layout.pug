@@ -1,8 +1,9 @@
 doctype html
 html
   head
-    title #{title} 
-    link(rel='stylesheet', href='/styles/global.css') 
+    title #{title}
+    link(rel='stylesheet', href='/styles/global.css')
+    script(src='/scripts/global.js')
     block head
   body
     .main-container
@@ -28,6 +29,11 @@ html
             if user && user.Profile
               strong #{user.Profile.name}
               span @#{user.Username}
+          ul.profile-dropdown
+            li
+              a(href='/settings') Settings
+            li
+              a(href='/logout') Logout
 
       .content
         block content
