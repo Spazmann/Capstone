@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text.Json;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
+using HelloWorld.Models; 
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
@@ -17,7 +18,7 @@ public class Function
     {
         try
         {
-            var input = JsonSerializer.Deserialize<User>(request.Body);
+            var input = JsonSerializer.Deserialize<Post>(request.Body);
 
             if (input == null)
             {
@@ -30,7 +31,7 @@ public class Function
             }
 
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            var response = await UserDatabase.AddUserToDatabase(input).WaitAsync(cts.Token);
+            var response = await PostDatabase.AddPost(input).WaitAsync(cts.Token);
 
             return new APIGatewayProxyResponse
             {
@@ -59,10 +60,5 @@ public class Function
                 Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
             };
         }
-    }
-
-    public async Task<APIGatewayProxyResponse> UpdateUser(APIGatewayProxyRequest apigProxyEvent, ILambdaContext context)
-    {
-
     }
 }

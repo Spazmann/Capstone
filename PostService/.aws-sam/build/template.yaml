@@ -10,11 +10,11 @@ Globals:
     LoggingConfig:
       LogFormat: JSON
 Resources:
-  CreateUser:
+  CreatePost:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: CreateUser
-      Handler: HelloWorld::HelloWorld.Function::CreateUser
+      CodeUri: CreatePost
+      Handler: HelloWorld::HelloWorld.Function::CreatePost
       Runtime: dotnet8
       Architectures:
       - x86_64
@@ -23,187 +23,27 @@ Resources:
         Variables:
           PARAM1: VALUE
       Events:
-        User:
+        CreatePostEvent:
           Type: Api
           Properties:
-            Path: /CreateUser
+            Path: /CreatePost
             Method: POST
     Metadata:
-      SamResourceId: CreateUser
-  FindUser:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: FindUser
-      Handler: HelloWorld::HelloWorld.Function::FindUser
-      Runtime: dotnet8
-      Architectures:
-      - x86_64
-      MemorySize: 512
-      Environment:
-        Variables:
-          PARAM1: VALUE
-      Events:
-        User:
-          Type: Api
-          Properties:
-            Path: /FindUser/{Username}
-            Method: GET
-    Metadata:
-      SamResourceId: FindUser
-  Login:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: Login
-      Handler: HelloWorld::HelloWorld.Function::Login
-      Runtime: dotnet8
-      Architectures:
-      - x86_64
-      MemorySize: 512
-      Environment:
-        Variables:
-          PARAM1: VALUE
-      Events:
-        HelloWorld:
-          Type: Api
-          Properties:
-            Path: /Login/{username}/{password}
-            Method: GET
-    Metadata:
-      SamResourceId: Login
-  UpdateUser:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: UpdateUser
-      Handler: HelloWorld::HelloWorld.Function::UpdateUser
-      Runtime: dotnet8
-      Architectures:
-      - x86_64
-      MemorySize: 512
-      Environment:
-        Variables:
-          PARAM1: VALUE
-      Events:
-        User:
-          Type: Api
-          Properties:
-            Path: /UpdateUser/{Id}
-            Method: PUT
-    Metadata:
-      SamResourceId: UpdateUser
-  DeleteUser:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: DeleteUser
-      Handler: HelloWorld::HelloWorld.Function::DeleteUser
-      Runtime: dotnet8
-      Architectures:
-      - x86_64
-      MemorySize: 512
-      Environment:
-        Variables:
-          PARAM1: VALUE
-      Events:
-        User:
-          Type: Api
-          Properties:
-            Path: /DeleteUser/{Id}
-            Method: DELETE
-    Metadata:
-      SamResourceId: DeleteUser
-  CheckUserEmailFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: CheckUserEmailFunction
-      Handler: HelloWorld::HelloWorld.Function::CheckUserEmailHandler
-      Runtime: dotnet8
-      Architectures:
-      - x86_64
-      MemorySize: 512
-      Environment:
-        Variables:
-          PARAM1: VALUE
-      Events:
-        CheckUserEmailApi:
-          Type: Api
-          Properties:
-            Path: /checkuseremail
-            Method: GET
-    Metadata:
-      SamResourceId: CheckUserEmailFunction
+      SamResourceId: CreatePost
 Outputs:
-  UsersApi:
-    Description: API Gateway endpoint URL for Prod stage for Users function
+  PostsApiEndpoint:
+    Description: API Gateway endpoint URL for Prod stage for Post function
     Value:
-      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/UserService/
-  CreateUser:
-    Description: Users Lambda Function ARN
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/CreatePost/
+  CreatePostFunctionArn:
+    Description: ARN of the CreatePost Lambda function
     Value:
       Fn::GetAtt:
-      - CreateUser
+      - CreatePost
       - Arn
-  FindUser:
-    Description: Users Lambda Function ARN
+  CreatePostIamRole:
+    Description: Implicit IAM Role created for CreatePost function
     Value:
       Fn::GetAtt:
-      - FindUser
-      - Arn
-  UpdateUser:
-    Description: Users Lambda Function ARN
-    Value:
-      Fn::GetAtt:
-      - UpdateUser
-      - Arn
-  DeleteUser:
-    Description: Users Lambda Function ARN
-    Value:
-      Fn::GetAtt:
-      - DeleteUser
-      - Arn
-  CheckUserEmailFunction:
-    Description: Users Lambda Function ARN
-    Value:
-      Fn::GetAtt:
-      - CheckUserEmailFunction
-      - Arn
-  Login:
-    Description: Users Lambda Function ARN
-    Value:
-      Fn::GetAtt:
-      - Login
-      - Arn
-  CreateUserIamRole:
-    Description: Implicit IAM Role created for Users function
-    Value:
-      Fn::GetAtt:
-      - CreateUserRole
-      - Arn
-  FindUserIamRole:
-    Description: Implicit IAM Role created for Users function
-    Value:
-      Fn::GetAtt:
-      - FindUserRole
-      - Arn
-  UpdateUserIamRole:
-    Description: Implicit IAM Role created for Users function
-    Value:
-      Fn::GetAtt:
-      - UpdateUserRole
-      - Arn
-  DeleteUserIamRole:
-    Description: Implicit IAM Role created for Users function
-    Value:
-      Fn::GetAtt:
-      - DeleteUserRole
-      - Arn
-  CheckUserEmailFunctionIamRole:
-    Description: Implicit IAM Role created for Users function
-    Value:
-      Fn::GetAtt:
-      - CheckUserEmailFunction
-      - Arn
-  LoginIamRole:
-    Description: Implicit IAM Role created for Users function
-    Value:
-      Fn::GetAtt:
-      - LoginRole
+      - CreatePostRole
       - Arn
