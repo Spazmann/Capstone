@@ -54,9 +54,9 @@ const addUser = async (callback, userData) => {
     }
 };
 
-const updateUser = async (callback, userData, email) => {
+const updateUser = async (callback, userData, id) => {
     try {
-        const response = await fetch(`${url}person/${email}`, {
+        const response = await fetch(`${url}UpdateUser/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

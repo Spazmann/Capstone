@@ -170,36 +170,37 @@ public class UserDatabase
         
     }
 
-    public static async Task<APIGatewayProxyResponse> EditUser(User user, string email)
+    public static async Task<APIGatewayProxyResponse> EditUser(User user, string id)
     {
         var mongoClient = new MongoClient(connectionString);
         var database = mongoClient.GetDatabase("Capstone");
         var collection = database.GetCollection<User>("Users");
 
-        User existingUser = await FindUserByEmail(email);
+        User existingUser = await FindUserById(id);
 
         if (existingUser != null)
         {
             try
             {
-                var filter = Builders<User>.Filter.Eq("Email", email);
+                var filter = Builders<User>.Filter.Eq("_id", id);
 
                 var update = Builders<User>.Update
-                    .Set("Id", existingUser.Id)
                     .Set("Username", user.Username)
                     .Set("Password", user.Password)
                     .Set("Email", user.Email)
-                    .Set("profile", user.Profile)
-                    .Set("settings", user.Settings)
-                    .Set("followers", user.Followers)
-                    .Set("following", user.Following)
-                    .Set("posts", user.Posts)
-                    .Set("likes", user.Likes)
-                    .Set("bookmarks", user.Bookmarks)
-                    .Set("blocks", user.Blocks);
-
+                    .Set("Profile", user.Profile)
+                    .Set("Settings", user.Settings)
+                    .Set("Followers", user.Followers)
+                    .Set("Following", user.Following)
+                    .Set("Posts", user.Posts)
+                    .Set("Likes", user.Likes)
+                    .Set("Bookmarks", user.Bookmarks)
+                    .Set("Blocks", user.Blocks);
 
                 await collection.UpdateOneAsync(filter, update);
+
+                user.Id = id;
+
                 return new APIGatewayProxyResponse
                 {
                     Body = JsonSerializer.Serialize(new { message = user }),
@@ -221,12 +222,13 @@ public class UserDatabase
         {
             return new APIGatewayProxyResponse
             {
-                Body = JsonSerializer.Serialize(new { message = "Email not found" }),
-                StatusCode = 500,
+                Body = JsonSerializer.Serialize(new { message = "Id not found" }),
+                StatusCode = 404,
                 Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
             };
         }
     }
+
 
     public static async Task<APIGatewayProxyResponse> deleteUser(string Id)
     {
@@ -260,6 +262,17 @@ public class UserDatabase
         var database = mongoClient.GetDatabase("Capstone");
         var collection = database.GetCollection<User>("Users");
         var filter = Builders<User>.Filter.Eq("Username", username);
+        User user = await collection.Find(filter).FirstOrDefaultAsync();
+
+        return user;
+    }
+
+        public static async Task<User> FindUserById(string id)
+    {
+        var mongoClient = new MongoClient(connectionString);
+        var database = mongoClient.GetDatabase("Capstone");
+        var collection = database.GetCollection<User>("Users");
+        var filter = Builders<User>.Filter.Eq("_id", id);
         User user = await collection.Find(filter).FirstOrDefaultAsync();
 
         return user;
