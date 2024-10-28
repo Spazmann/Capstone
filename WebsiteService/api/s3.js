@@ -38,17 +38,17 @@ function deleteFile(fileName) {
   return s3Client.send(new DeleteObjectCommand(deleteParams));
 }
 
-async function getObjectSignedUrl(key) {
-  const params = {
-    Bucket: bucketName,
-    Key: key,
-  };
+// async function getObjectSignedUrl(key) {
+//   const params = {
+//     Bucket: bucketName,
+//     Key: key,
+//   };
 
-  const command = new GetObjectCommand(params);
-  const seconds = 60;
-  const url = await getSignedUrl(s3Client, command, { expiresIn: seconds });
+//   const command = new GetObjectCommand(params);
+//   const seconds = 60;
+//   const url = await getSignedUrl(s3Client, command, { expiresIn: seconds });
 
-  return url;
-}
+//   return url;
+// }
 
-module.exports = { uploadFile, deleteFile, getObjectSignedUrl };
+module.exports = { uploadFile, deleteFile };

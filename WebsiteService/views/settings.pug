@@ -1,0 +1,96 @@
+doctype html
+html
+  head
+    title Account Settings
+    link(rel="stylesheet", href="/styles/settings.css")
+    script(src='/scripts/settings.js', defer)
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
+  body
+    .container
+      .sidebar
+        ul
+          li(data-section="account-info").active
+            i.fas.fa-user-circle
+            | Your account
+          li(data-section="privacy")
+            i.fas.fa-shield-alt
+            | Privacy and safety
+          li(data-section="notifications")
+            i.fas.fa-bell
+            | Notifications
+          li(data-section="accessibility")
+            i.fas.fa-universal-access
+            | Accessibility, display, and languages
+      .content
+        #account-info.content-section.active
+          h2 Account Information
+          #username-section
+            h3 Username:
+            p @#{user.Username}
+          #email-section
+            h3 Email: 
+            p #{user.Email}
+          #location-section
+            h3 Location:
+            p #{user.Profile.location || "Not Set"}
+          #gender-section
+            h3 Gender:
+            p #{user.Profile.gender || "Not Set"} 
+          #age-section
+            h3 Age:
+            p #{user.Profile.age || "Not Set"}
+            
+        // Edit Username
+        #edit-username.content-section.hidden
+          h2 Change Username
+          form(method="POST", action="/settings/update-username")
+            label(for="username-input") Username
+            input(type="text", name="username", id="username-input", value=user.Username)
+            button(type="submit", id="save-username") Save
+            
+        // Edit Email
+        #edit-email.content-section.hidden
+          h2 Change Email
+          form(method="POST", action="/settings/update-email")
+            label(for="email-input") Email
+            input(type="email", name="email", id="email-input", value=user.Email)
+            button(type="submit", id="save-email") Save
+
+        // Edit Location
+        #edit-location.content-section.hidden
+          h2 Change Location
+          form(method="POST", action="/settings/update-location")
+            label(for="location-input") Location
+            input(type="text", name="location", id="location-input", value=user.Profile.location)
+            button(type="submit", id="save-location") Save
+
+        // Edit Gender
+        #edit-gender.content-section.hidden
+          h2 Change Gender
+          form(method="POST", action="/settings/update-gender")
+            label(for="gender-select") Gender
+            select(name="gender", id="gender-select")
+              option(value="Male", selected=user.Profile.gender == "Male") Male
+              option(value="Female", selected=user.Profile.gender == "Female") Female
+              option(value="Other", selected=user.Profile.gender == "Other") Other
+            button(type="submit", id="save-gender") Save
+
+        // Edit Age
+        #edit-age.content-section.hidden
+          h2 Change Age
+          form(method="POST", action="/settings/update-age")
+            label(for="age-input") Age
+            input(type="number", name="age", id="age-input", value=user.Profile.age)
+            button(type="submit", id="save-age") Save
+
+
+        // Other content sections
+        #privacy.content-section.hidden
+          h2 Privacy and Safety Information
+          p Here you can manage your privacy settings.
+        #notifications.content-section.hidden
+          h2 Notifications Information
+          p Here you can manage your notification settings.
+        #accessibility.content-section.hidden
+          h2 Accessibility and Display Settings
+          p Here you can manage your accessibility settings.

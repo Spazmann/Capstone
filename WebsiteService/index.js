@@ -11,7 +11,8 @@ const imagesPageRouter = require('./routes/images');
 const indexPageRouter = require('./routes/index');
 const homePageRouter = require('./routes/home');
 const profilePageRouter = require('./routes/profile');
-const createAccountRouter = require('./routes/createAccount')
+const createAccountRouter = require('./routes/createAccount');
+const settingsRouter = require('./routes/settings');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
@@ -31,6 +32,7 @@ app.use('/', indexPageRouter);
 app.use('/home', homePageRouter);
 app.use('/profile', profilePageRouter);
 app.use('/createAccount', createAccountRouter);
+app.use('/settings', settingsRouter);
 
 
 // Cookies and Session Setup

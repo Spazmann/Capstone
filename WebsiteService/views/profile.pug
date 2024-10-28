@@ -1,63 +1,30 @@
-doctype html
-html
-  head
-    title Profile
-    link(rel='stylesheet', href='/styles/profile.css')
-    script(src="/scripts/profile.js", defer)
-  body
-    .main-container
-      .left-sidebar
-        ul
-          li
-            a(href='#') Home
-          li
-            a(href='#') Explore
-          li
-            a(href='#') Notifications
-          li
-            a(href='#') Messages
-          li
-            a(href='#') Bookmarks
-          li
-            a(href='#') Profile
-        button(type='button') Post
+//- profile.pug
+extends layout
 
-      .content
-        .banner-image
-          img(src="https://pbs.twimg.com/profile_banners/1238177261146320900/1584066048/1500x500", alt="Banner Image")
-        header.banner
-          div.profile-pic
-            img(src="https://pbs.twimg.com/profile_images/1238177398073556994/sToruGZ__400x400.jpg", alt="Profile Picture Placeholder")
-          div.header-details
-            h1 displayName
-            p @username
-        section.user-info
-          div.info-row
-            p BIO Row
-          div.info-row
-            span JOB | LOCATION | BIRTHDATE | JOINDATE
-        section.stats
-          div.stat 27 Followers
-          div.stat 140 Following
-        section.nav
-          button.active(data-nav="posts") Posts
-          button(data-nav="replies") Replies
-          button(data-nav="media") Media
-          button(data-nav="likes") Likes
-        .feed
-          article.post
-            div.post-header
+block head
+  link(rel='stylesheet', href='/styles/profile.css')
+  script(src="/scripts/profile.js", defer)
 
-      .right-sidebar
-        .trending
-          h3 What’s happening
-          ul
-            li Trending 1
-            li Trending 2
-            li Trending 3
-        .who-to-follow
-          h3 Who to follow
-          ul
-            li User 1
-            li User 2
-            li User 3
+block content
+  .banner-image
+    img(src=`https://capstonemedia.s3.amazonaws.com/${profile.Profile.bannerImage}`, alt="Banner Image")
+  header.banner
+    div.profile-pic
+      img(src=`https://capstonemedia.s3.amazonaws.com/${profile.Profile.profileImage}`, alt="Profile Picture")
+    div.header-details
+      h1 #{profile.Profile.name}
+      p @#{profile.Username}
+  section.user-info
+    div.info-row
+      p #{profile.Profile.bio}
+  section.stats
+    div.stat Followers: #{profile.Followers.length || 0}
+    div.stat Following: #{profile.Following.length || 0}
+  section.nav
+    button.active(data-nav="posts") Posts
+    button(data-nav="replies") Replies
+    button(data-nav="media") Media
+    button(data-nav="likes") Likes
+  .feed
+    article.post
+      div.post-header

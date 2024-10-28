@@ -48,7 +48,7 @@ Resources:
         User:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /FindUser/{Email}
+            Path: /FindUser/{Username}
             Method: GET
 
   Login:
@@ -86,7 +86,7 @@ Resources:
         User:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /UpdateUser/{Email}
+            Path: /UpdateUser/{Id}
             Method: PUT
 
   DeleteUser:

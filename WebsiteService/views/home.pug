@@ -1,63 +1,22 @@
-doctype html
-html
-  head
-    title Homepage
-    link(rel='stylesheet', href='/styles/home.css')
-  body
+//- home.pug
+extends layout
 
-    .main-container
-      .left-sidebar
-        ul
-          li
-            a(href='#') Home
-          li
-            a(href='#') Explore
-          li
-            a(href='#') Notifications
-          li
-            a(href='#') Messages
-          li
-            a(href='#') Bookmarks
-          li
-            a(href='#') Profile
-        button(type='button') Post
-        
-        // Profile component at the bottom
-        .profile
-          img(src='/path-to-your-image.png' alt='Profile Picture')
-          .profile-info
-            if user
-              if user.Profile
-                strong #{user.Profile.name}
-                span @#{user.Username}
+block head
+  link(rel='stylesheet', href='/styles/home.css')
 
-      .content
-        .new-post
-          form(action='/post', method='post')
-            textarea(name='post' placeholder='What’s happening?')
-            button(type='submit') Post
-        .posts
-          .post
-            .post-header
-              strong Username
-              span @username · 5m
-            p This is a sample post.
-          .post
-            .post-header
-              strong AnotherUser
-              span @anotheruser · 10m
-            p Another example post.
-
-      .right-sidebar
-        .trending
-          h3 What’s happening
-          ul
-            li Trending 1
-            li Trending 2
-            li Trending 3
-        .who-to-follow
-          h3 Who to follow
-          ul
-            li User 1
-            li User 2
-            li User 3
+block content
+  .new-post
+    form(action='/post', method='post')
+      textarea(name='post' placeholder='What’s happening?')
+      button(type='submit') Post
+  .posts
+    .post
+      .post-header
+        strong Username
+        span @username · 5m
+      p This is a sample post.
+    .post
+      .post-header
+        strong AnotherUser
+        span @anotheruser · 10m
+      p Another example post.

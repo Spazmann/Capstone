@@ -104,10 +104,10 @@ public class Function
     {
         try
         {
-            string email = apigProxyEvent.PathParameters != null && apigProxyEvent.PathParameters.ContainsKey("Email")
-            ? apigProxyEvent.PathParameters["Email"]
+            string username = apigProxyEvent.PathParameters != null && apigProxyEvent.PathParameters.ContainsKey("Username")
+            ? apigProxyEvent.PathParameters["Username"]
             : null;
-            var response = await UserDatabase.FindUserByEmail(email);
+            var response = await UserDatabase.FindUserByUsername(username);
             return new APIGatewayProxyResponse
             {
                 Body = JsonSerializer.Serialize(response),
@@ -132,10 +132,10 @@ public class Function
         try
         {
             var input = JsonSerializer.Deserialize<User>(apigProxyEvent.Body);
-            string email = apigProxyEvent.PathParameters != null && apigProxyEvent.PathParameters.ContainsKey("Email")
-            ? apigProxyEvent.PathParameters["Email"]
+            string id = apigProxyEvent.PathParameters != null && apigProxyEvent.PathParameters.ContainsKey("Id")
+            ? apigProxyEvent.PathParameters["Id"]
             : null;
-            var response = await UserDatabase.EditUser(input,email);
+            var response = await UserDatabase.EditUser(input,id);
             return new APIGatewayProxyResponse
             {
                 Body = JsonSerializer.Serialize(response.Body),

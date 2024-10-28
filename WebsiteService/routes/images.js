@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
   // for (let post of posts) {
   //   post.imageUrl = await getObjectSignedUrl(post.imageName)
   // }
-  const imageUrl = await getObjectSignedUrl("de610b8c7dd199ecdd996f8ba9fb8f8bdf1ba2ee7905c52b2148273d05eda2a4")
+  const imageUrl = "de610b8c7dd199ecdd996f8ba9fb8f8bdf1ba2ee7905c52b2148273d05eda2a4";
   res.render('image', {imageUrl})
 })
 

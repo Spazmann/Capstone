@@ -21,15 +21,21 @@ router.post('/', (req, res) => {
       name: username, 
       birthDate: birthDate,
       gender: '', 
-      bannerImage: '',
-      profileImage: '', 
+      bannerImage: 'defaultbanner.png',
+      profileImage: 'defaultpfp.png', 
       bio: '', 
       location: ''
     },
     Settings: {
       bannedWords: [],
       darkMode: true
-    }
+    },
+    Followers: [],
+    Following: [],
+    Posts: [],
+    Likes: [],
+    Bookmarks: [],
+    Blocks: []
   };
 
   dal.addUser((err) => {

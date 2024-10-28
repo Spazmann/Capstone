@@ -54,9 +54,9 @@ const addUser = async (callback, userData) => {
     }
 };
 
-const updateUser = async (callback, userData, email) => {
+const updateUser = async (callback, userData, id) => {
     try {
-        const response = await fetch(`${url}person/${email}`, {
+        const response = await fetch(`${url}UpdateUser/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -98,10 +98,39 @@ const checkUserEmail = async (callback, username, email) => {
     }
 };
 
+const findUser = async (username) => {
+    try {
+        const response = await fetch(`${url}FindUser/${username}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            return result; 
+        } else {
+            if (result.body) {
+                const errorData = JSON.parse(result.body);
+                throw new Error(errorData.error);
+            } else {
+                throw new Error("Unknown error occurred");
+            }
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+        throw error;
+    }
+};
+
+
 
 module.exports = {
     getUser: getUser,
     addUser: addUser,
     updateUser: updateUser,
-    checkUserEmail: checkUserEmail
+    checkUserEmail: checkUserEmail,
+    findUser: findUser
 }

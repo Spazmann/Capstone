@@ -1,0 +1,53 @@
+doctype html
+html
+  head
+    title #{title}
+    link(rel='stylesheet', href='/styles/global.css')
+    script(src='/scripts/global.js')
+    block head
+  body
+    .main-container
+      .left-sidebar
+        ul
+          li
+            a(href='/home') Home
+          li
+            a(href='/explore') Explore
+          li
+            a(href='/notifications') Notifications
+          li
+            a(href='/messages') Messages
+          li
+            a(href='/bookmarks') Bookmarks
+          li
+            a(href=`/profile/${user.Username}`) Profile
+        button(type='button') Post
+        
+        .profile
+          img(src=`https://capstonemedia.s3.amazonaws.com/${user.Profile.profileImage}` alt='Profile Picture')
+          .profile-info
+            if user && user.Profile
+              strong #{user.Profile.name}
+              span @#{user.Username}
+          ul.profile-dropdown
+            li
+              a(href='/settings') Settings
+            li
+              a(href='/logout') Logout
+
+      .content
+        block content
+
+      .right-sidebar
+        .trending
+          h3 What’s happening
+          ul
+            li Trending 1
+            li Trending 2
+            li Trending 3
+        .who-to-follow
+          h3 Who to follow
+          ul
+            li User 1
+            li User 2
+            li User 3
