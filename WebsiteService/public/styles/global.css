@@ -157,3 +157,120 @@
   .profile.active .profile-dropdown {
     display: block; /* Show dropdown when profile is active */
   }
+
+/* Modal background overlay */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 200;
+  display: flex; /* Use flexbox for centering */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+}
+
+
+/* Modal content - Centered and constrained */
+.modal-content {
+  background-color: #192734;
+  color: #E1E8ED;
+  padding: 20px;
+  border-radius: 8px;
+  width: 60vw; /* Adjusts to 60% of the viewport width */
+  max-width: 600px; /* Further limits the maximum width */
+  max-height: 80vh; /* Limits the height */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Close button */
+.close-button {
+  color: #E1E8ED;
+  font-size: 24px;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  cursor: pointer;
+}
+
+/* Modal header with profile picture */
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.profile-picture {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  background-color: #253341;
+  color: #E1E8ED;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 16px;
+  resize: none;
+}
+
+/* Modal footer */
+.modal-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+button#submitPost {
+  background-color: #1DA1F2;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.image-upload {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+.icon-image {
+  width: 24px; 
+  height: 24px; 
+  background-image: url('/images/uploadimage.png'); 
+  background-size: cover; 
+  background-repeat: no-repeat;
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: middle; 
+}
+
+/* Preview Image */
+.preview-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-top: 10px;
+  display: block; 
+}

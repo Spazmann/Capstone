@@ -13,6 +13,7 @@ const homePageRouter = require('./routes/home');
 const profilePageRouter = require('./routes/profile');
 const createAccountRouter = require('./routes/createAccount');
 const settingsRouter = require('./routes/settings');
+const postRouter = require('./routes/post');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
@@ -33,6 +34,7 @@ app.use('/home', homePageRouter);
 app.use('/profile', profilePageRouter);
 app.use('/createAccount', createAccountRouter);
 app.use('/settings', settingsRouter);
+app.use('/post', postRouter);
 
 
 // Cookies and Session Setup
