@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Sample SAM Template for UserService
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 1024
+    LoggingConfig:
+      LogFormat: JSON
+
+Resources:
+  CreatePost:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::CreatePost
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        CreatePostEvent:
+          Type: Api
+          Properties:
+            Path: /CreatePost
+            Method: POST
+
+  GetPosts:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetPosts
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        GetPostsEvent:
+          Type: Api
+          Properties:
+            Path: /GetPosts
+            Method: GET
+            RequestParameters:
+              method.request.querystring.page:
+                Required: false
+                Caching: false
+
+Outputs:
+  PostsApiEndpoint:
+    Description: API Gateway endpoint URL for Prod stage for Post functions
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+  
+  CreatePostFunctionArn:
+    Description: ARN of the CreatePost Lambda function
+    Value: !GetAtt CreatePost.Arn
+
+  GetPostsFunctionArn:
+    Description: ARN of the GetPosts Lambda function
+    Value: !GetAtt GetPosts.Arn
+
+  CreatePostIamRole:
+    Description: Implicit IAM Role created for CreatePost function
+    Value: !GetAtt CreatePostRole.Arn
+
+  GetPostsIamRole:
+    Description: Implicit IAM Role created for GetPosts function
+    Value: !GetAtt GetPostsRole.Arn

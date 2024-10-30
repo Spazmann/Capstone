@@ -1,6 +1,6 @@
 const express = require('express');
 const session = require('express-session');
-const dal = require('../api/userService')
+const dal = require('../api/userService');
 const router = express.Router();
 
 router.use(session({
@@ -10,7 +10,7 @@ router.use(session({
   cookie: { maxAge: 1000 * 60 * 60 * 24 }
 }));
 
-router.post('/', function(req, res) {
+router.post('/', async function(req, res) {
   var username = req.body.usernameLogin;
   var password = req.body.passwordLogin;
 

@@ -7,12 +7,12 @@ const dotenv = require('dotenv');
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 // Router Imports
-const imagesPageRouter = require('./routes/images');
 const indexPageRouter = require('./routes/index');
 const homePageRouter = require('./routes/home');
 const profilePageRouter = require('./routes/profile');
 const createAccountRouter = require('./routes/createAccount');
 const settingsRouter = require('./routes/settings');
+const postRouter = require('./routes/post');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
@@ -27,12 +27,12 @@ console.log(process.env.S3_BUCKET);
 
 // RestAPI Router Setup
 
-app.use('/images', imagesPageRouter);
 app.use('/', indexPageRouter);
 app.use('/home', homePageRouter);
 app.use('/profile', profilePageRouter);
 app.use('/createAccount', createAccountRouter);
 app.use('/settings', settingsRouter);
+app.use('/post', postRouter);
 
 
 // Cookies and Session Setup

@@ -1,22 +1,31 @@
-//- home.pug
 extends layout
 
 block head
   link(rel='stylesheet', href='/styles/home.css')
+  link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
 
 block content
-  .new-post
-    form(action='/post', method='post')
-      textarea(name='post' placeholder='What’s happening?')
-      button(type='submit') Post
   .posts
-    .post
-      .post-header
-        strong Username
-        span @username · 5m
-      p This is a sample post.
-    .post
-      .post-header
-        strong AnotherUser
-        span @anotheruser · 10m
-      p Another example post.
+    each post in posts
+      .post
+        .post-header
+          img.profile-image(src=`https://capstonemedia.s3.amazonaws.com/${post.Profile.profileImage}`, alt="Profile Image")
+          .user-info
+            h3.username #{post.Profile.name} (@#{post.Username})
+            span.created-at #{post.CreatedAt}
+        .post-content
+          p= post.Content
+        if post.Media
+          .post-media
+            img(src=`https://capstonemedia.s3.amazonaws.com/${post.Media}`, alt="Post Image")
+
+        .post-actions
+          button.like-button 
+            i.fas.fa-heart  #{post.Likes}
+          button.comment-button 
+            i.fas.fa-comment  #{post.CommentCount}
+          button.repost-button 
+            i.fas.fa-retweet  #{post.RepostCount}
+          button.bookmark-button 
+            i.fas.fa-bookmark  #{post.BookmarkCount}
+

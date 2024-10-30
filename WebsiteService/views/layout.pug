@@ -21,7 +21,7 @@ html
             a(href='/bookmarks') Bookmarks
           li
             a(href=`/profile/${user.Username}`) Profile
-        button(type='button') Post
+        button(type='button', id='postButton') Post
         
         .profile
           img(src=`https://capstonemedia.s3.amazonaws.com/${user.Profile.profileImage}` alt='Profile Picture')
@@ -51,3 +51,18 @@ html
             li User 1
             li User 2
             li User 3
+
+    // Modal
+    .modal#postModal
+      .modal-content
+        span.close-button &times;
+        .modal-header
+          img.profile-picture(src=`https://capstonemedia.s3.amazonaws.com/${user.Profile.profileImage}` alt='Profile Picture')
+          textarea(placeholder='What is happening?!') 
+        .modal-footer
+          .actions
+            button(type='button', id='submitPost') Post
+            label.image-upload
+              input(type='file', accept='image/*', id='imageInput', style='display: none;')
+              i.icon-image  
+

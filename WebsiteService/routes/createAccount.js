@@ -1,6 +1,7 @@
 const express = require('express');
 const dal = require('../api/userService')
 const router = express.Router();
+const { hashPassword } = require('../security/passwordUtils'); 
 
 const AWS = require('aws-sdk');
 
@@ -10,12 +11,13 @@ const sqs = new AWS.SQS({ apiVersion: '2012-11-05' });
 
 const queueUrl = '';
 
-router.post('/', (req, res) => {
+router.post('/', async  (req, res) => {
   const { username, password, email, birthDate } = req.body;
+  const hashedPassword = await hashPassword(password);
 
   const jsonData = {
     Username: username,
-    Password: password,
+    Password: hashedPassword,
     Email: email,
     Profile: {
       name: username, 
