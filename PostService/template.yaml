@@ -88,6 +88,23 @@ Resources:
             Path: /GetPost/{id}
             Method: GET
 
+  GetUserPosts:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetUserPosts
+      Runtime: dotnet8
+      Timeout: 30
+      Events:
+        GetUserPostsApi:
+          Type: Api
+          Properties:
+            Path: /GetPosts/{userId}
+            Method: GET
+            RequestParameters:
+              - method.request.querystring.page: false  
+
+
 Outputs:
   PostsApiEndpoint:
     Description: API Gateway endpoint URL for Prod stage for Post functions
@@ -109,6 +126,10 @@ Outputs:
     Description: ARN of the GetPostById Lambda function
     Value: !GetAtt GetPostById.Arn
 
+ GetUserPostsArn:
+    Description: ARN of the GetUserPosts Lambda function
+    Value: !GetAtt GetUserPosts.Arn
+
   CreatePostIamRole:
     Description: Implicit IAM Role created for CreatePost function
     Value: !GetAtt CreatePostRole.Arn
@@ -124,3 +145,7 @@ Outputs:
   GetPostByIdIamRole:
     Description: Implicit IAM Role created for GetPostById function
     Value: !GetAtt GetPostByIdRole.Arn
+
+  GetUserPostsIamRole:
+    Description: Implicit IAM Role created for GetUserPosts function
+    Value: !GetAtt GetUserPostsRole.Arn

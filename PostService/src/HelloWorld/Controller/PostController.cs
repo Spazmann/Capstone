@@ -127,4 +127,29 @@ public class PostDatabase
         }
     }
 
+    public static async Task<List<Post>> GetPostsByUser(string userId, int page, int pageSize)
+    {
+        var database = mongoClient.GetDatabase("Capstone");
+        var collection = database.GetCollection<Post>("Posts");
+
+        int skip = (page - 1) * pageSize;
+
+        var filter = Builders<Post>.Filter.Eq("UserId", userId);
+        try
+        {
+            var posts = await collection.Find(filter)
+                .Sort(Builders<Post>.Sort.Descending("CreatedAt"))
+                .Skip(skip)
+                .Limit(pageSize)
+                .ToListAsync();
+            return posts;
+        }
+        catch (Exception e)
+        {
+            LambdaLogger.Log($"Error in GetPostsByUser: {e.Message}");
+            throw;
+        }
+    }
+
+
 }

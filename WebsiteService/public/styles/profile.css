@@ -11,7 +11,7 @@
 .banner {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Ensures the Edit Profile button aligns to the right */
+  justify-content: space-between; 
   background-color: #192734;
   padding: 20px;
   margin-bottom: 20px;
@@ -167,7 +167,7 @@ button.follow:hover {
 
 /* Modal background overlay */
 .modal {
-  display: none; /* Hidden by default */
+  display: none; 
   position: fixed;
   top: 0;
   left: 0;

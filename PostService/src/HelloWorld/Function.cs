@@ -104,6 +104,63 @@ public class Function
             };
         }
     }
+    
+    public async Task<APIGatewayProxyResponse> GetUserPosts(APIGatewayProxyRequest request, ILambdaContext context)
+    {
+        try
+        {
+            if (!request.PathParameters.ContainsKey("userId"))
+            {
+                return new APIGatewayProxyResponse
+                {
+                    Body = JsonSerializer.Serialize(new { error = "User ID is required" }),
+                    StatusCode = 400,
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+
+            string userId = request.PathParameters["userId"];
+            int page = 1; 
+            int pageSize = 15; 
+
+            if (request.QueryStringParameters != null && request.QueryStringParameters.ContainsKey("page"))
+            {
+                int.TryParse(request.QueryStringParameters["page"], out page);
+            }
+
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            var posts = await PostDatabase.GetPostsByUser(userId, page, pageSize).WaitAsync(cts.Token);
+
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(posts),
+                StatusCode = 200,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+        catch (OperationCanceledException)
+        {
+            LambdaLogger.Log("Database operation timed out.");
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { error = "Database operation timed out." }),
+                StatusCode = 504,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+        catch (Exception ex)
+        {
+            LambdaLogger.Log($"Error in GetUserPosts: {ex}");
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { error = ex.Message }),
+                StatusCode = 500,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+    }
+
+
 
     public async Task<APIGatewayProxyResponse> EditPost(APIGatewayProxyRequest request, ILambdaContext context)
     {
