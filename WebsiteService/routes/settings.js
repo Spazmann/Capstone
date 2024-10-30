@@ -63,6 +63,7 @@ router.post('/editProfile', upload.fields([{ name: 'profileImage' }, { name: 'ba
   
     try {
       const userData = {
+        Id: userId,
         Username: req.session.user.Username,
         Password: req.session.user.Password,
         Email: req.session.user.Email,
@@ -110,10 +111,19 @@ router.post('/editProfile', upload.fields([{ name: 'profileImage' }, { name: 'ba
           console.error("Error updating user:", error);
           return res.status(500).json({ error: "Failed to update profile" });
         }
-        res.status(200).json({ message: "Profile updated successfully", data });
   
         req.session.user = userData;
+
+        req.session.save((saveError) => {
+          if (saveError) {
+            console.error("Error saving session:", saveError);
+            return res.status(500).json({ error: "Failed to save session after update" });
+          }
+          
+          res.status(200).json({ message: "Profile updated successfully", data });
+        });
       }, userData, userId);
+  
     } catch (error) {
       console.error("Error in editProfile route:", error);
       res.status(500).json({ error: "An error occurred while updating the profile" });

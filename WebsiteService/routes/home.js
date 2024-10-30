@@ -19,6 +19,21 @@ router.get('/', async function(req, res) {
       const postsWithUserData = await Promise.all(
         posts.map(async post => {
           const userData = await dal.findUserId(post.UserId);
+          if (!userData) {
+            console.warn(`User not found for UserId: ${post.UserId}`);
+            return {
+              ...post,
+              Username: "Unknown",
+              Profile: {
+                name: "Unknown User",
+                profileImage: "defaultpfp.png",
+                bannerImage: "defaultbanner.png", 
+                bio: "",
+                location: ""
+              }
+            };
+          }
+
           return {
             ...post,
             Username: userData.Username,
