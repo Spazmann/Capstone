@@ -126,6 +126,32 @@ public class Function
         }
     }
 
+    public async Task<APIGatewayProxyResponse> FindUserId(APIGatewayProxyRequest apigProxyEvent, ILambdaContext context)
+    {
+        try
+        {
+            string id = apigProxyEvent.PathParameters != null && apigProxyEvent.PathParameters.ContainsKey("Id")
+            ? apigProxyEvent.PathParameters["Id"]
+            : null;
+            var response = await UserDatabase.FindUserById(id);
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(response),
+                StatusCode = 200,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+        catch (Exception ex)
+        {
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { error = ex.Message }),
+                StatusCode = 500,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+    }
+
     public async Task<APIGatewayProxyResponse> UpdateUser(APIGatewayProxyRequest apigProxyEvent, ILambdaContext context)
     {
 

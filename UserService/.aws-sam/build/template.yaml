@@ -50,6 +50,26 @@ Resources:
             Method: GET
     Metadata:
       SamResourceId: FindUser
+  FindUserId:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: FindUserId
+      Handler: HelloWorld::HelloWorld.Function::FindUserId
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        User:
+          Type: Api
+          Properties:
+            Path: /FindUserId/{Id}
+            Method: GET
+    Metadata:
+      SamResourceId: FindUserId
   Login:
     Type: AWS::Serverless::Function
     Properties:
@@ -147,6 +167,12 @@ Outputs:
       Fn::GetAtt:
       - FindUser
       - Arn
+  FindUserId:
+    Description: Users Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - FindUserId
+      - Arn
   UpdateUser:
     Description: Users Lambda Function ARN
     Value:
@@ -182,6 +208,12 @@ Outputs:
     Value:
       Fn::GetAtt:
       - FindUserRole
+      - Arn
+  FindUserIdIamRole:
+    Description: Implicit IAM Role created for Users function
+    Value:
+      Fn::GetAtt:
+      - FindUserIdRole
       - Arn
   UpdateUserIamRole:
     Description: Implicit IAM Role created for Users function

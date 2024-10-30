@@ -51,6 +51,25 @@ Resources:
             Path: /FindUser/{Username}
             Method: GET
 
+  FindUserId:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::FindUserId
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      MemorySize: 512
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          PARAM1: VALUE
+      Events:
+        User:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /FindUserId/{Id}
+            Method: GET
+
   Login:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -142,6 +161,10 @@ Outputs:
     Description: Users Lambda Function ARN
     Value: !GetAtt FindUser.Arn
 
+  FindUserId:
+    Description: Users Lambda Function ARN
+    Value: !GetAtt FindUserId.Arn
+
   UpdateUser:
     Description: Users Lambda Function ARN
     Value: !GetAtt UpdateUser.Arn
@@ -165,6 +188,10 @@ Outputs:
   FindUserIamRole:
     Description: Implicit IAM Role created for Users function
     Value: !GetAtt FindUserRole.Arn
+
+  FindUserIdIamRole:
+    Description: Implicit IAM Role created for Users function
+    Value: !GetAtt FindUserIdRole.Arn
 
   UpdateUserIamRole:
     Description: Implicit IAM Role created for Users function
