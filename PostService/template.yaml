@@ -53,6 +53,41 @@ Resources:
                 Required: false
                 Caching: false
 
+  EditPost:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::EditPost
+      Runtime: dotnet8
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        EditPostEvent:
+          Type: Api
+          Properties:
+            Path: /EditPost/{id}
+            Method: PUT
+
+  GetPostById:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetPost
+      Runtime: dotnet8
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Events:
+        GetPostByIdEvent:
+          Type: Api
+          Properties:
+            Path: /GetPost/{id}
+            Method: GET
+
 Outputs:
   PostsApiEndpoint:
     Description: API Gateway endpoint URL for Prod stage for Post functions
@@ -66,6 +101,14 @@ Outputs:
     Description: ARN of the GetPosts Lambda function
     Value: !GetAtt GetPosts.Arn
 
+  EditPostFunctionArn:
+    Description: ARN of the EditPost Lambda function
+    Value: !GetAtt EditPost.Arn
+
+  GetPostByIdFunctionArn:
+    Description: ARN of the GetPostById Lambda function
+    Value: !GetAtt GetPostById.Arn
+
   CreatePostIamRole:
     Description: Implicit IAM Role created for CreatePost function
     Value: !GetAtt CreatePostRole.Arn
@@ -73,3 +116,11 @@ Outputs:
   GetPostsIamRole:
     Description: Implicit IAM Role created for GetPosts function
     Value: !GetAtt GetPostsRole.Arn
+
+  EditPostIamRole:
+    Description: Implicit IAM Role created for EditPost function
+    Value: !GetAtt EditPostRole.Arn
+
+  GetPostByIdIamRole:
+    Description: Implicit IAM Role created for GetPostById function
+    Value: !GetAtt GetPostByIdRole.Arn

@@ -60,7 +60,6 @@ public class PostDatabase
             .Set("CommentCount", post.CommentCount)
             .Set("RepostCount", post.RepostCount)
             .Set("BookmarkCount", post.BookmarkCount);
-
         try
         {
             var result = await collection.UpdateOneAsync(filter, update);
@@ -109,4 +108,23 @@ public class PostDatabase
 
         return posts;
     }
+
+    public static async Task<Post> GetPostById(string id)
+    {
+        var database = mongoClient.GetDatabase("Capstone");
+        var collection = database.GetCollection<Post>("Posts");
+        var filter = Builders<Post>.Filter.Eq("_id", id);
+
+        try
+        {
+            Post post = await collection.Find(filter).FirstOrDefaultAsync();
+            return post;
+        }
+        catch (Exception e)
+        {
+            LambdaLogger.Log($"Error in GetPostById: {e.Message}");
+            throw;
+        }
+    }
+
 }

@@ -271,7 +271,7 @@ public class UserDatabase
         return user;
     }
 
-        public static async Task<User> FindUserById(string id)
+    public static async Task<User> FindUserById(string id)
     {
         var mongoClient = new MongoClient(connectionString);
         var database = mongoClient.GetDatabase("Capstone");

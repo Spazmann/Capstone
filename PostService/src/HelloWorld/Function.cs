@@ -104,4 +104,106 @@ public class Function
             };
         }
     }
+
+    public async Task<APIGatewayProxyResponse> EditPost(APIGatewayProxyRequest request, ILambdaContext context)
+    {
+        try
+        {
+            if (!request.PathParameters.ContainsKey("id"))
+            {
+                return new APIGatewayProxyResponse
+                {
+                    Body = JsonSerializer.Serialize(new { error = "Post ID is required" }),
+                    StatusCode = 400,
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+
+            string postId = request.PathParameters["id"];
+            var updatedPost = JsonSerializer.Deserialize<Post>(request.Body);
+
+            if (updatedPost == null)
+            {
+                return new APIGatewayProxyResponse
+                {
+                    Body = JsonSerializer.Serialize(new { error = "Invalid post data" }),
+                    StatusCode = 400,
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            var response = await PostDatabase.EditPost(updatedPost, postId).WaitAsync(cts.Token);
+
+            return response;
+        }
+        catch (OperationCanceledException)
+        {
+            LambdaLogger.Log("Database operation timed out.");
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { error = "Database operation timed out." }),
+                StatusCode = 504,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+        catch (Exception ex)
+        {
+            LambdaLogger.Log($"Error in EditPost: {ex}");
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { error = ex.Message }),
+                StatusCode = 500,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+    }
+
+    public async Task<APIGatewayProxyResponse> GetPost(APIGatewayProxyRequest request, ILambdaContext context)
+    {
+        try
+        {
+            if (!request.PathParameters.ContainsKey("id"))
+            {
+                return new APIGatewayProxyResponse
+                {
+                    Body = JsonSerializer.Serialize(new { error = "Post ID is required" }),
+                    StatusCode = 400,
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+
+            string postId = request.PathParameters["id"];
+            var post = await PostDatabase.GetPostById(postId);
+
+            if (post == null)
+            {
+                return new APIGatewayProxyResponse
+                {
+                    Body = JsonSerializer.Serialize(new { message = "Post not found" }),
+                    StatusCode = 404,
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(post),
+                StatusCode = 200,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+        catch (Exception ex)
+        {
+            LambdaLogger.Log($"Error in GetPost: {ex.Message}");
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { error = ex.Message }),
+                StatusCode = 500,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+    }
+
+
 }
