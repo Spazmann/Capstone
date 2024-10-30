@@ -9,6 +9,7 @@ using MongoDB.Bson;
 using System;
 using Amazon.Runtime.Internal.Settings;
 using MongoDB.Bson.Serialization.Conventions;
+using BCrypt.Net;
 
 public class UserDatabase
 {
@@ -78,7 +79,7 @@ public class UserDatabase
             var filter = Builders<User>.Filter.Or(
                 Builders<User>.Filter.Eq("Username", identifier)
             );
-            
+
             var foundUser = await collection.Find(filter).FirstOrDefaultAsync();
 
             if (foundUser == null)
@@ -91,7 +92,9 @@ public class UserDatabase
                 };
             }
 
-            if (foundUser.Password == password)
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(password, foundUser.Password);
+
+            if (isPasswordValid)
             {
                 return new APIGatewayProxyResponse
                 {
@@ -120,6 +123,7 @@ public class UserDatabase
             };
         }
     }
+
 
 
     public static async Task<APIGatewayProxyResponse> CheckUserEmail(string username, string email) {

@@ -6,6 +6,9 @@ const router = express.Router();
 router.get('/:profile', async function(req, res) {
     var loggedInUser = req.session ? req.session.user : null;
     var profileUsername = req.params.profile;
+    if (!loggedInUser) {
+        return res.redirect('/');
+    }
 
     try {
         const profileUser = await dal.findUser(profileUsername);

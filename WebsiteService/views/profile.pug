@@ -1,4 +1,3 @@
-//- profile.pug
 extends layout
 
 block head
@@ -9,11 +8,18 @@ block content
   .banner-image
     img(src=`https://capstonemedia.s3.amazonaws.com/${profile.Profile.bannerImage}`, alt="Banner Image")
   header.banner
-    div.profile-pic
-      img(src=`https://capstonemedia.s3.amazonaws.com/${profile.Profile.profileImage}`, alt="Profile Picture")
-    div.header-details
-      h1 #{profile.Profile.name}
-      p @#{profile.Username}
+    .profile-details
+      .profile-pic
+        img(src=`https://capstonemedia.s3.amazonaws.com/${profile.Profile.profileImage}`, alt="Profile Picture")
+      .header-details
+        h1 #{profile.Profile.name}
+        p @#{profile.Username}
+
+    if user && user.Username === profile.Username
+      button.edit-profile(type="button") Edit Profile
+    else
+      button.follow Follow
+
   section.user-info
     div.info-row
       p #{profile.Profile.bio}
@@ -28,3 +34,21 @@ block content
   .feed
     article.post
       div.post-header
+
+  #editProfileModal.modal
+    .modal-content
+      span.close-button &times;
+      h2 Edit Profile
+      form(id="editProfileForm")
+        label(for="profileName") Name
+        input#profileName(type="text" value=`${profile.Profile.name}`)
+
+        label(for="profileImagePreview") Profile Image
+        img#profileImagePreview(src=`https://capstonemedia.s3.amazonaws.com/${profile.Profile.profileImage}`, alt="Current Profile Image")
+        input#profileImage(type="file" accept="image/*")
+
+        label(for="bannerImagePreview") Banner Image
+        img#bannerImagePreview(src=`https://capstonemedia.s3.amazonaws.com/${profile.Profile.bannerImage}`, alt="Current Banner Image")
+        input#bannerImage(type="file" accept="image/*")
+
+        button(type="submit") Save Changes
