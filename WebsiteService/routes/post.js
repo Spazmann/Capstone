@@ -5,7 +5,7 @@ const sharp = require('sharp');
 const crypto = require('crypto');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
-const apl = require('../api/postService'); // Import postService
+const apl = require('../api/postService'); 
 
 const { uploadFile } = require('../api/s3');
 const storage = multer.memoryStorage();
@@ -29,13 +29,14 @@ router.post('/', upload.single('image'), async (req, res) => {
       media = imageName;
     }
 
-    userId = req.session.user.Id
+    const userId = req.session.user.Id;
 
     const postData = {
       UserId: userId,
       Content: content,
       Media: media,
-      ReplyId: null
+      ReplyId: null,
+      CreatedAt: new Date() 
     };
 
     apl.createPost((error, data) => {

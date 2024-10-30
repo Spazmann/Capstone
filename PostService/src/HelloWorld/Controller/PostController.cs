@@ -55,6 +55,7 @@ public class PostDatabase
             .Set("Content", post.Content)
             .Set("Media", post.Media)
             .Set("ReplyId", post.ReplyId)
+            .Set("CreatedAt", post.CreatedAt)
             .Set("Likes", post.Likes)
             .Set("CommentCount", post.CommentCount)
             .Set("RepostCount", post.RepostCount)
@@ -90,5 +91,22 @@ public class PostDatabase
                 Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
             };
         }
+    }
+
+    public static async Task<List<Post>> GetPostsAsync(int page, int pageSize)
+    {
+        var database = mongoClient.GetDatabase("Capstone");
+        var collection = database.GetCollection<Post>("Posts");
+
+        int skip = (page - 1) * pageSize;
+
+        var filter = Builders<Post>.Filter.Empty; 
+        var posts = await collection.Find(filter)
+            .Sort(Builders<Post>.Sort.Descending("CreatedAt"))
+            .Skip(skip)
+            .Limit(pageSize)
+            .ToListAsync();
+
+        return posts;
     }
 }

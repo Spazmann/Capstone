@@ -1,37 +1,27 @@
 const { callback } = require("chart.js/helpers");
 
-const url = "https://4epsnoth44.execute-api.us-east-1.amazonaws.com/Prod/";
+const url = "https://07x4o7m31c.execute-api.us-east-1.amazonaws.com/Prod/";
 
-const getUser = async (callback, username, password) => {
+const getPosts = async (callback, page = 1) => { 
     try {
-        const response = await fetch(`${url}Login/${username}/${password}`, {
+        const response = await fetch(`${url}GetPosts?page=${page}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             }
         });
 
-        const result = await response.json();
-
-        if (response.ok) {
-            if (result.body) {
-                const data = JSON.parse(result.body);
-                callback(null, data); 
-            } else {
-                callback(null, null); 
-            }
-        } else {
-            if (result.body) {
-                const errorData = JSON.parse(result.body);
-                callback(new Error(errorData.error), null);
-            } else {
-                callback(new Error("Unknown error occurred"), null);
-            }
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
+
+        const data = await response.json();
+        callback(null, data);
     } catch (error) {
         callback(error, null); 
     }
 };
+
 
 const createPost = async (callback, postData) => {
     try {
@@ -55,5 +45,6 @@ const createPost = async (callback, postData) => {
 };
 
 module.exports = {
-    createPost: createPost
+    createPost: createPost,
+    getPosts: getPosts
 }

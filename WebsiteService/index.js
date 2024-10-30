@@ -7,7 +7,6 @@ const dotenv = require('dotenv');
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 // Router Imports
-const imagesPageRouter = require('./routes/images');
 const indexPageRouter = require('./routes/index');
 const homePageRouter = require('./routes/home');
 const profilePageRouter = require('./routes/profile');
@@ -28,7 +27,6 @@ console.log(process.env.S3_BUCKET);
 
 // RestAPI Router Setup
 
-app.use('/images', imagesPageRouter);
 app.use('/', indexPageRouter);
 app.use('/home', homePageRouter);
 app.use('/profile', profilePageRouter);

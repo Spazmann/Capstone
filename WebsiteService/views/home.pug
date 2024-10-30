@@ -1,4 +1,3 @@
-//- home.pug
 extends layout
 
 block head
@@ -6,13 +5,13 @@ block head
 
 block content
   .posts
-    .post
-      .post-header
-        strong Username
-        span @username · 5m
-      p This is a sample post.
-    .post
-      .post-header
-        strong AnotherUser
-        span @anotheruser · 10m
-      p Another example post.
+    each post in posts
+      .post
+        .post-header
+          h3.username @#{post.UserId}
+          span.created-at #{post.CreatedAt} 
+        .post-content
+          p= post.Content
+        if post.Media
+          .post-media
+            img(src=`https://capstonemedia.s3.amazonaws.com/${post.Media}`, alt="Post Image")

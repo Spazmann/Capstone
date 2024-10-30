@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Net.Http;
 using System.Text.Json;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
@@ -13,7 +13,6 @@ namespace HelloWorld;
 
 public class Function
 {
-
     public async Task<APIGatewayProxyResponse> CreatePost(APIGatewayProxyRequest request, ILambdaContext context)
     {
         try
@@ -53,6 +52,50 @@ public class Function
         catch (Exception ex)
         {
             LambdaLogger.Log($"Error in CreatePost: {ex}");
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { error = ex.Message }),
+                StatusCode = 500,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+    }
+
+    public async Task<APIGatewayProxyResponse> GetPosts(APIGatewayProxyRequest request, ILambdaContext context)
+    {
+        try
+        {
+            int page = 1;
+            if (request.QueryStringParameters != null && request.QueryStringParameters.ContainsKey("page"))
+            {
+                int.TryParse(request.QueryStringParameters["page"], out page);
+            }
+
+            int pageSize = 15;
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+
+            var posts = await PostDatabase.GetPostsAsync(page, pageSize).WaitAsync(cts.Token);
+
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(posts),
+                StatusCode = 200,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+        catch (OperationCanceledException)
+        {
+            LambdaLogger.Log("Database operation timed out.");
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { error = "Database operation timed out." }),
+                StatusCode = 504, 
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+        catch (Exception ex)
+        {
+            LambdaLogger.Log($"Error in GetPosts: {ex}");
             return new APIGatewayProxyResponse
             {
                 Body = JsonSerializer.Serialize(new { error = ex.Message }),

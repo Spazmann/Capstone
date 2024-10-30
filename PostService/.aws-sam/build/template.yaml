@@ -30,20 +30,56 @@ Resources:
             Method: POST
     Metadata:
       SamResourceId: CreatePost
+  GetPosts:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetPosts
+      Handler: HelloWorld::HelloWorld.Function::GetPosts
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        GetPostsEvent:
+          Type: Api
+          Properties:
+            Path: /GetPosts
+            Method: GET
+            RequestParameters:
+              method.request.querystring.page:
+                Required: false
+                Caching: false
+    Metadata:
+      SamResourceId: GetPosts
 Outputs:
   PostsApiEndpoint:
-    Description: API Gateway endpoint URL for Prod stage for Post function
+    Description: API Gateway endpoint URL for Prod stage for Post functions
     Value:
-      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/CreatePost/
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod
   CreatePostFunctionArn:
     Description: ARN of the CreatePost Lambda function
     Value:
       Fn::GetAtt:
       - CreatePost
       - Arn
+  GetPostsFunctionArn:
+    Description: ARN of the GetPosts Lambda function
+    Value:
+      Fn::GetAtt:
+      - GetPosts
+      - Arn
   CreatePostIamRole:
     Description: Implicit IAM Role created for CreatePost function
     Value:
       Fn::GetAtt:
       - CreatePostRole
+      - Arn
+  GetPostsIamRole:
+    Description: Implicit IAM Role created for GetPosts function
+    Value:
+      Fn::GetAtt:
+      - GetPostsRole
       - Arn
