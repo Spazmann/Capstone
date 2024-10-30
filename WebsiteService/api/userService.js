@@ -125,7 +125,7 @@ const findUser = async (username) => {
     }
 };
 
-const findUserId = async (username) => {
+const findUserId = async (id) => {
     try {
         const response = await fetch(`${url}FindUserId/${id}`, {
             method: 'GET',

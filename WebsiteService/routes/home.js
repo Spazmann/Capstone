@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const apl = require('../api/postService');
-const dal = require('../api/userService')
+const apl = require('../api/postService'); 
+const dal = require('../api/userService'); 
 
 router.get('/', async function(req, res) {
   const user = req.session ? req.session.user : null;
@@ -10,13 +10,24 @@ router.get('/', async function(req, res) {
   }
 
   try {
-    apl.getPosts((error, posts) => {
+    apl.getPosts(async (error, posts) => {
       if (error) {
         console.error("Error fetching posts:", error);
         return res.status(500).send("Error fetching posts");
       }
 
-      res.render('home', { title: "Home Page", user: user, posts: posts });
+      const postsWithUserData = await Promise.all(
+        posts.map(async post => {
+          const userData = await dal.findUserId(post.UserId);
+          return {
+            ...post,
+            Username: userData.Username,
+            Profile: userData.Profile
+          };
+        })
+      );
+
+      res.render('home', { title: "Home Page", user: user, posts: postsWithUserData });
     }, 1);
   } catch (error) {
     console.error("Error in home route:", error);

@@ -3,7 +3,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
@@ -21,12 +20,23 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Header styling (username and timestamp) */
+/* Header styling (profile image, username, and timestamp) */
 .post-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+}
+
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
 }
 
 .username {
@@ -54,3 +64,36 @@
   object-fit: cover;
   border-radius: 8px;
 }
+
+/* Post actions container */
+.post-actions {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  margin-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+/* Base styling for each button */
+.post-actions button {
+  background-color: transparent;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+/* Hover effect for buttons */
+.post-actions button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Individual button styles */
+.like-button { color: #e0245e; }      /* Like button in red */
+.comment-button { color: #1da1f2; }   /* Comment button in blue */
+.repost-button { color: #17bf63; }    /* Repost button in green */
+.bookmark-button { color: #ffad1f; }  /* Bookmark button in yellow */
+
