@@ -91,9 +91,21 @@
   background-color: #f0f0f0;
 }
 
-/* Individual button styles */
-.like-button { color: #e0245e; }      /* Like button in red */
-.comment-button { color: #1da1f2; }   /* Comment button in blue */
-.repost-button { color: #17bf63; }    /* Repost button in green */
-.bookmark-button { color: #ffad1f; }  /* Bookmark button in yellow */
+.liked {
+  color: red;
+}
+
+/* When a post is liked, make the heart icon red */
+.like-button.liked .fa-heart {
+  color: red;
+}
+
+/* Ensure like-count inherits Font Awesome styling */
+.like-count {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900; 
+  font-size: 14px; 
+  margin-left: 5px; 
+}
+
 

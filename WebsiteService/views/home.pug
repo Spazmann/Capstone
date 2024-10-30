@@ -3,6 +3,7 @@ extends layout
 block head
   link(rel='stylesheet', href='/styles/home.css')
   link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
+  script(src="/scripts/home.js")
 
 block content
   .posts
@@ -20,12 +21,12 @@ block content
             img(src=`https://capstonemedia.s3.amazonaws.com/${post.Media}`, alt="Post Image")
 
         .post-actions
-          button.like-button 
-            i.fas.fa-heart  #{post.Likes}
+          button.like-button(data-post-id=`${post.Id}`)
+            i.fas.fa-heart
+            span.fa.like-count #{post.Likes}
           button.comment-button 
             i.fas.fa-comment  #{post.CommentCount}
           button.repost-button 
             i.fas.fa-retweet  #{post.RepostCount}
           button.bookmark-button 
             i.fas.fa-bookmark  #{post.BookmarkCount}
-
