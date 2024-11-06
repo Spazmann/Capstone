@@ -6,29 +6,56 @@ block head
   script(src="/scripts/home.js")
 
 block content
-.post-container
+  .post-container
     .post
-        a.post-header(href=`/profile/${post.Username}`)
+      a.post-header(href=`/profile/${post.Username}`)
         img.profile-image(src=`https://capstonemedia.s3.amazonaws.com/${post.Profile.profileImage}`, alt="Profile Image")
-        .user-info
-            h3.username #{post.Profile.name}
-            span.username-handle @#{post.Username}
-            span.created-at #{post.CreatedAt}
-        a.post-content(href=`/post/${post.Id}`)
+      .user-info
+        h3.username #{post.Profile.name}
+        span.username-handle @#{post.Username}
+        span.created-at #{post.CreatedAt}
+      .post-content
         p= post.Content
         if post.Media
-            .post-media
+          .post-media
             img(src=`https://capstonemedia.s3.amazonaws.com/${post.Media}`, alt="Post Image")
     .post-actions
-        button.like-button(data-post-id=`${post.Id}`)
+      button.like-button(data-post-id=`${post.Id}`)
         i.fas.fa-heart
         span.like-count #{post.Likes}
-        button.comment-button
-        i.fas.fa-comment  #{post.CommentCount}
-        button.repost-button
-        i.fas.fa-retweet  #{post.RepostCount}
-        button.bookmark-button
-        i.fas.fa-bookmark  #{post.BookmarkCount}
+      button.comment-button
+        i.fas.fa-comment #{post.CommentCount}
+      button.repost-button
+        i.fas.fa-retweet #{post.RepostCount}
+      button.bookmark-button
+        i.fas.fa-bookmark #{post.BookmarkCount}
+
+  if post.Replies && post.Replies.length > 0
+    .replies
+      each reply in replies
+        .post-container
+          .post
+            a.post-header(href=`/profile/${reply.Username}`)
+              img.profile-image(src=`https://capstonemedia.s3.amazonaws.com/${reply.Profile.profileImage}`, alt="Profile Image")
+            .user-info
+              h3.username #{reply.Profile.name}
+              span.username-handle @#{reply.Username}
+              span.created-at #{reply.CreatedAt}
+            .post-content
+              p= reply.Content
+              if reply.Media
+                .post-media
+                  img(src=`https://capstonemedia.s3.amazonaws.com/${reply.Media}`, alt="Reply Image")
+          .post-actions
+            button.like-button(data-post-id=`${reply.Id}`)
+              i.fas.fa-heart
+              span.like-count #{reply.Likes}
+            button.comment-button
+              i.fas.fa-comment #{reply.CommentCount}
+            button.repost-button
+              i.fas.fa-retweet #{reply.RepostCount}
+            button.bookmark-button
+              i.fas.fa-bookmark #{reply.BookmarkCount}
 
   script.
     window.userLikes = !{JSON.stringify(user.Likes || [])};

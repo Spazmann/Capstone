@@ -91,6 +91,44 @@ Resources:
             Method: GET
     Metadata:
       SamResourceId: GetPostById
+  GetUserPosts:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetUserPosts
+      Handler: HelloWorld::HelloWorld.Function::GetUserPosts
+      Runtime: dotnet8
+      Timeout: 30
+      Events:
+        GetUserPostsApi:
+          Type: Api
+          Properties:
+            Path: /GetPosts/{userId}
+            Method: GET
+            RequestParameters:
+              method.request.querystring.page:
+                Required: false
+                Caching: false
+    Metadata:
+      SamResourceId: GetUserPosts
+  GetPostsByReply:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetPostsByReply
+      Handler: HelloWorld::HelloWorld.Function::GetPostsByReply
+      Runtime: dotnet8
+      Timeout: 30
+      Events:
+        GetPostsByReplyApi:
+          Type: Api
+          Properties:
+            Path: /GetPostByReply/{replyId}
+            Method: GET
+            RequestParameters:
+              method.request.querystring.page:
+                Required: false
+                Caching: false
+    Metadata:
+      SamResourceId: GetPostsByReply
 Outputs:
   PostsApiEndpoint:
     Description: API Gateway endpoint URL for Prod stage for Post functions
@@ -120,6 +158,18 @@ Outputs:
       Fn::GetAtt:
       - GetPostById
       - Arn
+  GetPostsByReplyArn:
+    Description: ARN of the GetPostsByReply Lambda function
+    Value:
+      Fn::GetAtt:
+      - GetPostsByReply
+      - Arn
+  GetUserPostsArn:
+    Description: ARN of the GetUserPosts Lambda function
+    Value:
+      Fn::GetAtt:
+      - GetUserPosts
+      - Arn
   CreatePostIamRole:
     Description: Implicit IAM Role created for CreatePost function
     Value:
@@ -143,4 +193,16 @@ Outputs:
     Value:
       Fn::GetAtt:
       - GetPostByIdRole
+      - Arn
+  GetUserPostsIamRole:
+    Description: Implicit IAM Role created for GetUserPosts function
+    Value:
+      Fn::GetAtt:
+      - GetUserPostsRole
+      - Arn
+  GetPostsByReplyIamRole:
+    Description: Implicit IAM Role created for GetPostsByReply function
+    Value:
+      Fn::GetAtt:
+      - GetPostsByReplyRole
       - Arn

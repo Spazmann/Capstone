@@ -126,6 +126,23 @@ public class PostDatabase
             throw;
         }
     }
+    
+    public static async Task<List<Post>> GetPostsByReplyId(int page, int pageSize, string id)
+    {
+        var database = mongoClient.GetDatabase("Capstone");
+        var collection = database.GetCollection<Post>("Posts");
+
+        int skip = (page - 1) * pageSize;
+
+        var filter = Builders<Post>.Filter.Eq("ReplyId", id);
+        var posts = await collection.Find(filter)
+            .Sort(Builders<Post>.Sort.Descending("CreatedAt"))
+            .Skip(skip)
+            .Limit(pageSize)
+            .ToListAsync();
+
+        return posts;
+    }
 
     public static async Task<List<Post>> GetPostsByUser(string userId, int page, int pageSize)
     {

@@ -63,6 +63,26 @@ const findPostById = async (callback, postId) => {
     }
 };
 
+const findPostByReplyId = async (callback, replyId) => {
+    try {
+        const response = await fetch(`${url}GetPostByReply/${replyId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        callback(null, data);
+    } catch (error) {
+        callback(error, null);
+    }
+};
+
 const editPost = async (callback, postData, postId) => {
     try {
         const response = await fetch(`${url}EditPost/${postId}`, {
@@ -88,5 +108,6 @@ module.exports = {
     createPost: createPost,
     getPosts: getPosts,
     findPostById: findPostById,
-    editPost: editPost
+    editPost: editPost,
+    findPostByReplyId: findPostByReplyId
 };

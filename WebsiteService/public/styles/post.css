@@ -140,4 +140,17 @@
   .post-actions i {
     margin-right: 5px;
   }
+
+  /* Replies styling */
+.replies {
+    margin-top: 20px;
+    padding-left: 20px;
+    border-left: 2px solid #ddd;
+  }
+  
+  .replies .post-container {
+    margin-bottom: 15px;
+    background-color: #f7f7f7; /* Lighter background for replies */
+  }
+  
   
