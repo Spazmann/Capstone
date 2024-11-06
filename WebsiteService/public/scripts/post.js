@@ -17,4 +17,28 @@ function showImagePreview(event) {
     }
   }
   
+  document.querySelector('.reply-form').addEventListener('submit', async function (event) {
+    event.preventDefault();
+    const formData = new FormData(this);
+    const postId = this.action.split('/').pop();
+  
+    try {
+      const response = await fetch(`/reply/${postId}`, {
+        method: 'POST',
+        body: formData
+      });
+  
+      if (response.ok) {
+        window.location.reload();
+      } else {
+        const errorText = await response.text();
+        console.error("Error submitting reply:", errorText);
+        alert("There was an error submitting your reply. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error in reply submission:", error);
+      alert("An error occurred. Please try again.");
+    }
+  });
+  
   

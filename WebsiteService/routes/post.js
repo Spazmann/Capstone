@@ -229,10 +229,12 @@ router.post('/reply/:postId', upload.single('image'), async (req, res) => {
     const postId = req.params.postId;
     let media = null;
 
+    // Ensure the user is authenticated
     if (!req.session || !req.session.user) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
+    // Process the uploaded image if it exists
     if (req.file) {
       const file = req.file;
       const imageName = generateFileName();
@@ -254,18 +256,39 @@ router.post('/reply/:postId', upload.single('image'), async (req, res) => {
       CreatedAt: new Date()
     };
 
-    apl.createPost((error, data) => {
+    apl.createPost(async (error, replyData) => {
       if (error) {
-        console.error("Error creating post:", error);
-        return res.status(500).json({ error: "Failed to create post" });
+        console.error("Error creating reply post:", error);
+        return res.status(500).json({ error: "Failed to create reply post" });
       }
-      res.status(201).json({ message: "Post created successfully", data });
+
+      apl.findPostById(async (findError, mainPost) => {
+        if (findError || !mainPost) {
+          console.error("Error fetching main post:", findError || "Main post not found");
+          return res.status(500).json({ error: "Failed to fetch main post for updating CommentCount" });
+        }
+
+        const updatedPostData = {
+          ...mainPost,
+          CommentCount: (mainPost.CommentCount || 0) + 1
+        };
+
+        apl.editPost((editError, updatedMainPost) => {
+          if (editError) {
+            console.error("Error updating CommentCount on main post:", editError);
+            return res.status(500).json({ error: "Failed to update CommentCount on main post" });
+          }
+            res.redirect(`/post/${postId}`)
+
+        }, updatedPostData, postId);
+      }, postId);
     }, postData);
   } catch (error) {
-    console.error("Error handling post request:", error);
-    res.status(500).json({ error: "An error occurred while processing the post" });
+    console.error("Error in reply post route:", error);
+    res.status(500).json({ error: "An error occurred while processing the reply" });
   }
 });
+
 
 
 module.exports = router;
