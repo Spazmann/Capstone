@@ -229,12 +229,10 @@ router.post('/reply/:postId', upload.single('image'), async (req, res) => {
     const postId = req.params.postId;
     let media = null;
 
-    // Ensure the user is authenticated
     if (!req.session || !req.session.user) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    // Process the uploaded image if it exists
     if (req.file) {
       const file = req.file;
       const imageName = generateFileName();
@@ -289,6 +287,76 @@ router.post('/reply/:postId', upload.single('image'), async (req, res) => {
   }
 });
 
+router.get('/user/:userId/posts', async (req, res) => {
+  const userId = req.params.userId;
+  const page = req.query.page || 1;
 
+  try {
+    apl.getUserTopLevelPosts((error, data) => {
+      if (error) {
+        console.error("Error fetching user's posts:", error);
+        return res.status(500).json({ error: "Failed to fetch user's posts" });
+      }
+      res.status(200).json(data);
+    }, userId, page);
+  } catch (error) {
+    console.error("Error in getUserTopLevelPosts route:", error);
+    res.status(500).json({ error: "An error occurred while fetching user's top-level posts" });
+  }
+});
+
+
+router.get('/user/:userId/replies', async (req, res) => {
+  const userId = req.params.userId;
+  const page = req.query.page || 1;
+
+  try {
+    apl.getUserReplies((error, data) => {
+      if (error) {
+        console.error("Error fetching user's replies:", error);
+        return res.status(500).json({ error: "Failed to fetch user's replies" });
+      }
+      res.status(200).json(data);
+    }, userId, page);
+  } catch (error) {
+    console.error("Error in getUserReplies route:", error);
+    res.status(500).json({ error: "An error occurred while fetching user's replies" });
+  }
+});
+
+router.get('/user/:userId/media', async (req, res) => {
+  const userId = req.params.userId;
+  const page = req.query.page || 1;
+
+  try {
+    apl.getUserMediaPosts((error, data) => {
+      if (error) {
+        console.error("Error fetching user's media posts:", error);
+        return res.status(500).json({ error: "Failed to fetch user's media posts" });
+      }
+      res.status(200).json(data);
+    }, userId, page);
+  } catch (error) {
+    console.error("Error in getUserMediaPosts route:", error);
+    res.status(500).json({ error: "An error occurred while fetching user's media posts" });
+  }
+});
+
+router.get('/user/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const userData = await dal.findUserId(userId);
+
+    if (!userData) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json(userData);
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    res.status(500).json({ error: "Failed to retrieve user data" });
+  }
+});
 
 module.exports = router;
