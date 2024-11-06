@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  Sample SAM Template for UserService
+  Sample SAM Template for PostService
 
 Globals:
   Function:
@@ -20,9 +20,6 @@ Resources:
       Architectures:
       - x86_64
       MemorySize: 512
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         CreatePostEvent:
           Type: Api
@@ -39,9 +36,6 @@ Resources:
       Architectures:
       - x86_64
       MemorySize: 512
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         GetPostsEvent:
           Type: Api
@@ -60,11 +54,8 @@ Resources:
       Handler: HelloWorld::HelloWorld.Function::EditPost
       Runtime: dotnet8
       Architectures:
-        - x86_64
+      - x86_64
       MemorySize: 512
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         EditPostEvent:
           Type: Api
@@ -79,7 +70,7 @@ Resources:
       Handler: HelloWorld::HelloWorld.Function::GetPost
       Runtime: dotnet8
       Architectures:
-        - x86_64
+      - x86_64
       MemorySize: 512
       Events:
         GetPostByIdEvent:
@@ -123,7 +114,61 @@ Resources:
               method.request.querystring.page:
                 Required: false
                 Caching: false
-              
+
+  GetUserTopLevelPosts:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetUserTopLevelPosts
+      Runtime: dotnet8
+      Timeout: 30
+      Events:
+        GetUserTopLevelPostsEvent:
+          Type: Api
+          Properties:
+            Path: /GetUserTopLevelPosts/{userId}
+            Method: GET
+            RequestParameters:
+              method.request.querystring.page:
+                Required: false
+                Caching: false
+
+  GetUserMediaPosts:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetUserMediaPosts
+      Runtime: dotnet8
+      Timeout: 30
+      Events:
+        GetUserMediaPostsEvent:
+          Type: Api
+          Properties:
+            Path: /GetUserMediaPosts/{userId}
+            Method: GET
+            RequestParameters:
+              method.request.querystring.page:
+                Required: false
+                Caching: false
+
+  GetUserReplies:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetUserReplies
+      Runtime: dotnet8
+      Timeout: 30
+      Events:
+        GetUserRepliesEvent:
+          Type: Api
+          Properties:
+            Path: /GetUserReplies/{userId}
+            Method: GET
+            RequestParameters:
+              method.request.querystring.page:
+                Required: false
+                Caching: false
+
 Outputs:
   PostsApiEndpoint:
     Description: API Gateway endpoint URL for Prod stage for Post functions
@@ -145,6 +190,18 @@ Outputs:
     Description: ARN of the GetPostById Lambda function
     Value: !GetAtt GetPostById.Arn
 
+  GetUserTopLevelPostsArn:
+    Description: ARN of the GetUserTopLevelPosts Lambda function
+    Value: !GetAtt GetUserTopLevelPosts.Arn
+
+  GetUserMediaPostsArn:
+    Description: ARN of the GetUserMediaPosts Lambda function
+    Value: !GetAtt GetUserMediaPosts.Arn
+
+  GetUserRepliesArn:
+    Description: ARN of the GetUserReplies Lambda function
+    Value: !GetAtt GetUserReplies.Arn
+
   GetPostsByReplyArn:
     Description: ARN of the GetPostsByReply Lambda function
     Value: !GetAtt GetPostsByReply.Arn
@@ -152,27 +209,3 @@ Outputs:
   GetUserPostsArn:
     Description: ARN of the GetUserPosts Lambda function
     Value: !GetAtt GetUserPosts.Arn
-
-  CreatePostIamRole:
-    Description: Implicit IAM Role created for CreatePost function
-    Value: !GetAtt CreatePostRole.Arn
-
-  GetPostsIamRole:
-    Description: Implicit IAM Role created for GetPosts function
-    Value: !GetAtt GetPostsRole.Arn
-
-  EditPostIamRole:
-    Description: Implicit IAM Role created for EditPost function
-    Value: !GetAtt EditPostRole.Arn
-
-  GetPostByIdIamRole:
-    Description: Implicit IAM Role created for GetPostById function
-    Value: !GetAtt GetPostByIdRole.Arn
-
-  GetUserPostsIamRole:
-    Description: Implicit IAM Role created for GetUserPosts function
-    Value: !GetAtt GetUserPostsRole.Arn
-
-  GetPostsByReplyIamRole:
-    Description: Implicit IAM Role created for GetPostsByReply function
-    Value: !GetAtt GetPostsByReplyRole.Arn

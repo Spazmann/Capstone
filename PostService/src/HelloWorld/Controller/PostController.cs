@@ -101,7 +101,7 @@ public class PostDatabase
 
         var filter = Builders<Post>.Filter.Or(
             Builders<Post>.Filter.Eq<string>("ReplyId", null),
-            Builders<Post>.Filter.Eq<string>("ReplyId", "")
+            Builders<Post>.Filter.Eq("ReplyId", "")
         );
 
         var posts = await collection.Find(filter)
@@ -149,29 +149,72 @@ public class PostDatabase
         return posts;
     }
 
-    public static async Task<List<Post>> GetPostsByUser(string userId, int page, int pageSize)
+    public static async Task<List<Post>> GetTopLevelPostsByUser(string userId, int page, int pageSize)
     {
         var database = mongoClient.GetDatabase("Capstone");
         var collection = database.GetCollection<Post>("Posts");
 
         int skip = (page - 1) * pageSize;
 
-        var filter = Builders<Post>.Filter.Eq("UserId", userId);
-        try
-        {
-            var posts = await collection.Find(filter)
-                .Sort(Builders<Post>.Sort.Descending("CreatedAt"))
-                .Skip(skip)
-                .Limit(pageSize)
-                .ToListAsync();
-            return posts;
-        }
-        catch (Exception e)
-        {
-            LambdaLogger.Log($"Error in GetPostsByUser: {e.Message}");
-            throw;
-        }
+        var filter = Builders<Post>.Filter.And(
+            Builders<Post>.Filter.Eq<string>("UserId", userId),
+            Builders<Post>.Filter.Or(
+                Builders<Post>.Filter.Eq<string>("ReplyId", null),
+                Builders<Post>.Filter.Eq("ReplyId", "")
+            )
+        );
+
+        var posts = await collection.Find(filter)
+            .Sort(Builders<Post>.Sort.Descending("CreatedAt"))
+            .Skip(skip)
+            .Limit(pageSize)
+            .ToListAsync();
+        return posts;
     }
 
+    public static async Task<List<Post>> GetMediaPostsByUser(string userId, int page, int pageSize)
+    {
+        var database = mongoClient.GetDatabase("Capstone");
+        var collection = database.GetCollection<Post>("Posts");
 
+        int skip = (page - 1) * pageSize;
+
+        var filter = Builders<Post>.Filter.And(
+            Builders<Post>.Filter.Eq<string>("UserId", userId),
+            Builders<Post>.Filter.Or(
+                Builders<Post>.Filter.Eq<string>("ReplyId", null),
+                Builders<Post>.Filter.Eq("ReplyId", "")
+            ),
+            Builders<Post>.Filter.Ne<string>("Media", null),
+            Builders<Post>.Filter.Ne("Media", "")
+        );
+
+        var posts = await collection.Find(filter)
+            .Sort(Builders<Post>.Sort.Descending("CreatedAt"))
+            .Skip(skip)
+            .Limit(pageSize)
+            .ToListAsync();
+        return posts;
+    }
+
+    public static async Task<List<Post>> GetRepliesByUser(string userId, int page, int pageSize)
+    {
+        var database = mongoClient.GetDatabase("Capstone");
+        var collection = database.GetCollection<Post>("Posts");
+
+        int skip = (page - 1) * pageSize;
+
+        var filter = Builders<Post>.Filter.And(
+            Builders<Post>.Filter.Eq<string>("UserId", userId),
+            Builders<Post>.Filter.Ne<string>("ReplyId", null),
+            Builders<Post>.Filter.Ne("ReplyId", "")
+        );
+
+        var posts = await collection.Find(filter)
+            .Sort(Builders<Post>.Sort.Descending("CreatedAt"))
+            .Skip(skip)
+            .Limit(pageSize)
+            .ToListAsync();
+        return posts;
+    }
 }

@@ -5,9 +5,9 @@ codeuri = "C:\\Users\\dmann\\Documents\\Neumont\\Capstone\\PostService\\src\\Hel
 runtime = "dotnet8"
 architecture = "x86_64"
 handler = "HelloWorld::HelloWorld.Function::CreatePost"
-source_hash = "38045fb6f3fe50dfda4a9c0e8ba26022bb6bbc520e809bdd8dde97263f992ab9"
+source_hash = "77bd2a0bf8588cd8974a410c22d78b679a6289ceab4c1d17b1154d28e60c938c"
 manifest_hash = ""
 packagetype = "Zip"
-functions = ["CreatePost", "GetPosts", "EditPost", "GetPostById", "GetUserPosts", "GetPostsByReply"]
+functions = ["CreatePost", "GetPosts", "EditPost", "GetPostById", "GetUserPosts", "GetPostsByReply", "GetUserTopLevelPosts", "GetUserMediaPosts", "GetUserReplies"]
 
 [layer_build_definitions]

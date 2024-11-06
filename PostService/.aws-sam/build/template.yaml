@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: 'Sample SAM Template for UserService
+Description: 'Sample SAM Template for PostService
 
   '
 Globals:
@@ -19,9 +19,6 @@ Resources:
       Architectures:
       - x86_64
       MemorySize: 512
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         CreatePostEvent:
           Type: Api
@@ -39,9 +36,6 @@ Resources:
       Architectures:
       - x86_64
       MemorySize: 512
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         GetPostsEvent:
           Type: Api
@@ -63,9 +57,6 @@ Resources:
       Architectures:
       - x86_64
       MemorySize: 512
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         EditPostEvent:
           Type: Api
@@ -129,6 +120,63 @@ Resources:
                 Caching: false
     Metadata:
       SamResourceId: GetPostsByReply
+  GetUserTopLevelPosts:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetUserTopLevelPosts
+      Handler: HelloWorld::HelloWorld.Function::GetUserTopLevelPosts
+      Runtime: dotnet8
+      Timeout: 30
+      Events:
+        GetUserTopLevelPostsEvent:
+          Type: Api
+          Properties:
+            Path: /GetUserTopLevelPosts/{userId}
+            Method: GET
+            RequestParameters:
+              method.request.querystring.page:
+                Required: false
+                Caching: false
+    Metadata:
+      SamResourceId: GetUserTopLevelPosts
+  GetUserMediaPosts:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetUserMediaPosts
+      Handler: HelloWorld::HelloWorld.Function::GetUserMediaPosts
+      Runtime: dotnet8
+      Timeout: 30
+      Events:
+        GetUserMediaPostsEvent:
+          Type: Api
+          Properties:
+            Path: /GetUserMediaPosts/{userId}
+            Method: GET
+            RequestParameters:
+              method.request.querystring.page:
+                Required: false
+                Caching: false
+    Metadata:
+      SamResourceId: GetUserMediaPosts
+  GetUserReplies:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetUserReplies
+      Handler: HelloWorld::HelloWorld.Function::GetUserReplies
+      Runtime: dotnet8
+      Timeout: 30
+      Events:
+        GetUserRepliesEvent:
+          Type: Api
+          Properties:
+            Path: /GetUserReplies/{userId}
+            Method: GET
+            RequestParameters:
+              method.request.querystring.page:
+                Required: false
+                Caching: false
+    Metadata:
+      SamResourceId: GetUserReplies
 Outputs:
   PostsApiEndpoint:
     Description: API Gateway endpoint URL for Prod stage for Post functions
@@ -158,6 +206,24 @@ Outputs:
       Fn::GetAtt:
       - GetPostById
       - Arn
+  GetUserTopLevelPostsArn:
+    Description: ARN of the GetUserTopLevelPosts Lambda function
+    Value:
+      Fn::GetAtt:
+      - GetUserTopLevelPosts
+      - Arn
+  GetUserMediaPostsArn:
+    Description: ARN of the GetUserMediaPosts Lambda function
+    Value:
+      Fn::GetAtt:
+      - GetUserMediaPosts
+      - Arn
+  GetUserRepliesArn:
+    Description: ARN of the GetUserReplies Lambda function
+    Value:
+      Fn::GetAtt:
+      - GetUserReplies
+      - Arn
   GetPostsByReplyArn:
     Description: ARN of the GetPostsByReply Lambda function
     Value:
@@ -169,40 +235,4 @@ Outputs:
     Value:
       Fn::GetAtt:
       - GetUserPosts
-      - Arn
-  CreatePostIamRole:
-    Description: Implicit IAM Role created for CreatePost function
-    Value:
-      Fn::GetAtt:
-      - CreatePostRole
-      - Arn
-  GetPostsIamRole:
-    Description: Implicit IAM Role created for GetPosts function
-    Value:
-      Fn::GetAtt:
-      - GetPostsRole
-      - Arn
-  EditPostIamRole:
-    Description: Implicit IAM Role created for EditPost function
-    Value:
-      Fn::GetAtt:
-      - EditPostRole
-      - Arn
-  GetPostByIdIamRole:
-    Description: Implicit IAM Role created for GetPostById function
-    Value:
-      Fn::GetAtt:
-      - GetPostByIdRole
-      - Arn
-  GetUserPostsIamRole:
-    Description: Implicit IAM Role created for GetUserPosts function
-    Value:
-      Fn::GetAtt:
-      - GetUserPostsRole
-      - Arn
-  GetPostsByReplyIamRole:
-    Description: Implicit IAM Role created for GetPostsByReply function
-    Value:
-      Fn::GetAtt:
-      - GetPostsByReplyRole
       - Arn
