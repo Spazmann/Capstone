@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  Sample SAM Template for UserService
+  Sample SAM Template for PostService
 
 Globals:
   Function:
@@ -20,9 +20,6 @@ Resources:
       Architectures:
       - x86_64
       MemorySize: 512
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         CreatePostEvent:
           Type: Api
@@ -39,14 +36,133 @@ Resources:
       Architectures:
       - x86_64
       MemorySize: 512
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         GetPostsEvent:
           Type: Api
           Properties:
             Path: /GetPosts
+            Method: GET
+            RequestParameters:
+              method.request.querystring.page:
+                Required: false
+                Caching: false
+
+  EditPost:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::EditPost
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      MemorySize: 512
+      Events:
+        EditPostEvent:
+          Type: Api
+          Properties:
+            Path: /EditPost/{id}
+            Method: PUT
+
+  GetPostById:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetPost
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      MemorySize: 512
+      Events:
+        GetPostByIdEvent:
+          Type: Api
+          Properties:
+            Path: /GetPost/{id}
+            Method: GET
+
+  GetUserPosts:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetUserPosts
+      Runtime: dotnet8
+      Timeout: 30
+      Events:
+        GetUserPostsApi:
+          Type: Api
+          Properties:
+            Path: /GetPosts/{userId}
+            Method: GET
+            RequestParameters:
+              method.request.querystring.page:
+                Required: false
+                Caching: false
+
+  GetPostsByReply:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetPostsByReply
+      Runtime: dotnet8
+      Timeout: 30
+      Events:
+        GetPostsByReplyApi:
+          Type: Api
+          Properties:
+            Path: /GetPostByReply/{replyId}
+            Method: GET
+            RequestParameters:
+              method.request.querystring.page:
+                Required: false
+                Caching: false
+
+  GetUserTopLevelPosts:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetUserTopLevelPosts
+      Runtime: dotnet8
+      Timeout: 30
+      Events:
+        GetUserTopLevelPostsEvent:
+          Type: Api
+          Properties:
+            Path: /GetUserTopLevelPosts/{userId}
+            Method: GET
+            RequestParameters:
+              method.request.querystring.page:
+                Required: false
+                Caching: false
+
+  GetUserMediaPosts:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetUserMediaPosts
+      Runtime: dotnet8
+      Timeout: 30
+      Events:
+        GetUserMediaPostsEvent:
+          Type: Api
+          Properties:
+            Path: /GetUserMediaPosts/{userId}
+            Method: GET
+            RequestParameters:
+              method.request.querystring.page:
+                Required: false
+                Caching: false
+
+  GetUserReplies:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetUserReplies
+      Runtime: dotnet8
+      Timeout: 30
+      Events:
+        GetUserRepliesEvent:
+          Type: Api
+          Properties:
+            Path: /GetUserReplies/{userId}
             Method: GET
             RequestParameters:
               method.request.querystring.page:
@@ -66,10 +182,30 @@ Outputs:
     Description: ARN of the GetPosts Lambda function
     Value: !GetAtt GetPosts.Arn
 
-  CreatePostIamRole:
-    Description: Implicit IAM Role created for CreatePost function
-    Value: !GetAtt CreatePostRole.Arn
+  EditPostFunctionArn:
+    Description: ARN of the EditPost Lambda function
+    Value: !GetAtt EditPost.Arn
 
-  GetPostsIamRole:
-    Description: Implicit IAM Role created for GetPosts function
-    Value: !GetAtt GetPostsRole.Arn
+  GetPostByIdFunctionArn:
+    Description: ARN of the GetPostById Lambda function
+    Value: !GetAtt GetPostById.Arn
+
+  GetUserTopLevelPostsArn:
+    Description: ARN of the GetUserTopLevelPosts Lambda function
+    Value: !GetAtt GetUserTopLevelPosts.Arn
+
+  GetUserMediaPostsArn:
+    Description: ARN of the GetUserMediaPosts Lambda function
+    Value: !GetAtt GetUserMediaPosts.Arn
+
+  GetUserRepliesArn:
+    Description: ARN of the GetUserReplies Lambda function
+    Value: !GetAtt GetUserReplies.Arn
+
+  GetPostsByReplyArn:
+    Description: ARN of the GetPostsByReply Lambda function
+    Value: !GetAtt GetPostsByReply.Arn
+
+  GetUserPostsArn:
+    Description: ARN of the GetUserPosts Lambda function
+    Value: !GetAtt GetUserPosts.Arn

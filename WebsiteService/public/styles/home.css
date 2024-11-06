@@ -10,30 +10,48 @@
   border-radius: 8px;
 }
 
+/* Container for each post and its actions */
+.post-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
 /* Individual post styling */
 .post {
   width: 100%;
-  background-color: #ffffff;
+  background-color: #2d2d2d; /* Dark gray background for the post */
   padding: 15px;
-  margin-bottom: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: inherit;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Header styling (profile image, username, and timestamp) */
+/* Profile header styling */
 .post-header {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  text-decoration: none; /* Remove underline */
+  color: inherit;
 }
 
+/* Profile image link styling */
 .profile-image {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  object-fit: cover;
   margin-right: 10px;
+  transition: transform 0.2s;
 }
 
+.profile-image:hover {
+  transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+/* User info styling */
 .user-info {
   display: flex;
   flex-direction: column;
@@ -42,27 +60,41 @@
 .username {
   font-size: 16px;
   font-weight: bold;
-  color: #333;
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.2s;
 }
 
+.username-handle,
 .created-at {
   font-size: 14px;
-  color: #777;
+  color: #888;
+}
+
+.username:hover {
+  color: #1da1f2; /* Hover color for username */
 }
 
 /* Post content styling */
 .post-content {
   font-size: 16px;
-  color: #444;
-  margin-bottom: 10px;
+  color: #ddd;
+  margin-top: 10px;
+  text-decoration: none;
 }
 
-/* Post media (image) styling */
+.post-content:hover {
+  background-color: #333;
+  border-radius: 8px;
+}
+
+/* Post media styling */
 .post-media img {
   width: 100%;
   max-height: 300px;
   object-fit: cover;
   border-radius: 8px;
+  margin-top: 10px;
 }
 
 /* Post actions container */
@@ -70,30 +102,41 @@
   display: flex;
   justify-content: space-around;
   padding: 10px 0;
-  margin-top: 10px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #444;
+  background-color: #2d2d2d; /* Matches post background */
+  border-radius: 0 0 8px 8px;
 }
 
-/* Base styling for each button */
+/* Base styling for each button in post actions */
 .post-actions button {
   background-color: transparent;
   border: none;
-  color: #555;
+  color: #ccc;
   font-size: 14px;
   cursor: pointer;
   padding: 5px 10px;
   border-radius: 5px;
   transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
 }
 
-/* Hover effect for buttons */
 .post-actions button:hover {
-  background-color: #f0f0f0;
+  background-color: #444;
 }
 
-/* Individual button styles */
-.like-button { color: #e0245e; }      /* Like button in red */
-.comment-button { color: #1da1f2; }   /* Comment button in blue */
-.repost-button { color: #17bf63; }    /* Repost button in green */
-.bookmark-button { color: #ffad1f; }  /* Bookmark button in yellow */
+.liked .fa-heart {
+  color: red;
+}
 
+.like-count {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+/* Additional styling for FontAwesome icons within buttons */
+.post-actions i {
+  margin-right: 5px;
+}

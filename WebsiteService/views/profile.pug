@@ -2,6 +2,7 @@ extends layout
 
 block head
   link(rel='stylesheet', href='/styles/profile.css')
+  link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
   script(src="/scripts/profile.js", defer)
 
 block content
@@ -31,9 +32,7 @@ block content
     button(data-nav="replies") Replies
     button(data-nav="media") Media
     button(data-nav="likes") Likes
-  .feed
-    article.post
-      div.post-header
+  .feed#feedContainer  
 
   #editProfileModal.modal
     .modal-content
@@ -52,3 +51,7 @@ block content
         input#bannerImage(type="file" accept="image/*")
 
         button(type="submit") Save Changes
+
+  script.
+    const userId = "#{profile.Id}";
+    window.userLikes = !{JSON.stringify(user.Likes || [])};
