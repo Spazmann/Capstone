@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function renderFeed(data, container) {
-    container.innerHTML = ''; // Clear previous content
+    container.innerHTML = '';
 
     if (data.length === 0) {
       container.innerHTML = `<p>No content found.</p>`;
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     for (const post of data) {
-      const userData = await fetchUserData(post.UserId); // Fetch user data for each post
+      const userData = await fetchUserData(post.UserId);
       const profileImage = userData ? `https://capstonemedia.s3.amazonaws.com/${userData.Profile.profileImage}` : '/path/to/placeholder-image.jpg';
       const name = userData ? userData.Profile.name : 'Unknown User';
       const username = userData ? userData.Username : 'unknown';
@@ -98,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
       container.appendChild(postElement);
     }
 
-    // Attach like button functionality after rendering
     initializeLikeButtons();
   }
 
@@ -113,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Initialize like button functionality
   function initializeLikeButtons() {
     document.querySelectorAll('.like-button').forEach(button => {
       const postId = button.getAttribute('data-post-id');
@@ -148,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Profile editing modal and form handling (unchanged)
   const editProfileButton = document.querySelector('.edit-profile');
   const editProfileModal = document.getElementById('editProfileModal');
   const closeModalButton = editProfileModal.querySelector('.close-button');

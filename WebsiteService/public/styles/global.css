@@ -104,8 +104,8 @@
     border-radius: 30px;
     margin-top: auto;
     position: relative;
-    width: 100%; /* Ensures consistent width for .profile */
-    max-width: 200px; /* You can adjust this to the desired width */
+    width: 100%;
+    max-width: 200px;
   }
   
   .profile img {
@@ -131,17 +131,17 @@
   }
   
   .profile-dropdown {
-    display: none; /* Initially hidden */
+    display: none;
     list-style: none;
     padding: 10px;
     background-color: #253341;
     border-radius: 10px;
     position: absolute;
-    bottom: 60px; /* Position above profile */
+    bottom: 60px;
     right: 0;
-    z-index: 100; /* Ensure it's above other elements */
+    z-index: 100; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%; /* Match the width of the .profile container */
+    width: 100%;
   }
   
   .profile-dropdown li {
@@ -155,12 +155,11 @@
   }
   
   .profile.active .profile-dropdown {
-    display: block; /* Show dropdown when profile is active */
+    display: block;
   }
 
-/* Modal background overlay */
 .modal {
-  display: none; /* Hidden by default */
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -168,28 +167,25 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 200;
-  display: flex; /* Use flexbox for centering */
-  align-items: center; /* Center vertically */
-  justify-content: center; /* Center horizontally */
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
 }
 
-
-/* Modal content - Centered and constrained */
 .modal-content {
   background-color: #192734;
   color: #E1E8ED;
   padding: 20px;
   border-radius: 8px;
-  width: 60vw; /* Adjusts to 60% of the viewport width */
-  max-width: 600px; /* Further limits the maximum width */
-  max-height: 80vh; /* Limits the height */
+  width: 60vw; 
+  max-width: 600px;
+  max-height: 80vh; 
   display: flex;
   flex-direction: column;
   overflow: hidden;
   position: relative;
 }
 
-/* Close button */
 .close-button {
   color: #E1E8ED;
   font-size: 24px;
@@ -199,7 +195,6 @@
   cursor: pointer;
 }
 
-/* Modal header with profile picture */
 .modal-header {
   display: flex;
   align-items: flex-start;
@@ -225,7 +220,6 @@ textarea {
   resize: none;
 }
 
-/* Modal footer */
 .modal-footer {
   margin-top: auto;
   display: flex;
@@ -266,7 +260,6 @@ button#submitPost {
   vertical-align: middle; 
 }
 
-/* Preview Image */
 .preview-image {
   width: 100%;
   height: auto;

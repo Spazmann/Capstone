@@ -19,7 +19,6 @@ router.get('/:postId', async (req, res) => {
   const postId = req.params.postId;
 
   try {
-    // Fetch the main post by ID
     apl.findPostById(async (error, post) => {
       if (error) {
         console.error("Error fetching post:", error);
@@ -30,7 +29,6 @@ router.get('/:postId', async (req, res) => {
         return res.status(404).send("Post not found");
       }
 
-      // Fetch user data for the main post
       const userData = await dal.findUserId(post.UserId);
 
       const postWithUserData = {

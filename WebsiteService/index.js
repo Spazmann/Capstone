@@ -26,7 +26,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 console.log(process.env.S3_BUCKET);
 
 // RestAPI Router Setup
-
 app.use('/', indexPageRouter);
 app.use('/home', homePageRouter);
 app.use('/profile', profilePageRouter);

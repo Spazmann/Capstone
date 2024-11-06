@@ -1,4 +1,3 @@
-/* Banner Image */
 .banner-image img {
   width: 100%;
   height: 200px;
@@ -7,7 +6,6 @@
   margin-bottom: 20px;
 }
 
-/* Banner Container */
 .banner {
   display: flex;
   align-items: center;
@@ -19,13 +17,11 @@
   position: relative;
 }
 
-/* Profile Details Flexbox */
 .profile-details {
   display: flex;
   align-items: center;
 }
 
-/* Profile Picture */
 .profile-pic img {
   width: 100px;
   height: 100px;
@@ -34,7 +30,6 @@
   margin-right: 20px;
 }
 
-/* Header Details */
 .header-details {
   display: flex;
   flex-direction: column;
@@ -52,7 +47,6 @@
   margin: 0;
 }
 
-/* Edit Profile & Follow Button */
 button.edit-profile,
 button.follow {
   background-color: #1DA1F2;
@@ -79,7 +73,6 @@ button.follow:hover {
   background-color: #1d86c7;
 }
 
-/* User Information Section */
 .user-info {
   margin-bottom: 20px;
 }
@@ -89,7 +82,6 @@ button.follow:hover {
   color: #E1E8ED;
 }
 
-/* Stats Section */
 .stats {
   display: flex;
   gap: 10px;
@@ -104,7 +96,6 @@ button.follow:hover {
   font-weight: bold;
 }
 
-/* Navigation Tabs */
 .nav {
   display: flex;
   gap: 5px;
@@ -127,14 +118,12 @@ button.follow:hover {
   color: white;
 }
 
-/* Feed Section */
 .feed {
   background-color: #242424;
   border-radius: 10px;
   padding: 15px;
 }
 
-/* Modal background overlay */
 .modal {
   display: none;
   position: fixed;
@@ -148,7 +137,6 @@ button.follow:hover {
   justify-content: center;
 }
 
-/* Modal content styling */
 .modal-content {
   background-color: #192734;
   color: #E1E8ED;
@@ -162,7 +150,6 @@ button.follow:hover {
   position: relative;
 }
 
-/* Modal image preview styling */
 .modal-content img {
   max-width: 100%;
   max-height: 150px;
@@ -171,7 +158,6 @@ button.follow:hover {
   margin-bottom: 10px;
 }
 
-/* Close button styling */
 .close-button {
   color: #E1E8ED;
   font-size: 24px;
@@ -181,7 +167,6 @@ button.follow:hover {
   cursor: pointer;
 }
 
-/* Form input styling */
 .modal-content label {
   font-size: 16px;
   color: #E1E8ED;
@@ -212,7 +197,6 @@ button.follow:hover {
   background-color: #0d8dd8;
 }
 
-/* Container for posts */
 .posts {
   display: flex;
   flex-direction: column;
@@ -224,16 +208,14 @@ button.follow:hover {
   border-radius: 8px;
 }
 
-/* Container for each post and its actions */
 .post-container {
   width: 100%;
   margin-bottom: 20px;
 }
 
-/* Individual post styling */
 .post {
   width: 100%;
-  background-color: #2d2d2d; /* Dark gray background for the post */
+  background-color: #2d2d2d; 
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -242,16 +224,14 @@ button.follow:hover {
   flex-direction: column;
 }
 
-/* Profile header styling */
 .post-header {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  text-decoration: none; /* Remove underline */
+  text-decoration: none; 
   color: inherit;
 }
 
-/* Profile image link styling */
 .profile-image {
   width: 40px;
   height: 40px;
@@ -262,10 +242,9 @@ button.follow:hover {
 }
 
 .profile-image:hover {
-  transform: scale(1.05); /* Slight zoom effect on hover */
+  transform: scale(1.05);
 }
 
-/* User info styling */
 .user-info {
   display: flex;
   flex-direction: column;
@@ -286,10 +265,9 @@ button.follow:hover {
 }
 
 .username:hover {
-  color: #1da1f2; /* Hover color for username */
+  color: #1da1f2;
 }
 
-/* Post content styling */
 .post-content {
   font-size: 16px;
   color: #ddd;
@@ -302,7 +280,6 @@ button.follow:hover {
   border-radius: 8px;
 }
 
-/* Post media styling */
 .post-media img {
   width: 100%;
   max-height: 300px;
@@ -311,17 +288,15 @@ button.follow:hover {
   margin-top: 10px;
 }
 
-/* Post actions container */
 .post-actions {
   display: flex;
   justify-content: space-around;
   padding: 10px 0;
   border-top: 1px solid #444;
-  background-color: #2d2d2d; /* Matches post background */
+  background-color: #2d2d2d; 
   border-radius: 0 0 8px 8px;
 }
 
-/* Base styling for each button in post actions */
 .post-actions button {
   background-color: transparent;
   border: none;
@@ -350,7 +325,6 @@ button.follow:hover {
   margin-left: 5px;
 }
 
-/* Additional styling for FontAwesome icons within buttons */
 .post-actions i {
   margin-right: 5px;
 }
