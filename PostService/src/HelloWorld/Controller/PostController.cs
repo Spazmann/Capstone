@@ -99,7 +99,11 @@ public class PostDatabase
 
         int skip = (page - 1) * pageSize;
 
-        var filter = Builders<Post>.Filter.Empty; 
+        var filter = Builders<Post>.Filter.Or(
+            Builders<Post>.Filter.Eq<string>("ReplyId", null),
+            Builders<Post>.Filter.Eq<string>("ReplyId", "")
+        );
+
         var posts = await collection.Find(filter)
             .Sort(Builders<Post>.Sort.Descending("CreatedAt"))
             .Skip(skip)
@@ -108,6 +112,7 @@ public class PostDatabase
 
         return posts;
     }
+
 
     public static async Task<Post> GetPostById(string id)
     {

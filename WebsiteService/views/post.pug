@@ -4,16 +4,17 @@ block head
   link(rel='stylesheet', href='/styles/post.css')
   link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
   script(src="/scripts/home.js")
+  script(src="/scripts/post.js")
 
 block content
   .post-container
     .post
       a.post-header(href=`/profile/${post.Username}`)
         img.profile-image(src=`https://capstonemedia.s3.amazonaws.com/${post.Profile.profileImage}`, alt="Profile Image")
-      .user-info
-        h3.username #{post.Profile.name}
-        span.username-handle @#{post.Username}
-        span.created-at #{post.CreatedAt}
+        .user-info
+          h3.username #{post.Profile.name}
+          span.username-handle @#{post.Username}
+          span.created-at #{post.CreatedAt}
       .post-content
         p= post.Content
         if post.Media
@@ -24,24 +25,44 @@ block content
         i.fas.fa-heart
         span.like-count #{post.Likes}
       button.comment-button
-        i.fas.fa-comment #{post.CommentCount}
+        i.fas.fa-comment  #{post.CommentCount}
       button.repost-button
-        i.fas.fa-retweet #{post.RepostCount}
+        i.fas.fa-retweet  #{post.RepostCount}
       button.bookmark-button
-        i.fas.fa-bookmark #{post.BookmarkCount}
+        i.fas.fa-bookmark  #{post.BookmarkCount}
 
-  if post.Replies && post.Replies.length > 0
+  .reply-form-container
+    .reply-to
+      span Replying to 
+      a(href=`/profile/${post.Username}`) @#{post.Username}
+    form.reply-form(action=`/post/reply/${post.Id}`, method="POST", enctype="multipart/form-data")
+      .reply-avatar-group
+        img.reply-avatar(src=`https://capstonemedia.s3.amazonaws.com/${user.Profile.profileImage}`, alt="User Avatar")
+      .reply-input-group
+        textarea(name="content", placeholder="Post your reply..." required)
+        
+        .reply-icons
+          label(for="media-upload")
+            i.fas.fa-image
+          input#media-upload(type="file", name="image", accept="image/*", hidden, onchange="showImagePreview(event)")
+
+        .image-preview-container
+          img#image-preview(src="", hidden)
+        
+      button.reply-submit(type="submit") Reply
+
+  if replies && replies.length > 0
     .replies
       each reply in replies
         .post-container
           .post
             a.post-header(href=`/profile/${reply.Username}`)
               img.profile-image(src=`https://capstonemedia.s3.amazonaws.com/${reply.Profile.profileImage}`, alt="Profile Image")
-            .user-info
-              h3.username #{reply.Profile.name}
-              span.username-handle @#{reply.Username}
-              span.created-at #{reply.CreatedAt}
-            .post-content
+              .user-info
+                h3.username #{reply.Profile.name}
+                span.username-handle @#{reply.Username}
+                span.created-at #{reply.CreatedAt}
+            a.post-content(href=`/post/${reply.Id}`)
               p= reply.Content
               if reply.Media
                 .post-media
@@ -51,11 +72,11 @@ block content
               i.fas.fa-heart
               span.like-count #{reply.Likes}
             button.comment-button
-              i.fas.fa-comment #{reply.CommentCount}
+              i.fas.fa-comment  #{reply.CommentCount}
             button.repost-button
-              i.fas.fa-retweet #{reply.RepostCount}
+              i.fas.fa-retweet  #{reply.RepostCount}
             button.bookmark-button
-              i.fas.fa-bookmark #{reply.BookmarkCount}
+              i.fas.fa-bookmark  #{reply.BookmarkCount}
 
   script.
     window.userLikes = !{JSON.stringify(user.Likes || [])};

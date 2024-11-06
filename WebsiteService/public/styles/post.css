@@ -83,11 +83,6 @@
     text-decoration: none;
   }
   
-  .post-content:hover {
-    background-color: #333;
-    border-radius: 8px;
-  }
-  
   /* Post media styling */
   .post-media img {
     width: 100%;
@@ -143,9 +138,14 @@
 
   /* Replies styling */
 .replies {
-    margin-top: 20px;
-    padding-left: 20px;
-    border-left: 2px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f7f9fa;
+    border-radius: 8px;
   }
   
   .replies .post-container {
@@ -153,4 +153,119 @@
     background-color: #f7f7f7; /* Lighter background for replies */
   }
   
+
+/* Reply form container */
+.reply-form-container {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #2c2f33; /* Dark background */
+  border-radius: 8px;
+  color: #d1d1d1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Replying to text */
+.reply-to {
+  font-size: 14px;
+  color: #8899a6;
+  margin-bottom: 8px;
+}
+
+.reply-to a {
+  color: #1da1f2;
+  text-decoration: none;
+}
+
+/* Form structure */
+.reply-form {
+  display: flex;
+  align-items: flex-start;
+}
+
+.reply-avatar-group {
+  margin-right: 10px;
+}
+
+.reply-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Reply input and icons */
+.reply-input-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.reply-form textarea {
+  width: 100%;
+  background-color: #3a3d41; /* Darker background for input */
+  border: 1px solid #4a4d52;
+  color: #d1d1d1;
+  padding: 10px;
+  border-radius: 8px;
+  resize: none;
+  min-height: 60px;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.reply-form textarea::placeholder {
+  color: #8899a6;
+}
+
+/* Icons below the textarea */
+.reply-icons {
+  display: flex;
+  gap: 10px;
+  padding: 8px 0;
+  color: #8899a6;
+}
+
+.reply-icons i {
+  cursor: pointer;
+  font-size: 18px;
+  transition: color 0.2s;
+}
+
+.reply-icons i:hover {
+  color: #1da1f2;
+}
+
+/* Reply submit button */
+.reply-submit {
+  background-color: #1da1f2;
+  color: white;
+  padding: 6px 16px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 10px;
+  height: 32px;
+  transition: background-color 0.3s;
+}
+
+.reply-submit:hover {
+  background-color: #0d8de1;
+}
+
+.image-preview-container {
+  margin-top: 10px;
+}
+
+#image-preview {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  margin-top: 5px;
+  display: block;
+}
+
+
   

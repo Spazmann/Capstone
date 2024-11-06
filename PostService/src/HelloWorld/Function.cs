@@ -118,7 +118,17 @@ public class Function
             int pageSize = 15;
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
 
-            string replyId = request.QueryStringParameters["replyId"];
+            if (request.PathParameters == null || !request.PathParameters.ContainsKey("replyId"))
+            {
+                return new APIGatewayProxyResponse
+                {
+                    Body = JsonSerializer.Serialize(new { error = "Missing replyId in path parameters" }),
+                    StatusCode = 400,
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+
+            string replyId = request.PathParameters["replyId"];
 
             var replyPosts = await PostDatabase.GetPostsByReplyId(page, pageSize, replyId).WaitAsync(cts.Token);
 
@@ -150,6 +160,7 @@ public class Function
             };
         }
     }
+
 
     
     public async Task<APIGatewayProxyResponse> GetUserPosts(APIGatewayProxyRequest request, ILambdaContext context)

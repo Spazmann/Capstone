@@ -25,7 +25,7 @@ block content
           button.like-button(data-post-id=`${post.Id}`)
             i.fas.fa-heart
             span.like-count #{post.Likes}
-          button.comment-button
+          button.comment-button(href=`/post/${post.Id}`)
             i.fas.fa-comment  #{post.CommentCount}
           button.repost-button
             i.fas.fa-retweet  #{post.RepostCount}

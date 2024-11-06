@@ -15,10 +15,11 @@ const upload = multer({ storage: storage });
 const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
 
 router.get('/:postId', async (req, res) => {
-  var user = req.session ? req.session.user : null;
+  const user = req.session ? req.session.user : null;
   const postId = req.params.postId;
 
   try {
+    // Fetch the main post by ID
     apl.findPostById(async (error, post) => {
       if (error) {
         console.error("Error fetching post:", error);
@@ -29,24 +30,52 @@ router.get('/:postId', async (req, res) => {
         return res.status(404).send("Post not found");
       }
 
+      // Fetch user data for the main post
       const userData = await dal.findUserId(post.UserId);
 
-      const postsWithUserData = [{
+      const postWithUserData = {
         ...post,
         Profile: {
           name: userData.Profile.name,
           profileImage: userData.Profile.profileImage,
         },
         Username: userData.Username,
-      }];
+      };
 
-      res.render('home', { title: "Home Page", user: user, posts: postsWithUserData });
+      apl.findPostByReplyId(async (replyError, replies) => {
+        if (replyError) {
+          console.error("Error fetching replies:", replyError);
+          return res.status(500).send("Error fetching replies");
+        }
+
+        const repliesWithUserData = await Promise.all(
+          replies.map(async (reply) => {
+            const replyUserData = await dal.findUserId(reply.UserId);
+            return {
+              ...reply,
+              Profile: {
+                name: replyUserData.Profile.name,
+                profileImage: replyUserData.Profile.profileImage,
+              },
+              Username: replyUserData.Username,
+            };
+          })
+        );
+
+        res.render('post', { 
+          title: "Post Page", 
+          user: user, 
+          post: postWithUserData, 
+          replies: repliesWithUserData 
+        });
+      }, postId);
     }, postId);
   } catch (error) {
-    console.error("Error in home route:", error);
+    console.error("Error in post route:", error);
     res.status(500).send("An error occurred while loading the page");
   }
 });
+
 
 router.post('/', upload.single('image'), async (req, res) => {
   try {
@@ -194,10 +223,15 @@ router.delete('/like/:postId', async (req, res) => {
   }
 });
 
-router.post('/reply', upload.single('image'), async (req, res) => {
+router.post('/reply/:postId', upload.single('image'), async (req, res) => {
   try {
     const { content } = req.body;
+    const postId = req.params.postId;
     let media = null;
+
+    if (!req.session || !req.session.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
     if (req.file) {
       const file = req.file;
@@ -216,7 +250,7 @@ router.post('/reply', upload.single('image'), async (req, res) => {
       UserId: userId,
       Content: content,
       Media: media,
-      ReplyId: null,
+      ReplyId: postId,
       CreatedAt: new Date()
     };
 
@@ -232,5 +266,6 @@ router.post('/reply', upload.single('image'), async (req, res) => {
     res.status(500).json({ error: "An error occurred while processing the post" });
   }
 });
+
 
 module.exports = router;
