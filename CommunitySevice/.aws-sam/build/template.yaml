@@ -1,0 +1,174 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'SAM Template for CommunityService
+
+  '
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 512
+    Tracing: Active
+    LoggingConfig:
+      LogFormat: JSON
+  Api:
+    TracingEnabled: true
+Resources:
+  CreateCommunityFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: CreateCommunityFunction
+      Handler: HelloWorld::HelloWorld.Function::CreateCommunity
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        CreateCommunity:
+          Type: Api
+          Properties:
+            Path: /communities/create
+            Method: post
+    Metadata:
+      SamResourceId: CreateCommunityFunction
+  EditCommunityNameFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: EditCommunityNameFunction
+      Handler: HelloWorld::HelloWorld.Function::EditCommunityName
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        EditCommunityName:
+          Type: Api
+          Properties:
+            Path: /communities/{communityId}/editname
+            Method: put
+    Metadata:
+      SamResourceId: EditCommunityNameFunction
+  EditAdminsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: EditAdminsFunction
+      Handler: HelloWorld::HelloWorld.Function::EditAdmins
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        EditAdmins:
+          Type: Api
+          Properties:
+            Path: /communities/{communityId}/admins
+            Method: put
+    Metadata:
+      SamResourceId: EditAdminsFunction
+  EditModsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: EditModsFunction
+      Handler: HelloWorld::HelloWorld.Function::EditMods
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        EditMods:
+          Type: Api
+          Properties:
+            Path: /communities/{communityId}/mods
+            Method: put
+    Metadata:
+      SamResourceId: EditModsFunction
+  EditMembersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: EditMembersFunction
+      Handler: HelloWorld::HelloWorld.Function::EditMembers
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        EditMembers:
+          Type: Api
+          Properties:
+            Path: /communities/{communityId}/members
+            Method: put
+    Metadata:
+      SamResourceId: EditMembersFunction
+  ApplicationResourceGroup:
+    Type: AWS::ResourceGroups::Group
+    Properties:
+      Name:
+        Fn::Sub: ApplicationInsights-SAM-${AWS::StackName}
+      ResourceQuery:
+        Type: CLOUDFORMATION_STACK_1_0
+  ApplicationInsightsMonitoring:
+    Type: AWS::ApplicationInsights::Application
+    Properties:
+      ResourceGroupName:
+        Ref: ApplicationResourceGroup
+      AutoConfigurationEnabled: 'true'
+Outputs:
+  CreateCommunityApi:
+    Description: API Gateway endpoint URL for Create Community
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/create
+  EditCommunityNameApi:
+    Description: API Gateway endpoint URL for Edit Community Name
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/{communityId}/editname
+  EditAdminsApi:
+    Description: API Gateway endpoint URL for Edit Admins
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/{communityId}/admins
+  EditModsApi:
+    Description: API Gateway endpoint URL for Edit Mods
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/{communityId}/mods
+  EditMembersApi:
+    Description: API Gateway endpoint URL for Edit Members
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/{communityId}/members
+  CreateCommunityFunctionArn:
+    Description: Lambda Function ARN for Create Community
+    Value:
+      Fn::GetAtt:
+      - CreateCommunityFunction
+      - Arn
+  EditCommunityNameFunctionArn:
+    Description: Lambda Function ARN for Edit Community Name
+    Value:
+      Fn::GetAtt:
+      - EditCommunityNameFunction
+      - Arn
+  EditAdminsFunctionArn:
+    Description: Lambda Function ARN for Edit Admins
+    Value:
+      Fn::GetAtt:
+      - EditAdminsFunction
+      - Arn
+  EditModsFunctionArn:
+    Description: Lambda Function ARN for Edit Mods
+    Value:
+      Fn::GetAtt:
+      - EditModsFunction
+      - Arn
+  EditMembersFunctionArn:
+    Description: Lambda Function ARN for Edit Members
+    Value:
+      Fn::GetAtt:
+      - EditMembersFunction
+      - Arn
