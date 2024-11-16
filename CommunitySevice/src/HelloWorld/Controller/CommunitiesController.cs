@@ -76,4 +76,33 @@ public class CommunitiesDatabase
         var result = await collection.UpdateOneAsync(filter, update);
         return result.ModifiedCount > 0;
     }
+
+    public static async Task<List<Post>> GetAllCommunities(int page, int pageSize)
+    {
+        var collection = GetCollection();
+        var communities = await collection
+            .Find(FilterDefinition<Post>.Empty)
+            .Skip((page - 1) * pageSize)
+            .Limit(pageSize)
+            .ToListAsync();
+        return communities;
+    }
+
+    public static async Task<Post> GetCommunityById(string communityId)
+    {
+        var collection = GetCollection();
+        var community = await collection
+            .Find(c => c.Id == communityId)
+            .FirstOrDefaultAsync();
+        return community;
+    }
+
+    public static async Task<Post> GetCommunityByName(string communityName)
+    {
+        var collection = GetCollection();
+        var community = await collection
+            .Find(c => c.communityName == communityName)
+            .FirstOrDefaultAsync();
+        return community;
+    }
 }

@@ -22,9 +22,6 @@ Resources:
       Runtime: dotnet8
       Architectures:
         - x86_64
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         CreateCommunity:
           Type: Api
@@ -40,9 +37,6 @@ Resources:
       Runtime: dotnet8
       Architectures:
         - x86_64
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         EditCommunityName:
           Type: Api
@@ -58,9 +52,6 @@ Resources:
       Runtime: dotnet8
       Architectures:
         - x86_64
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         EditAdmins:
           Type: Api
@@ -76,9 +67,6 @@ Resources:
       Runtime: dotnet8
       Architectures:
         - x86_64
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         EditMods:
           Type: Api
@@ -94,15 +82,57 @@ Resources:
       Runtime: dotnet8
       Architectures:
         - x86_64
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         EditMembers:
           Type: Api
           Properties:
             Path: /communities/{communityId}/members
             Method: put
+
+  GetAllCommunitiesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetAllCommunities
+      Runtime: dotnet8
+      Architectures:
+        - x86_64
+      Events:
+        GetAllCommunities:
+          Type: Api
+          Properties:
+            Path: /communities
+            Method: get
+
+  GetCommunityByIdFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetCommunityById
+      Runtime: dotnet8
+      Architectures:
+        - x86_64
+      Events:
+        GetCommunityById:
+          Type: Api
+          Properties:
+            Path: /communities/{communityId}
+            Method: get
+
+  GetCommunityByNameFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetCommunityByName
+      Runtime: dotnet8
+      Architectures:
+        - x86_64
+      Events:
+        GetCommunityByName:
+          Type: Api
+          Properties:
+            Path: /communities/search
+            Method: get
 
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group
@@ -140,6 +170,18 @@ Outputs:
     Description: "API Gateway endpoint URL for Edit Members"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/{communityId}/members"
 
+  GetAllCommunitiesApi:
+    Description: "API Gateway endpoint URL for Get All Communities"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities"
+
+  GetCommunityByIdApi:
+    Description: "API Gateway endpoint URL for Get Community By ID"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/{communityId}"
+
+  GetCommunityByNameApi:
+    Description: "API Gateway endpoint URL for Get Community By Name"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/search"
+
   CreateCommunityFunctionArn:
     Description: "Lambda Function ARN for Create Community"
     Value: !GetAtt CreateCommunityFunction.Arn
@@ -159,3 +201,15 @@ Outputs:
   EditMembersFunctionArn:
     Description: "Lambda Function ARN for Edit Members"
     Value: !GetAtt EditMembersFunction.Arn
+
+  GetAllCommunitiesFunctionArn:
+    Description: "Lambda Function ARN for Get All Communities"
+    Value: !GetAtt GetAllCommunitiesFunction.Arn
+
+  GetCommunityByIdFunctionArn:
+    Description: "Lambda Function ARN for Get Community By ID"
+    Value: !GetAtt GetCommunityByIdFunction.Arn
+
+  GetCommunityByNameFunctionArn:
+    Description: "Lambda Function ARN for Get Community By Name"
+    Value: !GetAtt GetCommunityByNameFunction.Arn

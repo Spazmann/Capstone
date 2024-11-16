@@ -5,9 +5,9 @@ codeuri = "C:\\Users\\dmann\\Documents\\Neumont\\Capstone\\CommunitySevice\\src\
 runtime = "dotnet8"
 architecture = "x86_64"
 handler = "HelloWorld::HelloWorld.Function::CreateCommunity"
-source_hash = "186124830eb66730775370eb9448ec1d228b2aa09b4dc443226b1673d0bc6a4c"
+source_hash = "5c088fe4f79d6d0560575ecaef0b860a0a803ba3d2f783c630c79f9ad0040faf"
 manifest_hash = ""
 packagetype = "Zip"
-functions = ["CreateCommunityFunction", "EditCommunityNameFunction", "EditAdminsFunction", "EditModsFunction", "EditMembersFunction"]
+functions = ["CreateCommunityFunction", "EditCommunityNameFunction", "EditAdminsFunction", "EditModsFunction", "EditMembersFunction", "GetAllCommunitiesFunction", "GetCommunityByIdFunction", "GetCommunityByNameFunction"]
 
 [layer_build_definitions]

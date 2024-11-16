@@ -21,9 +21,6 @@ Resources:
       Runtime: dotnet8
       Architectures:
       - x86_64
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         CreateCommunity:
           Type: Api
@@ -40,9 +37,6 @@ Resources:
       Runtime: dotnet8
       Architectures:
       - x86_64
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         EditCommunityName:
           Type: Api
@@ -59,9 +53,6 @@ Resources:
       Runtime: dotnet8
       Architectures:
       - x86_64
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         EditAdmins:
           Type: Api
@@ -78,9 +69,6 @@ Resources:
       Runtime: dotnet8
       Architectures:
       - x86_64
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         EditMods:
           Type: Api
@@ -97,9 +85,6 @@ Resources:
       Runtime: dotnet8
       Architectures:
       - x86_64
-      Environment:
-        Variables:
-          PARAM1: VALUE
       Events:
         EditMembers:
           Type: Api
@@ -108,6 +93,54 @@ Resources:
             Method: put
     Metadata:
       SamResourceId: EditMembersFunction
+  GetAllCommunitiesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetAllCommunitiesFunction
+      Handler: HelloWorld::HelloWorld.Function::GetAllCommunities
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      Events:
+        GetAllCommunities:
+          Type: Api
+          Properties:
+            Path: /communities
+            Method: get
+    Metadata:
+      SamResourceId: GetAllCommunitiesFunction
+  GetCommunityByIdFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetCommunityByIdFunction
+      Handler: HelloWorld::HelloWorld.Function::GetCommunityById
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      Events:
+        GetCommunityById:
+          Type: Api
+          Properties:
+            Path: /communities/{communityId}
+            Method: get
+    Metadata:
+      SamResourceId: GetCommunityByIdFunction
+  GetCommunityByNameFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetCommunityByNameFunction
+      Handler: HelloWorld::HelloWorld.Function::GetCommunityByName
+      Runtime: dotnet8
+      Architectures:
+      - x86_64
+      Events:
+        GetCommunityByName:
+          Type: Api
+          Properties:
+            Path: /communities/search
+            Method: get
+    Metadata:
+      SamResourceId: GetCommunityByNameFunction
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group
     Properties:
@@ -142,6 +175,18 @@ Outputs:
     Description: API Gateway endpoint URL for Edit Members
     Value:
       Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/{communityId}/members
+  GetAllCommunitiesApi:
+    Description: API Gateway endpoint URL for Get All Communities
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities
+  GetCommunityByIdApi:
+    Description: API Gateway endpoint URL for Get Community By ID
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/{communityId}
+  GetCommunityByNameApi:
+    Description: API Gateway endpoint URL for Get Community By Name
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/search
   CreateCommunityFunctionArn:
     Description: Lambda Function ARN for Create Community
     Value:
@@ -171,4 +216,22 @@ Outputs:
     Value:
       Fn::GetAtt:
       - EditMembersFunction
+      - Arn
+  GetAllCommunitiesFunctionArn:
+    Description: Lambda Function ARN for Get All Communities
+    Value:
+      Fn::GetAtt:
+      - GetAllCommunitiesFunction
+      - Arn
+  GetCommunityByIdFunctionArn:
+    Description: Lambda Function ARN for Get Community By ID
+    Value:
+      Fn::GetAtt:
+      - GetCommunityByIdFunction
+      - Arn
+  GetCommunityByNameFunctionArn:
+    Description: Lambda Function ARN for Get Community By Name
+    Value:
+      Fn::GetAtt:
+      - GetCommunityByNameFunction
       - Arn

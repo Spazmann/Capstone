@@ -147,5 +147,114 @@ namespace HelloWorld
                 };
             }
         }
+
+        public async Task<APIGatewayProxyResponse> GetAllCommunities(APIGatewayProxyRequest request, ILambdaContext context)
+    {
+        try
+        {
+            int page = request.QueryStringParameters != null && request.QueryStringParameters.ContainsKey("page")
+                ? int.Parse(request.QueryStringParameters["page"])
+                : 1;
+
+            int pageSize = request.QueryStringParameters != null && request.QueryStringParameters.ContainsKey("pageSize")
+                ? int.Parse(request.QueryStringParameters["pageSize"])
+                : 30;
+
+            var communities = await CommunitiesDatabase.GetAllCommunities(page, pageSize);
+
+            return new APIGatewayProxyResponse
+            {
+                StatusCode = 200,
+                Body = JsonSerializer.Serialize(communities),
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+        catch (Exception ex)
+        {
+            LambdaLogger.Log($"Error in GetAllCommunities: {ex}");
+            return new APIGatewayProxyResponse
+            {
+                StatusCode = 500,
+                Body = JsonSerializer.Serialize(new { error = ex.Message }),
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
     }
+
+        public async Task<APIGatewayProxyResponse> GetCommunityById(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            try
+            {
+                var communityId = request.PathParameters["communityId"];
+                var community = await CommunitiesDatabase.GetCommunityById(communityId);
+
+                if (community == null)
+                {
+                    return new APIGatewayProxyResponse
+                    {
+                        StatusCode = 404,
+                        Body = JsonSerializer.Serialize(new { error = "Community not found" }),
+                        Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                    };
+                }
+
+                return new APIGatewayProxyResponse
+                {
+                    StatusCode = 200,
+                    Body = JsonSerializer.Serialize(community),
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+            catch (Exception ex)
+            {
+                LambdaLogger.Log($"Error in GetCommunityById: {ex}");
+                return new APIGatewayProxyResponse
+                {
+                    StatusCode = 500,
+                    Body = JsonSerializer.Serialize(new { error = ex.Message }),
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+        }
+
+        public async Task<APIGatewayProxyResponse> GetCommunityByName(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            try
+            {
+                var communityName = request.QueryStringParameters["communityName"];
+                var community = await CommunitiesDatabase.GetCommunityByName(communityName);
+
+                if (community == null)
+                {
+                    return new APIGatewayProxyResponse
+                    {
+                        StatusCode = 404,
+                        Body = JsonSerializer.Serialize(new { error = "Community not found" }),
+                        Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                    };
+                }
+
+                return new APIGatewayProxyResponse
+                {
+                    StatusCode = 200,
+                    Body = JsonSerializer.Serialize(community),
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+            catch (Exception ex)
+            {
+                LambdaLogger.Log($"Error in GetCommunityByName: {ex}");
+                return new APIGatewayProxyResponse
+                {
+                    StatusCode = 500,
+                    Body = JsonSerializer.Serialize(new { error = ex.Message }),
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+        }
+    }
+
+    
+
+
 }
