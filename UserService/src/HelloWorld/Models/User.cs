@@ -13,4 +13,5 @@
         public List<string> Likes { get; set; }
         public List<string> Bookmarks { get; set; }
         public List<string> Blocks { get; set; }
+        public List<string> Communities { get; set; }
     }
