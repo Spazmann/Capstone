@@ -25,12 +25,17 @@ block content
           button.like-button(data-post-id=`${post.Id}`)
             i.fas.fa-heart
             span.like-count #{post.Likes}
-          button.comment-button(href=`/post/${post.Id}`)
+          a.comment-button(href=`/post/${post.Id}`)
             i.fas.fa-comment  #{post.CommentCount}
-          button.repost-button
-            i.fas.fa-retweet  #{post.RepostCount}
+          .repost-dropdown-container
+            button.repost-button
+              i.fas.fa-retweet  #{post.RepostCount}
+            .repost-dropdown.hidden
+              button.quote-button Quote
+              button.repost-confirm-button Repost
           button.bookmark-button
             i.fas.fa-bookmark  #{post.BookmarkCount}
+
 
   script.
     window.userLikes = !{JSON.stringify(user.Likes || [])};

@@ -55,6 +55,7 @@ public class PostDatabase
             .Set("Content", post.Content)
             .Set("Media", post.Media)
             .Set("ReplyId", post.ReplyId)
+            .Set("RepostId", post.RepostId)
             .Set("CreatedAt", post.CreatedAt)
             .Set("Likes", post.Likes)
             .Set("CommentCount", post.CommentCount)

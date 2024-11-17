@@ -106,7 +106,7 @@ router.post('/', upload.single('image'), async (req, res) => {
         console.error("Error creating post:", error);
         return res.status(500).json({ error: "Failed to create post" });
       }
-      res.status(201).json({ message: "Post created successfully", data });
+      res.redirect('/');
     }, postData);
   } catch (error) {
     console.error("Error handling post request:", error);
@@ -354,6 +354,71 @@ router.get('/user/:userId', async (req, res) => {
   } catch (error) {
     console.error("Error fetching user data:", error);
     res.status(500).json({ error: "Failed to retrieve user data" });
+  }
+});
+
+router.post('/repost/:postId', upload.single('image'), async (req, res) => {
+  try {
+    const { content } = req.body;
+    const postId = req.params.postId;
+    let media = null;
+
+    if (!req.session || !req.session.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    if (req.file) {
+      const file = req.file;
+      const imageName = generateFileName();
+      const fileBuffer = await sharp(file.buffer)
+        .resize({ height: 1080, width: 1920, fit: "contain" })
+        .toBuffer();
+
+      await uploadFile(fileBuffer, imageName, file.mimetype);
+      media = imageName;
+    }
+
+    const userId = req.session.user.Id;
+
+    const postData = {
+      UserId: userId,
+      Content: content,
+      Media: media,
+      ReplyId: null,
+      RepostId: postId,
+      CreatedAt: new Date()
+    };
+
+    apl.createPost(async (error, replyData) => {
+      if (error) {
+        console.error("Error creating reply post:", error);
+        return res.status(500).json({ error: "Failed to create reply post" });
+      }
+
+      apl.findPostById(async (findError, mainPost) => {
+        if (findError || !mainPost) {
+          console.error("Error fetching main post:", findError || "Main post not found");
+          return res.status(500).json({ error: "Failed to fetch main post for updating CommentCount" });
+        }
+
+        const updatedPostData = {
+          ...mainPost,
+          RepostCount: (mainPost.RepostCount || 0) + 1
+        };
+
+        apl.editPost((editError, updatedMainPost) => {
+          if (editError) {
+            console.error("Error updating CommentCount on main post:", editError);
+            return res.status(500).json({ error: "Failed to update CommentCount on main post" });
+          }
+            res.redirect(`/post/${postId}`)
+
+        }, updatedPostData, postId);
+      }, postId);
+    }, postData);
+  } catch (error) {
+    console.error("Error in reply post route:", error);
+    res.status(500).json({ error: "An error occurred while processing the reply" });
   }
 });
 
