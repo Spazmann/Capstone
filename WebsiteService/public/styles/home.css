@@ -5,11 +5,16 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f7f9fa;
+  background-color: #202020;
   border-radius: 8px;
 }
 
 .post-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.repost-container {
   width: 100%;
   margin-bottom: 20px;
 }

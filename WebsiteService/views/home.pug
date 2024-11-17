@@ -21,20 +21,39 @@ block content
             if post.Media
               .post-media
                 img(src=`https://capstonemedia.s3.amazonaws.com/${post.Media}`, alt="Post Image")
+
+          if post.Repost
+            .repost-container
+              .post
+                a.post-header(href=`/profile/${post.Repost.Username}`)
+                  img.profile-image(src=`https://capstonemedia.s3.amazonaws.com/${post.Repost.Profile.profileImage}`, alt="Profile Image")
+                  .user-info
+                    h3.username #{post.Repost.Profile.name}
+                    span.username-handle @#{post.Repost.Username}
+                    span.created-at #{post.Repost.CreatedAt}
+                a.post-content(href=`/post/${post.Repost.Id}`)
+                  p= post.Repost.Content
+                  if post.Repost.Media
+                    .post-media
+                      img(src=`https://capstonemedia.s3.amazonaws.com/${post.Repost.Media}`, alt="Post Image")
+
         .post-actions
           button.like-button(data-post-id=`${post.Id}`)
             i.fas.fa-heart
             span.like-count #{post.Likes}
           a.comment-button(href=`/post/${post.Id}`)
-            i.fas.fa-comment  #{post.CommentCount}
+            i.fas.fa-comment #{post.CommentCount}
           .repost-dropdown-container
-            button.repost-button
-              i.fas.fa-retweet  #{post.RepostCount}
+            button.repost-button(data-post-id=`${post.Id}`)
+              i.fas.fa-retweet #{post.RepostCount}
+            .repost-dropdown.hidden
+              button.quote-button(data-post-id=`${post.Id}`) Quote
+              button.repost-confirm-button(data-post-id=`${post.Id}`) Repost
             .repost-dropdown.hidden
               button.quote-button Quote
               button.repost-confirm-button Repost
           button.bookmark-button
-            i.fas.fa-bookmark  #{post.BookmarkCount}
+            i.fas.fa-bookmark #{post.BookmarkCount}
 
 
   script.

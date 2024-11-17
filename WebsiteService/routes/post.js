@@ -31,7 +31,7 @@ router.get('/:postId', async (req, res) => {
 
       const userData = await dal.findUserId(post.UserId);
 
-      const postWithUserData = {
+      let postWithUserData = {
         ...post,
         Profile: {
           name: userData.Profile.name,
@@ -39,6 +39,28 @@ router.get('/:postId', async (req, res) => {
         },
         Username: userData.Username,
       };
+
+      if (post.RepostId) {
+        await apl.findPostById(async (repostError, repost) => {
+          if (repostError) {
+            console.error("Error fetching repost:", repostError);
+            return res.status(500).send("Error fetching repost");
+          }
+
+          if (repost) {
+            const repostUserData = await dal.findUserId(repost.UserId);
+
+            postWithUserData.Repost = {
+              ...repost,
+              Profile: {
+                name: repostUserData.Profile.name,
+                profileImage: repostUserData.Profile.profileImage,
+              },
+              Username: repostUserData.Username,
+            };
+          }
+        }, post.RepostId);
+      }
 
       apl.findPostByReplyId(async (replyError, replies) => {
         if (replyError) {
@@ -73,6 +95,7 @@ router.get('/:postId', async (req, res) => {
     res.status(500).send("An error occurred while loading the page");
   }
 });
+
 
 
 router.post('/', upload.single('image'), async (req, res) => {
@@ -360,22 +383,14 @@ router.get('/user/:userId', async (req, res) => {
 router.post('/repost/:postId', upload.single('image'), async (req, res) => {
   try {
     const { content } = req.body;
-    const postId = req.params.postId;
-    let media = null;
+    const postId = req.params.postId; // Ensure this is properly extracted
+
+    if (!postId || postId === "null") {
+      return res.status(400).json({ error: "Invalid postId for reposting" });
+    }
 
     if (!req.session || !req.session.user) {
       return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    if (req.file) {
-      const file = req.file;
-      const imageName = generateFileName();
-      const fileBuffer = await sharp(file.buffer)
-        .resize({ height: 1080, width: 1920, fit: "contain" })
-        .toBuffer();
-
-      await uploadFile(fileBuffer, imageName, file.mimetype);
-      media = imageName;
     }
 
     const userId = req.session.user.Id;
@@ -383,43 +398,44 @@ router.post('/repost/:postId', upload.single('image'), async (req, res) => {
     const postData = {
       UserId: userId,
       Content: content,
-      Media: media,
+      Media: null,
       ReplyId: null,
       RepostId: postId,
-      CreatedAt: new Date()
+      CreatedAt: new Date(),
     };
 
-    apl.createPost(async (error, replyData) => {
+    apl.createPost(async (error, createdPost) => {
       if (error) {
-        console.error("Error creating reply post:", error);
-        return res.status(500).json({ error: "Failed to create reply post" });
+        console.error("Error creating repost:", error);
+        return res.status(500).json({ error: "Failed to create repost" });
       }
 
       apl.findPostById(async (findError, mainPost) => {
         if (findError || !mainPost) {
           console.error("Error fetching main post:", findError || "Main post not found");
-          return res.status(500).json({ error: "Failed to fetch main post for updating CommentCount" });
+          return res.status(500).json({ error: "Failed to fetch main post for updating RepostCount" });
         }
 
         const updatedPostData = {
           ...mainPost,
-          RepostCount: (mainPost.RepostCount || 0) + 1
+          RepostCount: (mainPost.RepostCount || 0) + 1,
         };
 
         apl.editPost((editError, updatedMainPost) => {
           if (editError) {
-            console.error("Error updating CommentCount on main post:", editError);
-            return res.status(500).json({ error: "Failed to update CommentCount on main post" });
+            console.error("Error updating RepostCount on main post:", editError);
+            return res.status(500).json({ error: "Failed to update RepostCount on main post" });
           }
-            res.redirect(`/post/${postId}`)
 
+          res.status(201).json({ message: "Repost created successfully", post: createdPost });
         }, updatedPostData, postId);
       }, postId);
     }, postData);
   } catch (error) {
-    console.error("Error in reply post route:", error);
-    res.status(500).json({ error: "An error occurred while processing the reply" });
+    console.error("Error in repost route:", error);
+    res.status(500).json({ error: "An error occurred while processing the repost" });
   }
 });
+
 
 module.exports = router;

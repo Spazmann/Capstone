@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const userLikedPosts = window.userLikes || [];
 
+  // Handle like button logic
   document.querySelectorAll('.like-button').forEach(button => {
     const postId = button.getAttribute('data-post-id');
 
@@ -8,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
       button.classList.add('liked');
     }
 
-    button.addEventListener('click', async (event) => {
+    button.addEventListener('click', async () => {
       button.disabled = true;
 
       const isLiked = button.classList.contains('liked');
@@ -42,27 +43,56 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Add functionality for repost dropdown
+  // Handle repost dropdown visibility
   document.querySelectorAll('.repost-button').forEach(button => {
-    button.addEventListener('click', (event) => {
+    button.addEventListener('click', () => {
       const dropdown = button.nextElementSibling;
       dropdown.classList.toggle('hidden');
     });
   });
 
+  // Handle quote repost button (placeholder logic)
   document.querySelectorAll('.quote-button').forEach(button => {
     button.addEventListener('click', () => {
-      // Add logic for quote reposting
-      alert('Quote repost clicked!');
+      alert('Quote repost clicked!'); // Placeholder for quote repost logic
     });
   });
 
+  // Handle repost confirm button
   document.querySelectorAll('.repost-confirm-button').forEach(button => {
-    button.addEventListener('click', () => {
-      // Add logic for reposting
-      alert('Repost confirmed!');
+    button.addEventListener('click', async () => {
+      const postId = button.getAttribute('data-post-id'); // Get postId directly from the confirm button
+  
+      if (!postId) {
+        console.error("Repost confirm button is missing a valid data-post-id attribute.");
+        console.log("Repost confirm button element:", button.outerHTML);
+        return;
+      }
+  
+      try {
+        const response = await fetch(`/post/repost/${postId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ content: null }) // No content or media for the repost
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Failed to repost post with ID: ${postId}`);
+        }
+  
+        const result = await response.json();
+        console.log("Repost successful:", result);
+  
+        // Optionally reload or update the page
+        window.location.reload();
+      } catch (error) {
+        console.error("Error reposting:", error);
+      }
     });
   });
+  
 
   // Close dropdowns when clicking outside
   document.addEventListener('click', (event) => {
