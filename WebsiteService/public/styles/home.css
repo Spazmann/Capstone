@@ -149,6 +149,17 @@
   margin-left: 5px;
 }
 
+.bookmarked .fa-bookmark {
+  color: green;
+}
+
+.bookmarked-count {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-size: 14px;
+  margin-left: 5px;
+}
+
 .post-actions i {
   margin-right: 5px;
 }

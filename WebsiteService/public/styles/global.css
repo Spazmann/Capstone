@@ -6,7 +6,7 @@
   }
   
   body {
-    background-color: #15202B;
+    background-color: #343434;
     color: #E1E8ED;
     display: flex;
     flex-direction: column;
@@ -23,7 +23,7 @@
   
   .left-sidebar {
     width: 250px;
-    background-color: #192734;
+    background-color: #292929;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -70,7 +70,7 @@
 
   .right-sidebar {
     width: 250px;
-    background-color: #192734;
+    background-color: #292929;
     padding: 20px;
     color: #E1E8ED;
   }
@@ -78,7 +78,7 @@
   .search-bar {
     display: flex;
     align-items: center;
-    background-color: #253341;
+    background-color: #232323;
     padding: 10px;
     border-radius: 10px;
     margin-bottom: 20px;

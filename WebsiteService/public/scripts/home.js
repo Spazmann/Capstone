@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const userLikedPosts = window.userLikes || [];
+  const userBookmarkedPosts = window.userBookmarks || []; // Retrieve initial bookmarks
 
   // Handle like button logic
   document.querySelectorAll('.like-button').forEach(button => {
@@ -43,6 +44,48 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Handle bookmark button logic
+  document.querySelectorAll('.bookmark-button').forEach(button => {
+    const postId = button.getAttribute('data-post-id');
+
+    if (userBookmarkedPosts.includes(postId)) {
+      button.classList.add('bookmarked'); // Add a visual indication for bookmarks
+    }
+
+    button.addEventListener('click', async () => {
+      button.disabled = true;
+
+      const isBookmarked = button.classList.contains('bookmarked');
+
+      try {
+        const response = await fetch(`/post/bookmark/${postId}`, {
+          method: isBookmarked ? 'DELETE' : 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to toggle bookmark for post with ID: ${postId}`);
+        }
+
+        const result = await response.json();
+
+        const bookmarkCountElement = button.querySelector('.bookmark-count');
+        if (bookmarkCountElement) {
+          const currentBookmarks = parseInt(bookmarkCountElement.textContent.trim()) || 0;
+          bookmarkCountElement.textContent = isBookmarked ? ` ${currentBookmarks - 1}` : ` ${currentBookmarks + 1}`;
+        }
+
+        button.classList.toggle('bookmarked');
+      } catch (error) {
+        console.error("Error toggling bookmark:", error);
+      } finally {
+        button.disabled = false;
+      }
+    });
+  });
+
   // Handle repost dropdown visibility
   document.querySelectorAll('.repost-button').forEach(button => {
     button.addEventListener('click', () => {
@@ -61,14 +104,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Handle repost confirm button
   document.querySelectorAll('.repost-confirm-button').forEach(button => {
     button.addEventListener('click', async () => {
-      const postId = button.getAttribute('data-post-id'); // Get postId directly from the confirm button
-  
+      const postId = button.getAttribute('data-post-id');
+
       if (!postId) {
         console.error("Repost confirm button is missing a valid data-post-id attribute.");
         console.log("Repost confirm button element:", button.outerHTML);
         return;
       }
-  
+
       try {
         const response = await fetch(`/post/repost/${postId}`, {
           method: 'POST',
@@ -77,14 +120,14 @@ document.addEventListener('DOMContentLoaded', () => {
           },
           body: JSON.stringify({ content: null }) // No content or media for the repost
         });
-  
+
         if (!response.ok) {
           throw new Error(`Failed to repost post with ID: ${postId}`);
         }
-  
+
         const result = await response.json();
         console.log("Repost successful:", result);
-  
+
         // Optionally reload or update the page
         window.location.reload();
       } catch (error) {
@@ -92,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
-  
 
   // Close dropdowns when clicking outside
   document.addEventListener('click', (event) => {

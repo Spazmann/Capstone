@@ -437,5 +437,112 @@ router.post('/repost/:postId', upload.single('image'), async (req, res) => {
   }
 });
 
+router.post('/bookmark/:postId', async (req, res) => {
+  const postId = req.params.postId;
+  const userId = req.session.user.Id;
+
+  try {
+    apl.findPostById(async (postError, postData) => {
+      if (postError || !postData) {
+        console.error("Error retrieving post data:", postError || "Post not found");
+        return res.status(500).json({ error: "Failed to retrieve post data" });
+      }
+
+      const updatedPostData = {
+        ...postData,
+        BookmarkCount: postData.BookmarkCount + 1
+      };
+
+      apl.editPost(async (editError, updatedPost) => {
+        if (editError) {
+          console.error("Error updating post bookmarks:", editError);
+          return res.status(500).json({ error: "Failed to update post bookmarks" });
+        }
+
+        const updatedUserData = {
+          ...req.session.user,
+          Bookmarks: Array.from(new Set([...req.session.user.Bookmarks, postId]))
+        };
+
+        dal.updateUser((userError, savedUser) => {
+          if (userError) {
+            console.error("Error updating user's bookmarks array in the database:", userError);
+            return res.status(500).json({ error: "Failed to update user's bookmarks array in the database" });
+          }
+
+          const parsedUser = typeof savedUser === 'string' ? JSON.parse(savedUser).message : savedUser;
+
+          req.session.user = parsedUser;
+
+
+          res.status(200).json({
+            message: "Post bookmarked successfully",
+            post: updatedPost,
+            user: parsedUser
+          });
+        }, updatedUserData, userId);
+      }, updatedPostData, postId);
+    }, postId);
+  } catch (error) {
+    console.error("Error in bookmarkPost route:", error);
+    res.status(500).json({ error: "An error occurred while bookmarking the post" });
+  }
+});
+
+router.delete('/bookmark/:postId', async (req, res) => {
+  const postId = req.params.postId;
+  const userId = req.session.user.Id;
+
+  try {
+    apl.findPostById(async (postError, postData) => {
+      if (postError || !postData) {
+        console.error("Error retrieving post data:", postError || "Post not found");
+        return res.status(500).json({ error: "Failed to retrieve post data" });
+      }
+
+      if (!req.session.user.Bookmarks.includes(postId)) {
+        return res.status(400).json({ error: "Post is not bookmarked by the user" });
+      }
+
+      const updatedPostData = {
+        ...postData,
+        BookmarkCount: Math.max(0, postData.BookmarkCount - 1)
+      };
+
+      apl.editPost(async (editError, updatedPost) => {
+        if (editError) {
+          console.error("Error updating post bookmarks:", editError);
+          return res.status(500).json({ error: "Failed to update post bookmarks" });
+        }
+
+        const updatedUserData = {
+          ...req.session.user,
+          Bookmarks: req.session.user.Bookmarks.filter(id => id !== postId)
+        };
+
+        dal.updateUser((userError, savedUser) => {
+          if (userError) {
+            console.error("Error updating user's Bookmarks array in the database:", userError);
+            return res.status(500).json({ error: "Failed to update user's Bookmarks array in the database" });
+          }
+
+          const parsedUser = typeof savedUser === 'string' ? JSON.parse(savedUser).message : savedUser;
+
+          req.session.user = parsedUser;
+
+          res.status(200).json({
+            message: "Bookmark removed successfully",
+            post: updatedPost,
+            user: parsedUser
+          });
+        }, updatedUserData, userId);
+      }, updatedPostData, postId);
+    }, postId);
+  } catch (error) {
+    console.error("Error in unBookmarkPost route:", error);
+    res.status(500).json({ error: "An error occurred while unBookmarking the post" });
+  }
+});
+
 
 module.exports = router;

@@ -197,6 +197,8 @@ button.follow:hover {
   background-color: #0d8dd8;
 }
 
+
+
 .posts {
   display: flex;
   flex-direction: column;
@@ -204,11 +206,16 @@ button.follow:hover {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f7f9fa;
+  background-color: #202020;
   border-radius: 8px;
 }
 
 .post-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.repost-container {
   width: 100%;
   margin-bottom: 20px;
 }
@@ -228,7 +235,7 @@ button.follow:hover {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  text-decoration: none; 
+  text-decoration: none;
   color: inherit;
 }
 
@@ -310,7 +317,25 @@ button.follow:hover {
   align-items: center;
 }
 
+.post-actions a {
+  background-color: transparent;
+  border: none;
+  color: #ccc;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
 .post-actions button:hover {
+  background-color: #444;
+}
+
+.post-actions a:hover {
   background-color: #444;
 }
 
@@ -325,6 +350,54 @@ button.follow:hover {
   margin-left: 5px;
 }
 
+.bookmarked .fa-bookmark {
+  color: green;
+}
+
+.bookmarked-count {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-size: 14px;
+  margin-left: 5px;
+}
+
 .post-actions i {
   margin-right: 5px;
+}
+
+.repost-dropdown-container {
+  position: relative;
+}
+
+.repost-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #2d2d2d;
+  border: 1px solid #444;
+  border-radius: 5px;
+  padding: 5px 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+  z-index: 1000;
+}
+
+.repost-dropdown.hidden {
+  display: none;
+}
+
+.repost-dropdown button {
+  background-color: transparent;
+  border: none;
+  color: #ccc;
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.repost-dropdown button:hover {
+  background-color: #444;
 }

@@ -48,58 +48,98 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function renderFeed(data, container) {
     container.innerHTML = '';
-
+  
     if (data.length === 0) {
       container.innerHTML = `<p>No content found.</p>`;
       return;
     }
-
+  
     for (const post of data) {
       const userData = await fetchUserData(post.UserId);
       const profileImage = userData ? `https://capstonemedia.s3.amazonaws.com/${userData.Profile.profileImage}` : '/path/to/placeholder-image.jpg';
       const name = userData ? userData.Profile.name : 'Unknown User';
       const username = userData ? userData.Username : 'unknown';
-
-      const postElement = document.createElement('article');
-      postElement.classList.add('post');
-      postElement.innerHTML = `
-        <a href="/profile/${username}" class="post-header">
-          <img class="profile-image" src="${profileImage}" alt="Profile Image">
-          <div class="user-info">
-            <h3 class="username">${name}</h3>
-            <span class="username-handle">@${username}</span>
-            <span class="created-at">${new Date(post.CreatedAt).toLocaleString()}</span>
+  
+      const postElement = document.createElement('div');
+      postElement.classList.add('post-container');
+  
+      const repostContent = post.Repost
+        ? `
+          <div class="repost-container">
+            <article class="post">
+              <a href="/profile/${post.Repost.Username}" class="post-header">
+                <img class="profile-image" src="https://capstonemedia.s3.amazonaws.com/${post.Repost.Profile.profileImage}" alt="Profile Image">
+                <div class="user-info">
+                  <h3 class="username">${post.Repost.Profile.name}</h3>
+                  <span class="username-handle">@${post.Repost.Username}</span>
+                  <span class="created-at">${new Date(post.Repost.CreatedAt).toLocaleString()}</span>
+                </div>
+              </a>
+              <a class="post-content" href="/post/${post.Repost.Id}">
+                <p>${post.Repost.Content}</p>
+                ${
+                  post.Repost.Media
+                    ? `<div class="post-media"><img src="https://capstonemedia.s3.amazonaws.com/${post.Repost.Media}" alt="Post Image"></div>`
+                    : ''
+                }
+              </a>
+            </article>
           </div>
-        </a>
-        <a class="post-content" href="/post/${post.Id}">
-          <p>${post.Content}</p>
-          ${post.Media ? `<div class="post-media"><img src="https://capstonemedia.s3.amazonaws.com/${post.Media}" alt="Post Image"></div>` : ''}
-        </a>
-        <div class="post-actions">
-          <button class="like-button ${userLikedPosts.includes(post.Id) ? 'liked' : ''}" data-post-id="${post.Id}">
-            <i class="fas fa-heart"></i>
-            <span class="like-count">${post.Likes}</span>
-          </button>
-          <button class="comment-button">
-            <i class="fas fa-comment"></i>
-            <span>${post.CommentCount}</span>
-          </button>
-          <button class="repost-button">
-            <i class="fas fa-retweet"></i>
-            <span>${post.RepostCount}</span>
-          </button>
-          <button class="bookmark-button">
-            <i class="fas fa-bookmark"></i>
-            <span>${post.BookmarkCount}</span>
-          </button>
-        </div>
+        `
+        : '';
+  
+      postElement.innerHTML = `
+        <article class="post">
+          <a href="/profile/${username}" class="post-header">
+            <img class="profile-image" src="${profileImage}" alt="Profile Image">
+            <div class="user-info">
+              <h3 class="username">${name}</h3>
+              <span class="username-handle">@${username}</span>
+              <span class="created-at">${new Date(post.CreatedAt).toLocaleString()}</span>
+            </div>
+          </a>
+          <a class="post-content" href="/post/${post.Id}">
+            <p>${post.Content}</p>
+            ${
+              post.Media
+                ? `<div class="post-media"><img src="https://capstonemedia.s3.amazonaws.com/${post.Media}" alt="Post Image"></div>`
+                : ''
+            }
+          </a>
+          ${repostContent}
+          <div class="post-actions">
+            <button class="like-button ${userLikedPosts.includes(post.Id) ? 'liked' : ''}" data-post-id="${post.Id}">
+              <i class="fas fa-heart"></i>
+              <span class="like-count">${post.Likes}</span>
+            </button>
+            <button class="comment-button">
+              <i class="fas fa-comment"></i>
+              <span>${post.CommentCount}</span>
+            </button>
+            <div class="repost-dropdown-container">
+              <button class="repost-button" data-post-id="${post.Id}">
+                <i class="fas fa-retweet"></i>
+                <span>${post.RepostCount}</span>
+              </button>
+              <div class="repost-dropdown hidden">
+                <button class="quote-button" data-post-id="${post.Id}">Quote</button>
+                <button class="repost-confirm-button" data-post-id="${post.Id}">Repost</button>
+              </div>
+            </div>
+            <button class="bookmark-button" data-post-id="${post.Id}">
+              <i class="fas fa-bookmark"></i>
+              <span class="bookmark-count">${post.BookmarkCount}</span>
+            </button>
+          </div>
+        </article>
       `;
-
+  
       container.appendChild(postElement);
     }
-
+  
     initializeLikeButtons();
   }
+  
 
   async function fetchUserData(userId) {
     try {

@@ -13,7 +13,8 @@ const profilePageRouter = require('./routes/profile');
 const createAccountRouter = require('./routes/createAccount');
 const settingsRouter = require('./routes/settings');
 const postRouter = require('./routes/post');
-const postCommunity = require('./routes/community');
+const postCommunityRouter = require('./routes/community');
+const bookmarksRouter = require('./routes/bookmarks');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
@@ -33,7 +34,8 @@ app.use('/profile', profilePageRouter);
 app.use('/createAccount', createAccountRouter);
 app.use('/settings', settingsRouter);
 app.use('/post', postRouter);
-app.use('/community', postCommunity);
+app.use('/community', postCommunityRouter);
+app.use('/bookmarks', bookmarksRouter);
 
 // Cookies and Session Setup
 app.use(session({
