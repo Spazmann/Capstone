@@ -60,33 +60,53 @@ document.addEventListener('DOMContentLoaded', () => {
       const name = userData ? userData.Profile.name : 'Unknown User';
       const username = userData ? userData.Username : 'unknown';
   
+      let repostContent = '';
+  
+      // Fetch repost data if RepostId exists
+      if (post.RepostId) {
+        try {
+          const repostResponse = await fetch(`/post/${post.RepostId}`);
+          if (repostResponse.ok) {
+            const repostData = await repostResponse.json();
+            const repostUserData = await fetchUserData(repostData.UserId);
+            const repostProfileImage = repostUserData
+              ? `https://capstonemedia.s3.amazonaws.com/${repostUserData.Profile.profileImage}`
+              : '/path/to/placeholder-image.jpg';
+            const repostName = repostUserData ? repostUserData.Profile.name : 'Unknown User';
+            const repostUsername = repostUserData ? repostUserData.Username : 'unknown';
+  
+            repostContent = `
+              <div class="repost-container">
+                <article class="post">
+                  <a href="/profile/${repostUsername}" class="post-header">
+                    <img class="profile-image" src="${repostProfileImage}" alt="Profile Image">
+                    <div class="user-info">
+                      <h3 class="username">${repostName}</h3>
+                      <span class="username-handle">@${repostUsername}</span>
+                      <span class="created-at">${new Date(repostData.CreatedAt).toLocaleString()}</span>
+                    </div>
+                  </a>
+                  <a class="post-content" href="/post/${repostData.Id}">
+                    <p>${repostData.Content}</p>
+                    ${
+                      repostData.Media
+                        ? `<div class="post-media"><img src="https://capstonemedia.s3.amazonaws.com/${repostData.Media}" alt="Post Image"></div>`
+                        : ''
+                    }
+                  </a>
+                </article>
+              </div>
+            `;
+          } else {
+            console.error(`Failed to fetch repost data for RepostId: ${post.RepostId}`);
+          }
+        } catch (error) {
+          console.error(`Error fetching repost data for RepostId: ${post.RepostId}`, error);
+        }
+      }
+  
       const postElement = document.createElement('div');
       postElement.classList.add('post-container');
-  
-      const repostContent = post.Repost
-        ? `
-          <div class="repost-container">
-            <article class="post">
-              <a href="/profile/${post.Repost.Username}" class="post-header">
-                <img class="profile-image" src="https://capstonemedia.s3.amazonaws.com/${post.Repost.Profile.profileImage}" alt="Profile Image">
-                <div class="user-info">
-                  <h3 class="username">${post.Repost.Profile.name}</h3>
-                  <span class="username-handle">@${post.Repost.Username}</span>
-                  <span class="created-at">${new Date(post.Repost.CreatedAt).toLocaleString()}</span>
-                </div>
-              </a>
-              <a class="post-content" href="/post/${post.Repost.Id}">
-                <p>${post.Repost.Content}</p>
-                ${
-                  post.Repost.Media
-                    ? `<div class="post-media"><img src="https://capstonemedia.s3.amazonaws.com/${post.Repost.Media}" alt="Post Image"></div>`
-                    : ''
-                }
-              </a>
-            </article>
-          </div>
-        `
-        : '';
   
       postElement.innerHTML = `
         <article class="post">
@@ -137,8 +157,9 @@ document.addEventListener('DOMContentLoaded', () => {
       container.appendChild(postElement);
     }
   
-    initializeLikeButtons();
+    initializeLikeButtons(); // Initialize event listeners for like buttons
   }
+  
   
 
   async function fetchUserData(userId) {

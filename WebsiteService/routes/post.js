@@ -15,86 +15,86 @@ const upload = multer({ storage: storage });
 const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
 
 router.get('/:postId', async (req, res) => {
-  const user = req.session ? req.session.user : null;
+  const user = req.session?.user || null;
   const postId = req.params.postId;
 
   try {
-    apl.findPostById(async (error, post) => {
-      if (error) {
-        console.error("Error fetching post:", error);
-        return res.status(500).send("Error fetching post");
-      }
-
-      if (!post) {
-        return res.status(404).send("Post not found");
-      }
-
-      const userData = await dal.findUserId(post.UserId);
-
-      let postWithUserData = {
-        ...post,
-        Profile: {
-          name: userData.Profile.name,
-          profileImage: userData.Profile.profileImage,
-        },
-        Username: userData.Username,
-      };
-
-      if (post.RepostId) {
-        await apl.findPostById(async (repostError, repost) => {
-          if (repostError) {
-            console.error("Error fetching repost:", repostError);
-            return res.status(500).send("Error fetching repost");
-          }
-
-          if (repost) {
-            const repostUserData = await dal.findUserId(repost.UserId);
-
-            postWithUserData.Repost = {
-              ...repost,
-              Profile: {
-                name: repostUserData.Profile.name,
-                profileImage: repostUserData.Profile.profileImage,
-              },
-              Username: repostUserData.Username,
-            };
-          }
-        }, post.RepostId);
-      }
-
-      apl.findPostByReplyId(async (replyError, replies) => {
-        if (replyError) {
-          console.error("Error fetching replies:", replyError);
-          return res.status(500).send("Error fetching replies");
-        }
-
-        const repliesWithUserData = await Promise.all(
-          replies.map(async (reply) => {
-            const replyUserData = await dal.findUserId(reply.UserId);
-            return {
-              ...reply,
-              Profile: {
-                name: replyUserData.Profile.name,
-                profileImage: replyUserData.Profile.profileImage,
-              },
-              Username: replyUserData.Username,
-            };
-          })
-        );
-
-        res.render('post', { 
-          title: "Post Page", 
-          user: user, 
-          post: postWithUserData, 
-          replies: repliesWithUserData 
-        });
+    const post = await new Promise((resolve, reject) => {
+      apl.findPostById((error, data) => {
+        if (error) return reject(error);
+        if (!data) return reject(new Error("Post not found"));
+        resolve(data);
       }, postId);
-    }, postId);
+    });
+
+    const userData = await dal.findUserId(post.UserId);
+    let postWithUserData = {
+      ...post,
+      Profile: {
+        name: userData?.Profile?.name || "Unknown User",
+        profileImage: userData?.Profile?.profileImage || "default-profile.png",
+      },
+      Username: userData?.Username || "unknown",
+    };
+
+    if (post.RepostId) {
+      try {
+        const repost = await new Promise((resolve, reject) => {
+          apl.findPostById((error, data) => {
+            if (error) return reject(error);
+            resolve(data);
+          }, post.RepostId);
+        });
+
+        if (repost) {
+          const repostUserData = await dal.findUserId(repost.UserId);
+          postWithUserData.Repost = {
+            ...repost,
+            Profile: {
+              name: repostUserData?.Profile?.name || "Unknown User",
+              profileImage: repostUserData?.Profile?.profileImage || "default-profile.png",
+            },
+            Username: repostUserData?.Username || "unknown",
+          };
+        }
+      } catch (error) {
+        console.error(`Error fetching repost for RepostId: ${post.RepostId}`, error);
+      }
+    }
+
+    const replies = await new Promise((resolve, reject) => {
+      apl.findPostByReplyId((error, data) => {
+        if (error) return reject(error);
+        resolve(data);
+      }, postId);
+    });
+
+    const repliesWithUserData = await Promise.all(
+      replies.map(async (reply) => {
+        const replyUserData = await dal.findUserId(reply.UserId);
+        return {
+          ...reply,
+          Profile: {
+            name: replyUserData?.Profile?.name || "Unknown User",
+            profileImage: replyUserData?.Profile?.profileImage || "default-profile.png",
+          },
+          Username: replyUserData?.Username || "unknown",
+        };
+      })
+    );
+
+    res.render('post', {
+      title: "Post Page",
+      user: user,
+      post: postWithUserData,
+      replies: repliesWithUserData,
+    });
   } catch (error) {
     console.error("Error in post route:", error);
-    res.status(500).send("An error occurred while loading the page");
+    res.status(500).json({ error: "An error occurred while loading the page" });
   }
 });
+
 
 
 
