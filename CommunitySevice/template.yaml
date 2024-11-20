@@ -1,0 +1,215 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  SAM Template for CommunityService
+
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 512
+    Tracing: Active
+    LoggingConfig:
+      LogFormat: JSON
+  Api:
+    TracingEnabled: true
+
+Resources:
+  CreateCommunityFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::CreateCommunity
+      Runtime: dotnet8
+      Architectures:
+        - x86_64
+      Events:
+        CreateCommunity:
+          Type: Api
+          Properties:
+            Path: /communities/create
+            Method: post
+
+  EditCommunityNameFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::EditCommunityName
+      Runtime: dotnet8
+      Architectures:
+        - x86_64
+      Events:
+        EditCommunityName:
+          Type: Api
+          Properties:
+            Path: /communities/{communityId}/editname
+            Method: put
+
+  EditAdminsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::EditAdmins
+      Runtime: dotnet8
+      Architectures:
+        - x86_64
+      Events:
+        EditAdmins:
+          Type: Api
+          Properties:
+            Path: /communities/{communityId}/admins
+            Method: put
+
+  EditModsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::EditMods
+      Runtime: dotnet8
+      Architectures:
+        - x86_64
+      Events:
+        EditMods:
+          Type: Api
+          Properties:
+            Path: /communities/{communityId}/mods
+            Method: put
+
+  EditMembersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::EditMembers
+      Runtime: dotnet8
+      Architectures:
+        - x86_64
+      Events:
+        EditMembers:
+          Type: Api
+          Properties:
+            Path: /communities/{communityId}/members
+            Method: put
+
+  GetAllCommunitiesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetAllCommunities
+      Runtime: dotnet8
+      Architectures:
+        - x86_64
+      Events:
+        GetAllCommunities:
+          Type: Api
+          Properties:
+            Path: /communities
+            Method: get
+
+  GetCommunityByIdFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetCommunityById
+      Runtime: dotnet8
+      Architectures:
+        - x86_64
+      Events:
+        GetCommunityById:
+          Type: Api
+          Properties:
+            Path: /communities/{communityId}
+            Method: get
+
+  GetCommunityByNameFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/HelloWorld/
+      Handler: HelloWorld::HelloWorld.Function::GetCommunityByName
+      Runtime: dotnet8
+      Architectures:
+        - x86_64
+      Events:
+        GetCommunityByName:
+          Type: Api
+          Properties:
+            Path: /communities/search
+            Method: get
+
+  ApplicationResourceGroup:
+    Type: AWS::ResourceGroups::Group
+    Properties:
+      Name:
+        Fn::Sub: ApplicationInsights-SAM-${AWS::StackName}
+      ResourceQuery:
+        Type: CLOUDFORMATION_STACK_1_0
+
+  ApplicationInsightsMonitoring:
+    Type: AWS::ApplicationInsights::Application
+    Properties:
+      ResourceGroupName:
+        Ref: ApplicationResourceGroup
+      AutoConfigurationEnabled: 'true'
+
+Outputs:
+  CreateCommunityApi:
+    Description: "API Gateway endpoint URL for Create Community"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/create"
+
+  EditCommunityNameApi:
+    Description: "API Gateway endpoint URL for Edit Community Name"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/{communityId}/editname"
+
+  EditAdminsApi:
+    Description: "API Gateway endpoint URL for Edit Admins"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/{communityId}/admins"
+
+  EditModsApi:
+    Description: "API Gateway endpoint URL for Edit Mods"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/{communityId}/mods"
+
+  EditMembersApi:
+    Description: "API Gateway endpoint URL for Edit Members"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/{communityId}/members"
+
+  GetAllCommunitiesApi:
+    Description: "API Gateway endpoint URL for Get All Communities"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities"
+
+  GetCommunityByIdApi:
+    Description: "API Gateway endpoint URL for Get Community By ID"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/{communityId}"
+
+  GetCommunityByNameApi:
+    Description: "API Gateway endpoint URL for Get Community By Name"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/communities/search"
+
+  CreateCommunityFunctionArn:
+    Description: "Lambda Function ARN for Create Community"
+    Value: !GetAtt CreateCommunityFunction.Arn
+
+  EditCommunityNameFunctionArn:
+    Description: "Lambda Function ARN for Edit Community Name"
+    Value: !GetAtt EditCommunityNameFunction.Arn
+
+  EditAdminsFunctionArn:
+    Description: "Lambda Function ARN for Edit Admins"
+    Value: !GetAtt EditAdminsFunction.Arn
+
+  EditModsFunctionArn:
+    Description: "Lambda Function ARN for Edit Mods"
+    Value: !GetAtt EditModsFunction.Arn
+
+  EditMembersFunctionArn:
+    Description: "Lambda Function ARN for Edit Members"
+    Value: !GetAtt EditMembersFunction.Arn
+
+  GetAllCommunitiesFunctionArn:
+    Description: "Lambda Function ARN for Get All Communities"
+    Value: !GetAtt GetAllCommunitiesFunction.Arn
+
+  GetCommunityByIdFunctionArn:
+    Description: "Lambda Function ARN for Get Community By ID"
+    Value: !GetAtt GetCommunityByIdFunction.Arn
+
+  GetCommunityByNameFunctionArn:
+    Description: "Lambda Function ARN for Get Community By Name"
+    Value: !GetAtt GetCommunityByNameFunction.Arn

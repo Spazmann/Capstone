@@ -199,7 +199,8 @@ public class UserDatabase
                     .Set("Posts", user.Posts)
                     .Set("Likes", user.Likes)
                     .Set("Bookmarks", user.Bookmarks)
-                    .Set("Blocks", user.Blocks);
+                    .Set("Blocks", user.Blocks)
+                    .Set("Communities", user.Communities);
 
                 await collection.UpdateOneAsync(filter, update);
 

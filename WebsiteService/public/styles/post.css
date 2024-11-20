@@ -1,142 +1,209 @@
-/* Container for posts */
 .posts {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f7f9fa;
-    border-radius: 8px;
-  }
-  
-  /* Container for each post and its actions */
-  .post-container {
-    width: 100%;
-    margin-bottom: 20px;
-  }
-  
-  /* Individual post styling */
-  .post {
-    width: 100%;
-    background-color: #2d2d2d; /* Dark gray background for the post */
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  /* Profile header styling */
-  .post-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    text-decoration: none; /* Remove underline */
-    color: inherit;
-  }
-  
-  /* Profile image link styling */
-  .profile-image {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 10px;
-    transition: transform 0.2s;
-  }
-  
-  .profile-image:hover {
-    transform: scale(1.05); /* Slight zoom effect on hover */
-  }
-  
-  /* User info styling */
-  .user-info {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .username {
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  
-  .username-handle,
-  .created-at {
-    font-size: 14px;
-    color: #888;
-  }
-  
-  .username:hover {
-    color: #1da1f2; /* Hover color for username */
-  }
-  
-  /* Post content styling */
-  .post-content {
-    font-size: 16px;
-    color: #ddd;
-    margin-top: 10px;
-    text-decoration: none;
-  }
-  
-  /* Post media styling */
-  .post-media img {
-    width: 100%;
-    max-height: 300px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-top: 10px;
-  }
-  
-  /* Post actions container */
-  .post-actions {
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-    border-top: 1px solid #444;
-    background-color: #2d2d2d; /* Matches post background */
-    border-radius: 0 0 8px 8px;
-  }
-  
-  /* Base styling for each button in post actions */
-  .post-actions button {
-    background-color: transparent;
-    border: none;
-    color: #ccc;
-    font-size: 14px;
-    cursor: pointer;
-    padding: 5px 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-    display: flex;
-    align-items: center;
-  }
-  
-  .post-actions button:hover {
-    background-color: #444;
-  }
-  
-  .liked .fa-heart {
-    color: red;
-  }
-  
-  .like-count {
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-    font-size: 14px;
-    margin-left: 5px;
-  }
-  
-  /* Additional styling for FontAwesome icons within buttons */
-  .post-actions i {
-    margin-right: 5px;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #202020;
+  border-radius: 8px;
+}
 
-  /* Replies styling */
+.post-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.repost-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.post {
+  width: 100%;
+  background-color: #2d2d2d; 
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+  transition: transform 0.2s;
+}
+
+.profile-image:hover {
+  transform: scale(1.05);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.username-handle,
+.created-at {
+  font-size: 14px;
+  color: #888;
+}
+
+.username:hover {
+  color: #1da1f2;
+}
+
+.post-content {
+  font-size: 16px;
+  color: #ddd;
+  margin-top: 10px;
+  text-decoration: none;
+}
+
+.post-content:hover {
+  background-color: #333;
+  border-radius: 8px;
+}
+
+.post-media img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  border-top: 1px solid #444;
+  background-color: #2d2d2d; 
+  border-radius: 0 0 8px 8px;
+}
+
+.post-actions button {
+  background-color: transparent;
+  border: none;
+  color: #ccc;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+}
+
+.post-actions a {
+  background-color: transparent;
+  border: none;
+  color: #ccc;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.post-actions button:hover {
+  background-color: #444;
+}
+
+.post-actions a:hover {
+  background-color: #444;
+}
+
+.liked .fa-heart {
+  color: red;
+}
+
+.like-count {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+.bookmarked .fa-bookmark {
+  color: green;
+}
+
+.bookmarked-count {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+.post-actions i {
+  margin-right: 5px;
+}
+
+.repost-dropdown-container {
+  position: relative;
+}
+
+.repost-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #2d2d2d;
+  border: 1px solid #444;
+  border-radius: 5px;
+  padding: 5px 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+  z-index: 1000;
+}
+
+.repost-dropdown.hidden {
+  display: none;
+}
+
+.repost-dropdown button {
+  background-color: transparent;
+  border: none;
+  color: #ccc;
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.repost-dropdown button:hover {
+  background-color: #444;
+}
+
+
+
+
 .replies {
     display: flex;
     flex-direction: column;
@@ -144,28 +211,25 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #f7f9fa;
+    background-color: #1f1f1f;
     border-radius: 8px;
   }
   
   .replies .post-container {
     margin-bottom: 15px;
-    background-color: #f7f7f7; /* Lighter background for replies */
+    background-color: #1f1f1f;
   }
   
-
-/* Reply form container */
 .reply-form-container {
   margin: 20px 0;
   padding: 15px;
-  background-color: #2c2f33; /* Dark background */
+  background-color: #2c2f33; 
   border-radius: 8px;
   color: #d1d1d1;
   display: flex;
   flex-direction: column;
 }
 
-/* Replying to text */
 .reply-to {
   font-size: 14px;
   color: #8899a6;
@@ -177,7 +241,6 @@
   text-decoration: none;
 }
 
-/* Form structure */
 .reply-form {
   display: flex;
   align-items: flex-start;
@@ -194,7 +257,6 @@
   object-fit: cover;
 }
 
-/* Reply input and icons */
 .reply-input-group {
   flex: 1;
   display: flex;
@@ -203,7 +265,7 @@
 
 .reply-form textarea {
   width: 100%;
-  background-color: #3a3d41; /* Darker background for input */
+  background-color: #3a3d41;
   border: 1px solid #4a4d52;
   color: #d1d1d1;
   padding: 10px;
@@ -219,7 +281,6 @@
   color: #8899a6;
 }
 
-/* Icons below the textarea */
 .reply-icons {
   display: flex;
   gap: 10px;
@@ -237,7 +298,6 @@
   color: #1da1f2;
 }
 
-/* Reply submit button */
 .reply-submit {
   background-color: #1da1f2;
   color: white;

@@ -1,4 +1,3 @@
-/* Reset and Global Styles */
 * {
     margin: 0;
     padding: 0;
@@ -6,7 +5,6 @@
     font-family: Arial, sans-serif;
 }
 
-/* Body Layout */
 body {
     display: flex;
     height: 100vh;
@@ -14,13 +12,11 @@ body {
     background-color: #a85809;
 }
 
-/* Main Container */
 .container {
     display: flex;
     width: 100%;
 }
 
-/* Left Section Styling */
 .left {
     width: 70%;
     display: flex;
@@ -33,7 +29,6 @@ body {
     max-width: 200px;
 }
 
-/* Right Section Styling */
 .right {
     width: 30%;
     background-color: #454341;
@@ -48,7 +43,6 @@ body {
     text-align: left;
 }
 
-/* Header Styling */
 h1 {
     font-size: 2.5rem;
     font-weight: bold;
@@ -62,7 +56,6 @@ h2 {
     color: white;
 }
 
-/* Form Layout */
 form {
     display: flex;
     flex-direction: column;
@@ -76,7 +69,6 @@ form {
     gap: 15px;
 }
 
-/* Button Styling */
 button {
     padding: 10px;
     border-radius: 30px;
@@ -127,7 +119,6 @@ button:hover {
     border-color: #f2921d;
 }
 
-/* Modal Overlay */
 #overlay, #passwordOverlay, #loginOverlay {
     position: fixed;
     top: 0;
@@ -149,7 +140,6 @@ button:hover {
     opacity: 1;
 }
 
-/* Modal Styling */
 .modal {
     background-color: #15202B;
     padding: 40px;
@@ -163,7 +153,6 @@ button:hover {
     overflow: hidden;
 }
 
-/* Close Button Styling */
 button.close-button {
     position: absolute;
     top: 15px;
@@ -183,11 +172,10 @@ button.close-button {
 }
 
 button.close-button:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* Subtle circle hover effect */
-    color: #f2921d; /* Orange color on hover for the X */
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #f2921d; 
 }
 
-/* Form Elements */
 .modal label {
     display: block;
     margin-bottom: 5px;
@@ -219,7 +207,6 @@ button.close-button:hover {
     line-height: 1.4;
 }
 
-/* Modal Buttons */
 .modal button.submit {
     width: 100%;
     padding: 12px;
@@ -237,7 +224,6 @@ button.close-button:hover {
     background-color: #d9791a;
 }
 
-/* Link Styling */
 .modal a {
     display: block;
     margin-top: 10px;
@@ -257,8 +243,8 @@ button.close-button:hover {
     transition: visibility 0s, opacity 0.3s;
   }
   
-  .visible {
+.visible {
     visibility: visible;
     opacity: 1;
     transition: opacity 0.3s;
-  }
+}

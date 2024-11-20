@@ -18,7 +18,7 @@ html
           li
             a(href='/messages') Messages X
           li
-            a(href='/bookmarks') Bookmarks X
+            a(href='/bookmarks') Bookmarks
           li
             a(href=`/profile/${user.Username}`) Profile
         button(type='button', id='postButton') Post
@@ -39,20 +39,11 @@ html
         block content
 
       .right-sidebar
-        .trending
-          h3 What’s happening
-          ul
-            li Trending 1
-            li Trending 2
-            li Trending 3
-        .who-to-follow
-          h3 Who to follow
-          ul
-            li User 1
-            li User 2
-            li User 3
+        .search-bar
+          input(type='text', placeholder='Search...', id='searchInput')
+          button(type='button', id='searchButton') Search
+        h3 Your Communities
 
-    // Modal
     .modal#postModal
       .modal-content
         span.close-button &times;

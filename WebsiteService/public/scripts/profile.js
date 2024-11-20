@@ -47,60 +47,120 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function renderFeed(data, container) {
-    container.innerHTML = ''; // Clear previous content
-
+    container.innerHTML = '';
+  
     if (data.length === 0) {
       container.innerHTML = `<p>No content found.</p>`;
       return;
     }
-
+  
     for (const post of data) {
-      const userData = await fetchUserData(post.UserId); // Fetch user data for each post
+      const userData = await fetchUserData(post.UserId);
       const profileImage = userData ? `https://capstonemedia.s3.amazonaws.com/${userData.Profile.profileImage}` : '/path/to/placeholder-image.jpg';
       const name = userData ? userData.Profile.name : 'Unknown User';
       const username = userData ? userData.Username : 'unknown';
-
-      const postElement = document.createElement('article');
-      postElement.classList.add('post');
+  
+      let repostContent = '';
+  
+      // Fetch repost data if RepostId exists
+      if (post.RepostId) {
+        try {
+          const repostResponse = await fetch(`/post/${post.RepostId}`);
+          if (repostResponse.ok) {
+            const repostData = await repostResponse.json();
+            const repostUserData = await fetchUserData(repostData.UserId);
+            const repostProfileImage = repostUserData
+              ? `https://capstonemedia.s3.amazonaws.com/${repostUserData.Profile.profileImage}`
+              : '/path/to/placeholder-image.jpg';
+            const repostName = repostUserData ? repostUserData.Profile.name : 'Unknown User';
+            const repostUsername = repostUserData ? repostUserData.Username : 'unknown';
+  
+            repostContent = `
+              <div class="repost-container">
+                <article class="post">
+                  <a href="/profile/${repostUsername}" class="post-header">
+                    <img class="profile-image" src="${repostProfileImage}" alt="Profile Image">
+                    <div class="user-info">
+                      <h3 class="username">${repostName}</h3>
+                      <span class="username-handle">@${repostUsername}</span>
+                      <span class="created-at">${new Date(repostData.CreatedAt).toLocaleString()}</span>
+                    </div>
+                  </a>
+                  <a class="post-content" href="/post/${repostData.Id}">
+                    <p>${repostData.Content}</p>
+                    ${
+                      repostData.Media
+                        ? `<div class="post-media"><img src="https://capstonemedia.s3.amazonaws.com/${repostData.Media}" alt="Post Image"></div>`
+                        : ''
+                    }
+                  </a>
+                </article>
+              </div>
+            `;
+          } else {
+            console.error(`Failed to fetch repost data for RepostId: ${post.RepostId}`);
+          }
+        } catch (error) {
+          console.error(`Error fetching repost data for RepostId: ${post.RepostId}`, error);
+        }
+      }
+  
+      const postElement = document.createElement('div');
+      postElement.classList.add('post-container');
+  
       postElement.innerHTML = `
-        <a href="/profile/${username}" class="post-header">
-          <img class="profile-image" src="${profileImage}" alt="Profile Image">
-          <div class="user-info">
-            <h3 class="username">${name}</h3>
-            <span class="username-handle">@${username}</span>
-            <span class="created-at">${new Date(post.CreatedAt).toLocaleString()}</span>
+        <article class="post">
+          <a href="/profile/${username}" class="post-header">
+            <img class="profile-image" src="${profileImage}" alt="Profile Image">
+            <div class="user-info">
+              <h3 class="username">${name}</h3>
+              <span class="username-handle">@${username}</span>
+              <span class="created-at">${new Date(post.CreatedAt).toLocaleString()}</span>
+            </div>
+          </a>
+          <a class="post-content" href="/post/${post.Id}">
+            <p>${post.Content}</p>
+            ${
+              post.Media
+                ? `<div class="post-media"><img src="https://capstonemedia.s3.amazonaws.com/${post.Media}" alt="Post Image"></div>`
+                : ''
+            }
+          </a>
+          ${repostContent}
+          <div class="post-actions">
+            <button class="like-button ${userLikedPosts.includes(post.Id) ? 'liked' : ''}" data-post-id="${post.Id}">
+              <i class="fas fa-heart"></i>
+              <span class="like-count">${post.Likes}</span>
+            </button>
+            <button class="comment-button">
+              <i class="fas fa-comment"></i>
+              <span>${post.CommentCount}</span>
+            </button>
+            <div class="repost-dropdown-container">
+              <button class="repost-button" data-post-id="${post.Id}">
+                <i class="fas fa-retweet"></i>
+                <span>${post.RepostCount}</span>
+              </button>
+              <div class="repost-dropdown hidden">
+                <button class="quote-button" data-post-id="${post.Id}">Quote</button>
+                <button class="repost-confirm-button" data-post-id="${post.Id}">Repost</button>
+              </div>
+            </div>
+            <button class="bookmark-button" data-post-id="${post.Id}">
+              <i class="fas fa-bookmark"></i>
+              <span class="bookmark-count">${post.BookmarkCount}</span>
+            </button>
           </div>
-        </a>
-        <a class="post-content" href="/post/${post.Id}">
-          <p>${post.Content}</p>
-          ${post.Media ? `<div class="post-media"><img src="https://capstonemedia.s3.amazonaws.com/${post.Media}" alt="Post Image"></div>` : ''}
-        </a>
-        <div class="post-actions">
-          <button class="like-button ${userLikedPosts.includes(post.Id) ? 'liked' : ''}" data-post-id="${post.Id}">
-            <i class="fas fa-heart"></i>
-            <span class="like-count">${post.Likes}</span>
-          </button>
-          <button class="comment-button">
-            <i class="fas fa-comment"></i>
-            <span>${post.CommentCount}</span>
-          </button>
-          <button class="repost-button">
-            <i class="fas fa-retweet"></i>
-            <span>${post.RepostCount}</span>
-          </button>
-          <button class="bookmark-button">
-            <i class="fas fa-bookmark"></i>
-            <span>${post.BookmarkCount}</span>
-          </button>
-        </div>
+        </article>
       `;
-
+  
       container.appendChild(postElement);
     }
-
-    // Attach like button functionality after rendering
-    initializeLikeButtons();
+  
+    initializeLikeButtons(); // Initialize event listeners for like buttons
   }
+  
+  
 
   async function fetchUserData(userId) {
     try {
@@ -113,7 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Initialize like button functionality
   function initializeLikeButtons() {
     document.querySelectorAll('.like-button').forEach(button => {
       const postId = button.getAttribute('data-post-id');
@@ -148,7 +207,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Profile editing modal and form handling (unchanged)
   const editProfileButton = document.querySelector('.edit-profile');
   const editProfileModal = document.getElementById('editProfileModal');
   const closeModalButton = editProfileModal.querySelector('.close-button');

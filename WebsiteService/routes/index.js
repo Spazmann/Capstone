@@ -31,7 +31,11 @@ router.post('/', async function(req, res) {
 
 
 router.get('/', async function(req, res) {
-  res.render('index', { title: "Home Page", });
+  const user = req.session ? req.session.user : null;
+  if(user != null) {
+    res.redirect('/home');
+  }
+  res.render('index', { title: "Welcome", });
 });
 
 router.post('/api/checkuseremail', async (req, res) => {

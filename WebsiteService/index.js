@@ -13,6 +13,8 @@ const profilePageRouter = require('./routes/profile');
 const createAccountRouter = require('./routes/createAccount');
 const settingsRouter = require('./routes/settings');
 const postRouter = require('./routes/post');
+const postCommunityRouter = require('./routes/community');
+const bookmarksRouter = require('./routes/bookmarks');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
@@ -26,14 +28,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 console.log(process.env.S3_BUCKET);
 
 // RestAPI Router Setup
-
 app.use('/', indexPageRouter);
 app.use('/home', homePageRouter);
 app.use('/profile', profilePageRouter);
 app.use('/createAccount', createAccountRouter);
 app.use('/settings', settingsRouter);
 app.use('/post', postRouter);
-
+app.use('/community', postCommunityRouter);
+app.use('/bookmarks', bookmarksRouter);
 
 // Cookies and Session Setup
 app.use(session({
