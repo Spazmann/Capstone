@@ -1,6 +1,7 @@
-using MessagingBackend.Services; 
-using MessagingBackend.Models; 
 using Microsoft.AspNetCore.SignalR;
+using MessagingBackend.Models;
+using MessagingBackend.Services;
+using System.Threading.Tasks;
 
 namespace MessagingBackend
 {
@@ -13,20 +14,31 @@ namespace MessagingBackend
             _mongoDbService = mongoDbService;
         }
 
-        public async Task SendMessage(string senderId, string receiverId, string content)
+        public async Task SendMessage(string chatRoomId, string senderId, string content)
         {
             var message = new Message
             {
                 Id = Guid.NewGuid().ToString(),
                 SenderId = senderId,
-                ReceiverId = receiverId,
                 Content = content,
                 Timestamp = DateTime.UtcNow
             };
 
-            await _mongoDbService.SaveMessage(message);
+            // Save the message to MongoDB
+            await _mongoDbService.AddMessageToChatRoomAsync(chatRoomId, message);
 
-            await Clients.User(receiverId).SendAsync("ReceiveMessage", senderId, content);
+            // Broadcast the message to all clients in the chat room
+            await Clients.Group(chatRoomId).SendAsync("ReceiveMessage", message);
+        }
+
+        public async Task JoinChatRoom(string chatRoomId)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, chatRoomId);
+        }
+
+        public async Task LeaveChatRoom(string chatRoomId)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, chatRoomId);
         }
     }
 }

@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: .NET Messaging Service
+Description: .NET Messaging Service with Self-Hosted SignalR Integration
 Resources:
   MessagingApiFunction:
     Type: AWS::Serverless::Function
@@ -14,6 +14,10 @@ Resources:
       - x86_64
       Policies:
       - AWSLambdaBasicExecutionRole
+      Environment:
+        Variables:
+          MONGO_CONNECTION_STRING: mongodb+srv://ddmann2004:9kt1LQi62AMBcXDW@cluster0.gzmfmz9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+          MONGO_DATABASE_NAME: Capstone
       Events:
         ApiRoot:
           Type: Api

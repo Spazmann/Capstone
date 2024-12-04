@@ -7,7 +7,7 @@ namespace MessagingBackend.Services
 {
     public class MongoDbService
     {
-        private readonly IMongoCollection<Message> _messages;
+        private readonly IMongoCollection<ChatRoom> _chatRooms;
 
         public MongoDbService()
         {
@@ -15,21 +15,28 @@ namespace MessagingBackend.Services
             var mongoClient = new MongoClient(connectionString);
             var database = mongoClient.GetDatabase("Capstone");
 
-            _messages = database.GetCollection<Message>("Messages");
+            _chatRooms = database.GetCollection<ChatRoom>("Messages");
         }
 
-        public async Task SaveMessage(Message message)
+        public async Task<List<ChatRoom>> GetAllChatRoomsAsync()
         {
-            await _messages.InsertOneAsync(message);
+            return await _chatRooms.Find(_ => true).ToListAsync();
         }
 
-        public async Task<List<Message>> GetMessages(string senderId, string receiverId)
+        public async Task<ChatRoom> GetChatRoomByIdAsync(string id)
         {
-            return await _messages.Find(m =>
-                (m.SenderId == senderId && m.ReceiverId == receiverId) ||
-                (m.SenderId == receiverId && m.ReceiverId == senderId))
-                .SortBy(m => m.Timestamp) 
-                .ToListAsync();
+            return await _chatRooms.Find(cr => cr.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task CreateChatRoomAsync(ChatRoom chatRoom)
+        {
+            await _chatRooms.InsertOneAsync(chatRoom);
+        }
+
+        public async Task AddMessageToChatRoomAsync(string chatRoomId, Message message)
+        {
+            var update = Builders<ChatRoom>.Update.Push(cr => cr.Messages, message);
+            await _chatRooms.UpdateOneAsync(cr => cr.Id == chatRoomId, update);
         }
     }
 }

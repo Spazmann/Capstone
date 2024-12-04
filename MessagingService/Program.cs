@@ -1,52 +1,24 @@
-using Amazon.Lambda.AspNetCoreServer;
-using MessagingBackend.Services;
-using MessagingBackend.Models;
-using MessagingBackend;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using MessagingBackend.Services;
+using MessagingBackend;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<MongoDbService>();
-builder.Services.AddSignalR(); 
+builder.Services.AddSignalR(); // Add SignalR to the service collection
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
-app.MapHub<ChatHub>("/chatHub");
+app.UseRouting();
 
-if (app.Environment.IsDevelopment())
+app.UseEndpoints(endpoints =>
 {
-    app.UseRouting();
-    app.UseEndpoints(endpoints =>
-    {
-        endpoints.MapHub<ChatHub>("/chatHub");
-    });
-}
+    endpoints.MapControllers();
+    endpoints.MapHub<ChatHub>("/chatHub"); // Map SignalR hub to an endpoint
+});
 
 app.Run();
-
-public class LambdaEntryPoint : APIGatewayProxyFunction
-{
-    protected override void Init(IWebHostBuilder builder)
-    {
-        builder.ConfigureServices((context, services) =>
-        {
-            services.AddSingleton<MongoDbService>();
-            services.AddSignalR();
-        });
-
-        builder.Configure(app =>
-        {
-            var env = app.ApplicationServices.GetService<IHostEnvironment>();
-            if (env.IsDevelopment())
-            {
-                app.UseRouting();
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapHub<ChatHub>("/chatHub");
-                });
-            }
-        });
-    }
-}

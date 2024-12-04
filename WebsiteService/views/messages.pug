@@ -1,0 +1,55 @@
+doctype html
+html
+    head
+        title Messaging
+        link(rel="stylesheet", href="/styles/messages.css")
+    body
+        .container
+            .left-sidebar
+                ul
+                    li
+                        a(href='/home') Home
+                    li
+                        a(href='/explore') Explore X
+                    li
+                        a(href='/notifications') Notifications X
+                    li
+                        a(href='/messages') Messages
+                    li
+                        a(href='/bookmarks') Bookmarks
+                    li
+                        a(href=`/profile/${user.Username}`) Profile
+                button(type='button', id='postButton') Post
+                .profile
+                    img(src=`https://capstonemedia.s3.amazonaws.com/${user.Profile.profileImage}`, alt='Profile Picture')
+                    .profile-info
+                        if user && user.Profile
+                            strong #{user.Profile.name}
+                            span @#{user.Username}
+            .messaging-area
+                .sidebar
+                    h2 Messages
+                    ul
+                        each user in users
+                            li
+                                a(href=`/messages/${user.id}`)
+                                    img(src=user.avatar)
+                                    .details
+                                        .name #{user.name}
+                                        .preview #{user.preview}
+                .chat-column
+                    if user
+                        h2 Chat with #{user.name}
+                        .messages
+                            each message in messages
+                                .message
+                                    if message.senderId === user.id
+                                        .received #{message.content}
+                                    else
+                                        .sent #{message.content}
+                        form(action=`/messages/${user.id}`, method="post")
+                            input(type="text", name="message", placeholder="Type a message")
+                            button(type="submit") Send
+                    else
+                        .chat-placeholder
+                            p Select a user to start chatting.

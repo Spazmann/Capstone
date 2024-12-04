@@ -56,12 +56,16 @@ const addUser = async (callback, userData) => {
 
 const updateUser = async (callback, userData, id) => {
     try {
+        const filteredData = Object.fromEntries(
+            Object.entries(userData).filter(([_, value]) => value != null)
+        );
+
         const response = await fetch(`${url}UpdateUser/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(userData),
+            body: JSON.stringify(filteredData),
         });
 
         const data = await response.json();
@@ -75,6 +79,7 @@ const updateUser = async (callback, userData, id) => {
         callback(error, null);
     }
 };
+
 
 const checkUserEmail = async (callback, username, email) => {
     try {

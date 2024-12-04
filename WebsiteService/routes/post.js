@@ -95,9 +95,6 @@ router.get('/:postId', async (req, res) => {
   }
 });
 
-
-
-
 router.post('/', upload.single('image'), async (req, res) => {
   try {
     const { content } = req.body;
@@ -173,7 +170,6 @@ router.post('/like/:postId', async (req, res) => {
           const parsedUser = typeof savedUser === 'string' ? JSON.parse(savedUser).message : savedUser;
 
           req.session.user = parsedUser;
-
 
           res.status(200).json({
             message: "Post liked successfully",

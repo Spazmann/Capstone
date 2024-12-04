@@ -176,63 +176,66 @@ public class UserDatabase
 
     public static async Task<APIGatewayProxyResponse> EditUser(User user, string id)
     {
-        var mongoClient = new MongoClient(connectionString);
-        var database = mongoClient.GetDatabase("Capstone");
-        var collection = database.GetCollection<User>("Users");
-
-        User existingUser = await FindUserById(id);
-
-        if (existingUser != null)
+        try
         {
-            try
+            var database = mongoClient.GetDatabase("Capstone");
+            var collection = database.GetCollection<User>("Users");
+
+            User existingUser = await FindUserById(id);
+
+            if (existingUser != null)
             {
-                var filter = Builders<User>.Filter.Eq("_id", id);
+                var updateDefinition = Builders<User>.Update.Combine(
+                    typeof(User).GetProperties()
+                        .Where(prop => prop.GetValue(user) != null)
+                        .Select(prop => Builders<User>.Update.Set(prop.Name, prop.GetValue(user)))
+                );
 
-                var update = Builders<User>.Update
-                    .Set("Username", user.Username)
-                    .Set("Password", user.Password)
-                    .Set("Email", user.Email)
-                    .Set("Profile", user.Profile)
-                    .Set("Settings", user.Settings)
-                    .Set("Followers", user.Followers)
-                    .Set("Following", user.Following)
-                    .Set("Posts", user.Posts)
-                    .Set("Likes", user.Likes)
-                    .Set("Bookmarks", user.Bookmarks)
-                    .Set("Blocks", user.Blocks)
-                    .Set("Communities", user.Communities);
+                var filter = Builders<User>.Filter.Eq(u => u.Id, id);
+                var result = await collection.UpdateOneAsync(filter, updateDefinition);
 
-                await collection.UpdateOneAsync(filter, update);
-
-                user.Id = id;
-
-                return new APIGatewayProxyResponse
+                if (result.MatchedCount > 0)
                 {
-                    Body = JsonSerializer.Serialize(new { message = user }),
-                    StatusCode = 200,
-                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
-                };
+                    var updatedUser = await FindUserById(id);
+
+                    return new APIGatewayProxyResponse
+                    {
+                        Body = JsonSerializer.Serialize(new { message = updatedUser }),
+                        StatusCode = 200,
+                        Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                    };
+                }
+                else
+                {
+                    return new APIGatewayProxyResponse
+                    {
+                        Body = JsonSerializer.Serialize(new { error = "User not found or update failed" }),
+                        StatusCode = 404,
+                        Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                    };
+                }
             }
-            catch (Exception e)
+            else
             {
                 return new APIGatewayProxyResponse
                 {
-                    Body = JsonSerializer.Serialize(new { message = e.Message }),
-                    StatusCode = 500,
+                    Body = JsonSerializer.Serialize(new { error = "User not found" }),
+                    StatusCode = 404,
                     Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
                 };
             }
         }
-        else
+        catch (Exception e)
         {
             return new APIGatewayProxyResponse
             {
-                Body = JsonSerializer.Serialize(new { message = "Id not found" }),
-                StatusCode = 404,
+                Body = JsonSerializer.Serialize(new { error = e.Message }),
+                StatusCode = 500,
                 Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
             };
         }
     }
+
 
 
     public static async Task<APIGatewayProxyResponse> deleteUser(string Id)

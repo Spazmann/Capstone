@@ -4,6 +4,7 @@ block head
   link(rel='stylesheet', href='/styles/profile.css')
   link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css")
   script(src="/scripts/profile.js", defer)
+  script(src="/scripts/follow.js", defer)
 
 block content
   .banner-image
@@ -18,8 +19,10 @@ block content
 
     if user && user.Username === profile.Username
       button.edit-profile(type="button") Edit Profile
+    else if user && user.Following && user.Following.includes(profile.Id)
+      button.unfollow(data-profile-id=`${profile.Id}`) Unfollow
     else
-      button.follow Follow
+      button.follow(data-profile-id=`${profile.Id}`) Follow
 
   section.user-info
     div.info-row
