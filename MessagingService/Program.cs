@@ -8,7 +8,9 @@ using MessagingBackend;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<MongoDbService>();
-builder.Services.AddSignalR(); // Add SignalR to the service collection
+
+builder.Services.AddSignalR().AddAzureSignalR(builder.Configuration["Azure:SignalR:ConnectionString"]);
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -18,7 +20,8 @@ app.UseRouting();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
-    endpoints.MapHub<ChatHub>("/chatHub"); // Map SignalR hub to an endpoint
+
+    endpoints.MapHub<ChatHub>("/chatHub");
 });
 
 app.Run();

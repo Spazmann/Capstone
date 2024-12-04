@@ -1,46 +1,64 @@
 const express = require('express');
+const { findUserId } = require('../api/userService'); 
 const router = express.Router();
 
-const users = [
-    { id: '1', name: 'Alice' },
-    { id: '2', name: 'Bob' },
-    { id: '3', name: 'Charlie' }
-];
+// Helper function to fetch valid users
+const getValidUsers = async (loggedUser) => {
+    const userIdsToMessage = loggedUser.Following.filter(id => loggedUser.Followers.includes(id));
 
-const messages = [
-    { senderId: '1', receiverId: '2', content: 'Hello!', timestamp: '2024-12-04T10:00:00Z' },
-    { senderId: '2', receiverId: '1', content: 'Hi there!', timestamp: '2024-12-04T10:01:00Z' }
-];
-
-router.get('/', (req, res) => {
-    const user = req.session ? req.session.user : null;
-    if (!user) {
-      return res.redirect('/'); // Redirect unauthenticated users to the login page
-    }
-  
-    res.render('messages', { users, user: null, messages: [], user: user });
-});
-
-router.get('/:userId', (req, res) => {
-    const userId = req.params.userId;
-    const user = users.find((u) => u.id === userId);
-
-    const Loggeduser = req.session ? req.session.user : null;
-    if (!Loggeduser) {
-      return res.redirect('/'); // Redirect unauthenticated users to the login page
-    }
-
-    if (!user) {
-        return res.status(404).send('User not found');
-    }
-
-    const userMessages = messages.filter(
-        (m) =>
-            (m.senderId === userId && m.receiverId === req.session.user.id) ||
-            (m.receiverId === userId && m.senderId === req.session.user.id)
+    const users = await Promise.all(
+        userIdsToMessage.map(async (id) => {
+            try {
+                return await findUserId(id);
+            } catch (err) {
+                console.error(`Failed to fetch user with ID ${id}:`, err);
+                return null; 
+            }
+        })
     );
 
-    res.render('messages', { users, user, messages: userMessages, user: Loggeduser });
+    return users.filter(user => user !== null);
+};
+
+// Route: GET /
+router.get('/', async (req, res) => {
+    const loggedUser = req.session ? req.session.user : null;
+
+    if (!loggedUser) {
+        return res.redirect('/'); 
+    }
+
+    try {
+        const validUsers = await getValidUsers(loggedUser);
+        res.render('messages', { users: validUsers, selectedUser: null, messages: [], loggedUser });
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Route: GET /:userId
+router.get('/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    const loggedUser = req.session ? req.session.user : null;
+
+    if (!loggedUser) {
+        return res.redirect('/'); 
+    }
+
+    try {
+        const selectedUser = await findUserId(userId);
+
+        if (!selectedUser) {
+            return res.status(404).send('User not found');
+        }
+
+        const validUsers = await getValidUsers(loggedUser);
+        res.render('messages', { users: validUsers, selectedUser, messages: [], loggedUser });
+    } catch (error) {
+        console.error('Error fetching user details:', error);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 module.exports = router;

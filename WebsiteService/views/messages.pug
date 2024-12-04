@@ -3,6 +3,7 @@ html
     head
         title Messaging
         link(rel="stylesheet", href="/styles/messages.css")
+        script(src="/scripts/chat.js")
     body
         .container
             .left-sidebar
@@ -18,37 +19,35 @@ html
                     li
                         a(href='/bookmarks') Bookmarks
                     li
-                        a(href=`/profile/${user.Username}`) Profile
+                        a(href=`/profile/${loggedUser.Username}`) Profile
                 button(type='button', id='postButton') Post
                 .profile
-                    img(src=`https://capstonemedia.s3.amazonaws.com/${user.Profile.profileImage}`, alt='Profile Picture')
+                    img(src=`https://capstonemedia.s3.amazonaws.com/${loggedUser.Profile.profileImage}`, alt='Profile Picture')
                     .profile-info
-                        if user && user.Profile
-                            strong #{user.Profile.name}
-                            span @#{user.Username}
+                        if loggedUser && loggedUser.Profile
+                            strong #{loggedUser.Profile.name}
+                            span @#{loggedUser.Username}
             .messaging-area
                 .sidebar
                     h2 Messages
                     ul
-                        each user in users
-                            li
-                                a(href=`/messages/${user.id}`)
-                                    img(src=user.avatar)
-                                    .details
-                                        .name #{user.name}
-                                        .preview #{user.preview}
+                        each chatUser in users
+                            li(onclick=`startChat('${chatUser.Id}')`) // Call startChat function when clicked
+                                img(src=`https://capstonemedia.s3.amazonaws.com/${chatUser.Profile.profileImage}`, alt=`${chatUser.Profile.name}'s Profile Picture`)
+                                .details
+                                    .name #{chatUser.Profile.name}
                 .chat-column
-                    if user
-                        h2 Chat with #{user.name}
-                        .messages
+                    if selectedUser
+                        h2 #{selectedUser.Profile.name}
+                        .messages#messages-container // Add an ID for JavaScript manipulation
                             each message in messages
                                 .message
-                                    if message.senderId === user.id
+                                    if message.senderId === selectedUser.Id
                                         .received #{message.content}
                                     else
                                         .sent #{message.content}
-                        form(action=`/messages/${user.id}`, method="post")
-                            input(type="text", name="message", placeholder="Type a message")
+                        form(onSubmit="sendMessage(event)") // Call sendMessage function on submit
+                            input(type="text", id="messageInput", placeholder="Type a message")
                             button(type="submit") Send
                     else
                         .chat-placeholder

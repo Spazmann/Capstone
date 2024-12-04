@@ -46,3 +46,15 @@ C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\obj\Release\net8.0\li
 C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\obj\Release\net8.0\linux-x64\MessagingService.pdb
 C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\obj\Release\net8.0\linux-x64\MessagingService.genruntimeconfig.cache
 C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\obj\Release\net8.0\linux-x64\ref\MessagingService.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\linux-x64\Azure.Core.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\linux-x64\Azure.Identity.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\linux-x64\Microsoft.Azure.SignalR.Common.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\linux-x64\Microsoft.Azure.SignalR.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\linux-x64\Microsoft.Azure.SignalR.Protocols.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\linux-x64\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\linux-x64\Microsoft.Identity.Client.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\linux-x64\Microsoft.Identity.Client.Extensions.Msal.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\linux-x64\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\linux-x64\System.ClientModel.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\linux-x64\System.Memory.Data.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\linux-x64\System.Security.Cryptography.ProtectedData.dll

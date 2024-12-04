@@ -16,6 +16,7 @@ const postRouter = require('./routes/post');
 const postCommunityRouter = require('./routes/community');
 const bookmarksRouter = require('./routes/bookmarks');
 const messagingRouter = require('./routes/messages');
+const chatRoomRouter = require('./routes/chatRoom');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
@@ -38,6 +39,7 @@ app.use('/post', postRouter);
 app.use('/community', postCommunityRouter);
 app.use('/bookmarks', bookmarksRouter);
 app.use('/messages', messagingRouter);
+app.use('/chatroom', chatRoomRouter);
 
 // Cookies and Session Setup
 app.use(session({

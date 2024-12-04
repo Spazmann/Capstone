@@ -11,8 +11,17 @@ C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\pu
 C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Amazon.Lambda.Core.dll
 C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Amazon.Lambda.Logging.AspNetCore.dll
 C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Amazon.Lambda.Serialization.SystemTextJson.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Azure.Core.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Azure.Identity.dll
 C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\DnsClient.dll
 C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Microsoft.AspNetCore.OpenApi.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Microsoft.Azure.SignalR.Common.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Microsoft.Azure.SignalR.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Microsoft.Azure.SignalR.Protocols.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Microsoft.Identity.Client.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Microsoft.Identity.Client.Extensions.Msal.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Microsoft.IdentityModel.Abstractions.dll
 C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Microsoft.OpenApi.dll
 C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\MongoDB.Bson.dll
 C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\MongoDB.Driver.dll
@@ -22,5 +31,8 @@ C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\pu
 C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\System.ClientModel.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\System.Memory.Data.dll
 C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\System.Net.WebSockets.WebSocketProtocol.dll
+C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\System.Security.Cryptography.ProtectedData.dll
 C:\Users\dmann\Documents\Neumont\Capstone\MessagingService\bin\Release\net8.0\publish\ZstdSharp.dll

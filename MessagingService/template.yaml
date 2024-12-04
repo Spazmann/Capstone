@@ -1,12 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: .NET Messaging Service with Self-Hosted SignalR Integration
+Description: .NET Messaging Service with Azure SignalR Integration
 
 Resources:
   MessagingApiFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./ 
+      CodeUri: ./ # Path to your application code
       Handler: MessagingBackend::MessagingBackend.LambdaEntryPoint::FunctionHandlerAsync
       Runtime: dotnet8
       MemorySize: 512
@@ -14,11 +14,12 @@ Resources:
       Architectures:
         - x86_64
       Policies:
-        - AWSLambdaBasicExecutionRole 
+        - AWSLambdaBasicExecutionRole
       Environment:
         Variables:
           MONGO_CONNECTION_STRING: "mongodb+srv://ddmann2004:9kt1LQi62AMBcXDW@cluster0.gzmfmz9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
           MONGO_DATABASE_NAME: "Capstone"
+          SIGNALR_CONNECTION_STRING: "Endpoint=https://capstone.service.signalr.net;AccessKey=CGrYlHTM1cQVGyEFNeky1Kt3JRbrR3MKt9olzt0hjWcvs8JgtvO6JQQJ99ALACYeBjFXJ3w3AAAAASRSIpOO;Version=1.0;"
       Events:
         ApiRoot:
           Type: Api
