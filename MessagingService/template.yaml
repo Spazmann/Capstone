@@ -1,33 +1,97 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: .NET Messaging Service with Azure SignalR Integration
+Description: WebSocket-based live messaging system with AWS Lambda
 
 Resources:
-  MessagingApiFunction:
-    Type: AWS::Serverless::Function
+  WebSocketApi:
+    Type: AWS::ApiGatewayV2::Api
     Properties:
-      CodeUri: ./ # Path to your application code
-      Handler: MessagingBackend::MessagingBackend.LambdaEntryPoint::FunctionHandlerAsync
-      Runtime: dotnet8
-      MemorySize: 512
-      Timeout: 30
-      Architectures:
-        - x86_64
-      Policies:
-        - AWSLambdaBasicExecutionRole
+      Name: "WebSocketApi"
+      ProtocolType: WEBSOCKET
+      RouteSelectionExpression: "$request.body.action"
+
+  WebSocketConnectFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: WebSocketConnectFunction::HandleConnectAsync
+      Runtime: dotnet6
+      CodeUri: ./src
+      MemorySize: 128
+      Timeout: 5
       Environment:
         Variables:
-          MONGO_CONNECTION_STRING: "mongodb+srv://ddmann2004:9kt1LQi62AMBcXDW@cluster0.gzmfmz9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-          MONGO_DATABASE_NAME: "Capstone"
-          SIGNALR_CONNECTION_STRING: "Endpoint=https://capstone.service.signalr.net;AccessKey=CGrYlHTM1cQVGyEFNeky1Kt3JRbrR3MKt9olzt0hjWcvs8JgtvO6JQQJ99ALACYeBjFXJ3w3AAAAASRSIpOO;Version=1.0;"
-      Events:
-        ApiRoot:
-          Type: Api
-          Properties:
-            Path: /{proxy+}
-            Method: ANY
+          CONNECTIONS_TABLE: !Ref ConnectionsTable
+
+  WebSocketDisconnectFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: WebSocketDisconnectFunction::HandleDisconnectAsync
+      Runtime: dotnet6
+      CodeUri: ./src
+      MemorySize: 128
+      Timeout: 5
+      Environment:
+        Variables:
+          CONNECTIONS_TABLE: !Ref ConnectionsTable
+
+  WebSocketSendMessageFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: WebSocketSendMessageFunction::HandleSendMessageAsync
+      Runtime: dotnet6
+      CodeUri: ./src
+      MemorySize: 128
+      Timeout: 5
+      Environment:
+        Variables:
+          CONNECTIONS_TABLE: !Ref ConnectionsTable
+
+  WebSocketApiGatewayIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref WebSocketApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:!GetAtt WebSocketConnectFunction.Arn
+
+  WebSocketRouteConnect:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref WebSocketApi
+      RouteKey: "$connect"
+      AuthorizationType: NONE
+      Target: !Sub "integrations/${WebSocketApiGatewayIntegration}"
+
+  WebSocketRouteDisconnect:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref WebSocketApi
+      RouteKey: "$disconnect"
+      AuthorizationType: NONE
+      Target: !Sub "integrations/${WebSocketApiGatewayIntegration}"
+
+  WebSocketRouteSendMessage:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref WebSocketApi
+      RouteKey: "sendmessage"
+      AuthorizationType: NONE
+      Target: !Sub "integrations/${WebSocketApiGatewayIntegration}"
+
+  ConnectionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: "WebSocketConnections"
+      AttributeDefinitions:
+        - AttributeName: "connectionId"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "connectionId"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
 
 Outputs:
-  ApiUrl:
-    Description: "API Gateway endpoint URL for the Messaging Service"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  WebSocketApiUrl:
+    Value: !Sub "wss://${WebSocketApi}.execute-api.${AWS::Region}.amazonaws.com"
+    Description: "WebSocket API URL"

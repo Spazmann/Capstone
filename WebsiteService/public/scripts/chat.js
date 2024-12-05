@@ -1,98 +1,92 @@
-const messagesContainer = document.getElementById('messages-container');
-const messageInput = document.getElementById('messageInput');
-let selectedUserId = null;
-let socket;
+document.addEventListener("DOMContentLoaded", () => {
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl('https://yum6gmr8vh.execute-api.us-east-1.amazonaws.com/Prod/chatHub')
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
 
-async function startChat(userId) {
-    try {
-        const response = await fetch(`/chatroom/${userId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-        });
+    connection.start()
+        .then(() => console.log("Connected to SignalR"))
+        .catch((err) => console.error("Error connecting to SignalR:", err));
 
-        if (!response.ok) {
-            throw new Error('Failed to fetch or create chatroom');
+    let selectedUserId = null;
+
+    document.querySelector('.sidebar ul').addEventListener('click', (event) => {
+        const li = event.target.closest('li');
+        if (li && li.dataset.userId) {
+            startChat(li.dataset.userId);
         }
+    });
+    
 
-        const chatRoom = await response.json();
+    document.addEventListener("submit", (event) => {
+        if (event.target.closest("form")) {
+            sendMessage(event);
+        }
+    });
+
+    async function startChat(userId) {
         selectedUserId = userId;
 
-        document.querySelector('.chat-column').innerHTML = `
-            <h2>${chatRoom.ReceiverId === selectedUserId ? chatRoom.ReceiverName : chatRoom.SenderName}</h2>
-            <div class="messages" id="messages-container"></div>
-            <form onSubmit="sendMessage(event)">
-                <input type="text" id="messageInput" placeholder="Type a message">
-                <button type="submit">Send</button>
-            </form>
-        `;
+        try {
+            const response = await fetch(`/messages/${userId}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch chat room');
+            }
 
-        renderMessages(chatRoom.messages);
+            const chatData = await response.json();
 
-        connectWebSocket();
-    } catch (error) {
-        console.error('Error starting chat:', error);
+            if (!chatData || !chatData.selectedUser || !chatData.messages) {
+                throw new Error('Invalid chat data received');
+            }
+
+            document.querySelector('.chat-column').innerHTML = `
+                <h2>${chatData.selectedUser.Profile.name}</h2>
+                <div class="messages" id="messages-container"></div>
+                <form onSubmit="sendMessage(event)">
+                    <input type="text" id="messageInput" placeholder="Type a message">
+                    <button type="submit">Send</button>
+                </form>
+            `;
+
+            const messagesContainer = document.getElementById('messages-container');
+            chatData.messages.forEach((message) => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = message.senderId === selectedUserId ? 'received' : 'sent';
+                messageDiv.textContent = message.content;
+                messagesContainer.appendChild(messageDiv);
+            });
+
+            await connection.invoke('JoinChatRoom', userId);
+        } catch (error) {
+            console.error('Error in startChat:', error.message);
+        }
     }
-}
 
-function renderMessages(messages) {
-    messagesContainer.innerHTML = '';
-    messages.forEach((message) => {
+    async function sendMessage(event) {
+        event.preventDefault();
+
+        const input = document.getElementById('messageInput');
+        const content = input.value.trim();
+        if (!content) return;
+
+        await connection.invoke('SendMessage', selectedUserId, content);
+
+        input.value = '';
+    }
+
+    function scrollToBottom() {
+        const messagesContainer = document.getElementById('messages-container');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    connection.on('ReceiveMessage', (message) => {
+        if (selectedUserId && message.senderId !== selectedUserId) return;
+
+        const messagesContainer = document.getElementById('messages-container');
         const messageDiv = document.createElement('div');
         messageDiv.className = message.senderId === selectedUserId ? 'received' : 'sent';
         messageDiv.textContent = message.content;
         messagesContainer.appendChild(messageDiv);
+        scrollToBottom();
     });
-}
-
-async function sendMessage(event) {
-    event.preventDefault();
-
-    const content = messageInput.value.trim();
-    if (!content) return;
-
-    try {
-        const response = await fetch(`/messages/${selectedUserId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content }),
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to send message');
-        }
-
-        const message = await response.json();
-
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'sent';
-        messageDiv.textContent = message.content;
-        messagesContainer.appendChild(messageDiv);
-
-        messageInput.value = '';
-    } catch (error) {
-        console.error('Error sending message:', error);
-    }
-}
-
-function connectWebSocket() {
-    if (socket) {
-        socket.close();
-    }
-
-    socket = new WebSocket(`wss://your-signalr-url/chatHub`);
-
-    socket.onmessage = (event) => {
-        const message = JSON.parse(event.data);
-
-        if (message.senderId === selectedUserId) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'received';
-            messageDiv.textContent = message.content;
-            messagesContainer.appendChild(messageDiv);
-        }
-    };
-
-    socket.onerror = (error) => {
-        console.error('WebSocket error:', error);
-    };
-}
+});

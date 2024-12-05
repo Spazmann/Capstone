@@ -19,5 +19,7 @@
   </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <PkgMicrosoft_Extensions_ApiDescription_Server Condition=" '$(PkgMicrosoft_Extensions_ApiDescription_Server)' == '' ">C:\Users\dmann\.nuget\packages\microsoft.extensions.apidescription.server\6.0.5</PkgMicrosoft_Extensions_ApiDescription_Server>
+    <PkgAWSSDK_Core Condition=" '$(PkgAWSSDK_Core)' == '' ">C:\Users\dmann\.nuget\packages\awssdk.core\3.7.400.59</PkgAWSSDK_Core>
+    <PkgAWSSDK_ApiGatewayManagementApi Condition=" '$(PkgAWSSDK_ApiGatewayManagementApi)' == '' ">C:\Users\dmann\.nuget\packages\awssdk.apigatewaymanagementapi\3.7.400.59</PkgAWSSDK_ApiGatewayManagementApi>
   </PropertyGroup>
 </Project>

@@ -12,11 +12,11 @@ router.post('/:receiverId', async (req, res) => {
 
     try {
         // Check if ChatRoom already exists
-        let chatRoom = await findChatRoom(loggedUser._id, receiverId);
+        let chatRoom = await findChatRoom(loggedUser.Id, receiverId);
 
         // If ChatRoom does not exist, create it
         if (!chatRoom) {
-            chatRoom = await createChatRoom(loggedUser._id, receiverId);
+            chatRoom = await createChatRoom(loggedUser.Id, receiverId);
         }
 
         res.status(200).json(chatRoom);

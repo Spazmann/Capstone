@@ -3,7 +3,8 @@ html
     head
         title Messaging
         link(rel="stylesheet", href="/styles/messages.css")
-        script(src="/scripts/chat.js")
+        script(src="https://cdn.jsdelivr.net/npm/@microsoft/signalr/dist/browser/signalr.min.js")
+        script(src="/scripts/chat.js", defer)
     body
         .container
             .left-sidebar
@@ -32,23 +33,25 @@ html
                     h2 Messages
                     ul
                         each chatUser in users
-                            li(onclick=`startChat('${chatUser.Id}')`) // Call startChat function when clicked
+                            li(data-user-id=`${chatUser.Id}`)
                                 img(src=`https://capstonemedia.s3.amazonaws.com/${chatUser.Profile.profileImage}`, alt=`${chatUser.Profile.name}'s Profile Picture`)
                                 .details
                                     .name #{chatUser.Profile.name}
                 .chat-column
                     if selectedUser
                         h2 #{selectedUser.Profile.name}
-                        .messages#messages-container // Add an ID for JavaScript manipulation
+                        .messages#messages-container
                             each message in messages
                                 .message
-                                    if message.senderId === selectedUser.Id
-                                        .received #{message.content}
-                                    else
+                                    if message.senderId === loggedUser.Id
                                         .sent #{message.content}
-                        form(onSubmit="sendMessage(event)") // Call sendMessage function on submit
-                            input(type="text", id="messageInput", placeholder="Type a message")
+                                    else
+                                        .received #{message.content}
+                        form
+                            input(type="text" id="messageInput" placeholder="Type a message")
                             button(type="submit") Send
                     else
                         .chat-placeholder
                             p Select a user to start chatting.
+
+

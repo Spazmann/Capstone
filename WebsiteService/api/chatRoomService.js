@@ -3,7 +3,7 @@ const { MongoClient, ObjectId } = require('mongodb');
 const MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || 'mongodb+srv://ddmann2004:9kt1LQi62AMBcXDW@cluster0.gzmfmz9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 const client = new MongoClient(MONGO_CONNECTION_STRING);
 const database = client.db('Capstone');
-const chatRooms = database.collection('Messages');
+const chatRooms = database.collection('ChatRooms');
 
 // Find ChatRoom by SenderId and ReceiverId
 async function findChatRoom(senderId, receiverId) {
